@@ -22,6 +22,12 @@
   - git checkout BRANCH_NAME
 - Merge with master
   - git merge master
+- IF conflict | TODO add what todo if conflict
+- ELSE
+  - git push origin BRANCH_NAME
+- Go to repo on gitlab and press
+- If everything is OK? Delete branch locally
+  - git branch -d BRANCH_NAME
 
 ## Commands
 
