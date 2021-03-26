@@ -25,9 +25,18 @@
 - IF conflict | TODO add what todo if conflict
 - ELSE
   - git push origin BRANCH_NAME
-- Go to repo on gitlab and press
-- If everything is OK? Delete branch locally
+- Go to merge request page of the repo and press "Create merge request"
+  - Add info and stuff
+- Scroll down and press "Submit merge request"(Make sure that "Delete source branch when merge request is accepted." is checked)
+- If everything went ok, press the "Merge" button
+- Change to master branch and pull the latest changes
+  - git checkout master
+  - git pull
+- Delete the feature branch
   - git branch -d BRANCH_NAME
+- REPEAT
+- 8D
+- Profit
 
 ## Commands
 
