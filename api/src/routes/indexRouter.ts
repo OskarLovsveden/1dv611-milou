@@ -12,3 +12,5 @@ export default class IndexRouter {
         this.router.use('/example', this.exampleRouter.expressRouter)
     }
 }
+
+
