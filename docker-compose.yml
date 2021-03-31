@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  api-service:
+    build: "./api"
+    ports: 
+      - "5000:5000"
+    environment: 
+      - DB_CONNECTION_STRING=mongodb://db-service/milou-project
+    depends_on: 
+      - db-service
+
+  db-service:
+    image: mongo:latest
+    ports: 
+      - "27017:27017"

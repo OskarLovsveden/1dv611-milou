@@ -1,11 +1,12 @@
 import { NextFunction } from 'express';
+import Example, { IExample } from '../models/example';
 const e = 'example';
 
-export interface User {
+/* export interface User {
     fullname: string
     firstname: string
     lastname: string
-}
+} */
 
 export default class ExampleService {
 
@@ -16,14 +17,15 @@ export default class ExampleService {
         return e + ' test';
     }
 
-    public async createExample(req: any, next: NextFunction): Promise<User> {
+    public async createExample(req: any, next: NextFunction): Promise<IExample> {
         const { firstname, lastname } = req.body;
         console.log(`${firstname} ${lastname}`);
-        const user: User = {
-            firstname,
-            lastname,
-            fullname: `${firstname} ${lastname}`
-        };
+        
+        const user = Example.create({
+            username: firstname,
+            password: lastname
+        });
+
         return user;
     }
 }

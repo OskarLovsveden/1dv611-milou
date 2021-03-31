@@ -1,8 +1,10 @@
+import { connectDB } from './config/mongoose';
 import Server from './server';
 
 const main = async () => {
     try {
         // await connect to db
+        await connectDB();
 
         const server = new Server(5000);
 
