@@ -1,16 +1,16 @@
-import Server from "./server"
+import Server from './server';
 
 const main = async () => {
     try {
         // await connect to db
 
-        const server = new Server(5000)
+        const server = new Server(5000);
 
-        server.run()
+        server.run();
     } catch (error) {
-        console.error(error)
-        console.log('test')
+        console.error(error);
+        console.log('test');
     }
-}
+};
 
-main()
+main();
