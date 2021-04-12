@@ -4,7 +4,7 @@
   "description": "UX measurement",
   "main": "app.ts",
   "scripts": {
-    "start:dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/app.ts",
+    "start:dev": "nodemon --config nodemon.json src/app.ts",
     "start": "ts-node dist/app.js",
     "build": "tsc -p .",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet"
