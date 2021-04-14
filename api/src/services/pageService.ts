@@ -13,7 +13,7 @@ export default class PageService {
 
     public async createPage(req: Request): Promise<IPage> {
         try {
-            const pageInfo: pageData = this.getPageData(req.body);
+            const pageInfo: pageData = this.getPageData(req);
             const existingPage = await Page.getByAddress(pageInfo.href);
 
             if (existingPage) {
