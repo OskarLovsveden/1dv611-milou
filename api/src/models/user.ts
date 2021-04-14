@@ -15,16 +15,16 @@ export interface IUserModel extends Model<IUser> {
 export const schema = new Schema({
     email: {
         type: String,
-        required: [true, 'User email required.'],
+        required: true,
         unique: true,
         lowercase: true,
         trim: true,
-        validate: [isEmail, '{VALUE} is not an valid email address.']
+        validate: [isEmail, '{VALUE} is not a valid email address.']
     },
     password: {
         type: String,
         minlength: [10, 'The password must be of minimum length 10 characters.'],
-        required: [true, 'User password required.']
+        required: true
     }
     
 }, {

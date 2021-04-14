@@ -6,11 +6,7 @@ export default class PageController {
     public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const pageInfo = await this.service.createPage(req);
-            res.status(201).json({
-                domain: pageInfo.domain, 
-                address: pageInfo.address, 
-                path: pageInfo.path
-            });
+            res.status(201).json(pageInfo);
         } catch (error) {
             next(error);
         }

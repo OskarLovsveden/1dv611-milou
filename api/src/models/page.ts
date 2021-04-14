@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema} from 'mongoose';
+import { URL } from 'url';
 
 export interface IPage extends Document {
     domain: string
@@ -10,6 +11,7 @@ export interface IPage extends Document {
 export interface IPageModel extends Model<IPage> {
     getById(id: number) : Promise<IPage>
     getByAddress(address: string): Promise<IPage>
+    insert(url: URL): Promise<IPage>
 }
 
 
@@ -26,8 +28,18 @@ export const PageSchema = new Schema({
     path: {
         type: String,
         required: true
+    },
+}, {
+    timestamps: true,
+    toJSON: {
+        transform(doc, ret) {
+            delete ret._id;
+            delete ret.createdAt;
+            delete ret.updatedAt;
+            delete ret.__v;
+        }
     }
-}, {timestamps: true});
+});
 
 PageSchema.statics.getByAddress = async function(address: string) {
     try {
@@ -35,7 +47,26 @@ PageSchema.statics.getByAddress = async function(address: string) {
 
         return existingPage;
     } catch (error) {
-        null;
+        return null;
+    }
+};
+
+PageSchema.statics.insert = async function(url: URL) {
+    try {
+        const {href, hostname, pathname} = url;
+        const existingPage = await Page.findOne({address: href});
+
+        if (existingPage) {
+            console.log(existingPage);
+            return existingPage;
+        }
+        return await Page.create({
+            domain: hostname,
+            address:href,
+            path: pathname
+        });
+    } catch (error) {
+        throw createHttpError(400);
     }
 };
 
