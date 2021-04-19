@@ -1,14 +1,17 @@
 import mongoose, { Document, Model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
+import createHttpError from 'http-errors';
 const { isEmail } = validator;
 
 export interface IUser extends Document {
     email: string
     password: string
+    pageIds: Array<string>
 }
 
 export interface IUserModel extends Model<IUser> {
+    authenticate(email: string, password: string): Promise<IUser>
     getById(id: number) : Promise<IUser>
 }
 
@@ -25,7 +28,11 @@ export const schema = new Schema({
         type: String,
         minlength: [10, 'The password must be of minimum length 10 characters.'],
         required: true
-    }
+    },
+    pageIds: {
+        type: Array,
+    },
+
     
 }, {
     timestamps: true
@@ -34,6 +41,16 @@ export const schema = new Schema({
 schema.pre<IUser>('save', async function () {
     this.password = await bcrypt.hash(this.password, 10);
 });
+
+schema.statics.authenticate = async function(email: string, password: string): Promise<IUser> {
+    const user = await this.findOne({email});
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+        throw createHttpError(401, 'Invalid email or password');
+    }
+
+    return user;
+};
 
 const User: IUserModel = mongoose.model<IUser, IUserModel>('User', schema);
 

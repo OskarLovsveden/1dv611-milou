@@ -23,7 +23,8 @@ export default class PageController {
     
     public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            res.status(500).json('THIS IS NOT IMPLEMENTED');
+            const domainInfo = await this.service.getDomainPages(req);
+            res.status(200).json(domainInfo);
         } catch (error) {
             next(error);
         }

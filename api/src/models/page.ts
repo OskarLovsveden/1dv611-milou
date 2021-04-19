@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import mongoose, { Document, Model, Schema} from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 import { URL } from 'url';
 
 export interface IPage extends Document {
@@ -11,6 +11,7 @@ export interface IPage extends Document {
 export interface IPageModel extends Model<IPage> {
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
+    getAllPages(pageIds: string[]): Promise<IPage[]>
     findOrCreate(url: URL, id: string): Promise<IPage>
 }
 
@@ -57,6 +58,8 @@ PageSchema.statics.insert = async function(url: URL) {
 
         if (existingPage) {
             console.log(existingPage);
+
+            console.log('hahaha');
             return existingPage;
         }
         return await Page.create({
@@ -64,6 +67,19 @@ PageSchema.statics.insert = async function(url: URL) {
             address:href,
             path: pathname
         });
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+PageSchema.statics.getAllPages = async function(pageIds: string[]) {
+    try {
+        const pages = await Promise.all(pageIds.map(async (page) => {
+            return await Page.findOne({_id: page});
+
+        }));
+
+        return pages;
     } catch (error) {
         throw createHttpError(400);
     }
