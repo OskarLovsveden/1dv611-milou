@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import PageService from '../services/pageService';
+import Page from '../models/page';
 
 export default class PageController {
     private service: PageService = new PageService()
@@ -14,7 +15,8 @@ export default class PageController {
 
     public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            res.status(500).json('THIS IS NOT IMPLEMENTED');
+            const domainInfo = await this.service.getDomainPages(req);
+            res.status(200).json(domainInfo);
         } catch (error) {
             next(error);
         }
