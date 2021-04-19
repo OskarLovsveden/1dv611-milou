@@ -12,7 +12,7 @@ export default class IndexRouter {
     }
 
     public initializeRoutes(): void {
-        this.router.use('/page', this.pageRouter.expressRouter);
+        this.router.use('/pages', this.pageRouter.expressRouter);
         this.router.use('/users', this.userRouter.expressRouter);
     }
 }

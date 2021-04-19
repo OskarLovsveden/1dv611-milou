@@ -2,7 +2,7 @@ import { IRouter } from '../interfaces/IRouter';
 import express from 'express';
 import PageController from '../controllers/pageController';
 import PageMiddleware from '../middleware/pageMiddleware';
-import AuthMiddleware from 'middleware/authMiddleware';
+import AuthMiddleware from '../middleware/authMiddleware';
 
 export default class PageRouter implements IRouter {
     private controller: PageController = new PageController()
