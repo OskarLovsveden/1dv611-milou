@@ -58,6 +58,10 @@ typings/
 # Optional npm cache directory
 .npm
 
+# Pem keys
+
+*.pem
+
 # Optional eslint cache
 .eslintcache
 

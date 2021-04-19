@@ -11,4 +11,12 @@ export default class PageController {
             next(error);
         }
     }
+
+    public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            res.status(500).json('THIS IS NOT IMPLEMENTED');
+        } catch (error) {
+            next(error);
+        }
+    }
 }
