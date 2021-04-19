@@ -5,6 +5,24 @@ import createHttpError from 'http-errors';
 import IPayload from '../interfaces/IPayload';
 
 export default class AuthMiddleware {
+    public requestIncludesEmail(req: Request, next: NextFunction): void {
+        if (!req.body.email) {
+            next(createHttpError(400, 'Email needs to be provided'));
+            return;
+        }
+
+        next();
+    }
+
+    public requestIncludesPassword(req: Request, next: NextFunction): void {
+        if (!req.body.password) {
+            next(createHttpError(400, 'password needs to be provided'));
+            return;
+        }
+
+        next();
+    }
+
     // Find soulution to add variables to request object
     public async isAuthenticated(req: any, next: NextFunction): Promise<void> {
         if (!req.headers.authorization) {
@@ -24,6 +42,7 @@ export default class AuthMiddleware {
             const payload = jwt.verify(authorization[1], publicKey);
 
             req.user = payload;
+            next();
         } catch (error) {
             next(createHttpError(403));
         }
@@ -31,13 +50,5 @@ export default class AuthMiddleware {
 
     public isAuthorized(req: Request, next: NextFunction) {
         throw new Error('Not implemented');
-    }
-
-    public async createToken(payload: IPayload, next: NextFunction): Promise<string> {
-        const privateKey = await fs.promises.readFile('./private.pem', 'utf8');
-
-        const signOptions: jwt.SignOptions = { algorithm: 'RS256', expiresIn: '1h' };
-
-        return jwt.sign(payload, privateKey, signOptions);
     }
 }
