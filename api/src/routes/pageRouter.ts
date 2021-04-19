@@ -17,7 +17,11 @@ export default class PageRouter implements IRouter {
             (req, res, next) => this.middleware.validateRequestData(req, next),
             (req, res, next) => this.controller.create(req, res, next)
         );
+            
+        this.expressRouter.put('/:id',
+            (req, res, next) => this.middleware.requestParamsHasId(req, next),
+            (req, res, next) => this.middleware.validateRequestData(req, next),
+            (req, res, next) => this.controller.update(req, res, next)
+        );
     }
-
-
 }
