@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import createHttpError from 'http-errors';
 import Page, { IPage } from '../models/page';
 import User from '../models/user';
@@ -50,7 +49,7 @@ export default class PageService {
             throw createHttpError(400);
         }
     }
-
+ 
     public async getDomainPages(req: any): Promise<IPage[]> {
         try {
             console.log(req.user.email);
@@ -64,10 +63,28 @@ export default class PageService {
         }
     }
 
-    public async updatePage(req: Request): Promise<IPage> {
-        try {          
-            return await Page.findAndUpdate(new URL(req.body.address), req.params.id);
+    public async updatePage(req: any): Promise<void> {
+        try {
+            // Find user
+            const user = await User.findOne({email: req.user.email});
+        
+            // User not found...
+            if (!user) {
+                // ... 404
+                throw createHttpError(404, 'User not found');
+            }
+
+            // Add "new" address if not exists
+            const page = await Page.findOrCreate(new URL(req.body.address), req.params.id);
+            
+            // find old address in array using :id 
+            // replace with "new" address id
+            const index = user.pageIds.findIndex(req.params.id);
+            user.pageIds[index] = page.id;
+            user.save();
         } catch (error) {
+            console.log('error in service: ', error);
+
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
