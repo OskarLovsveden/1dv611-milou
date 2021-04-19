@@ -9,10 +9,9 @@ export interface IPage extends Document {
 }
 
 export interface IPageModel extends Model<IPage> {
-    getById(id: number) : Promise<IPage>
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
-    findAndUpdate(url: URL, id: string): Promise<IPage>
+    findOrCreate(url: URL, id: string): Promise<IPage>
 }
 
 export const PageSchema = new Schema({
@@ -70,26 +69,28 @@ PageSchema.statics.insert = async function(url: URL) {
     }
 };
 
-PageSchema.statics.findAndUpdate = async function(url: URL, id: string) {
+PageSchema.statics.findOrCreate = async function(url: URL, id: string) {
     try {
         const {href, hostname, pathname} = url;
 
-        const filter = { _id: id };
-        const update = {
+        const condition = { _id: id };
+        const address = {
             domain: hostname,
             address:href,
             path: pathname
         };
 
-        return await Page.findOneAndUpdate(filter, update, {
-            new: true
+        await Page.findById(condition, async (err: any, page: IPage) => {
+            if (err) console.log(err);
+            return page
+                ? page
+                : await Page.create(address);
         });
-
     } catch (error) {
+        console.log('error: ', error);
         throw createHttpError(400);
     }
 };
-
 
 const Page: IPageModel = mongoose.model<IPage, IPageModel>('Page', PageSchema);
 
