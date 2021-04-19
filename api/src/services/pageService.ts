@@ -21,4 +21,15 @@ export default class PageService {
             throw createHttpError(400);
         }
     }
+
+    public async updatePage(req: Request): Promise<IPage> {
+        try {          
+            return await Page.findAndUpdate(new URL(req.body.address), req.params.id);
+        } catch (error) {
+            if(error.code === 'ERR_INVALID_URL') {
+                throw createHttpError(400, `${error.input} is not a valid address.`);
+            }
+            throw createHttpError(400);
+        }
+    }
 }
