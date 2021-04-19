@@ -12,8 +12,8 @@ export interface IPageModel extends Model<IPage> {
     getById(id: number) : Promise<IPage>
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
+    findAndUpdate(url: URL, id: string): Promise<IPage>
 }
-
 
 export const PageSchema = new Schema({
     domain: {
@@ -65,6 +65,26 @@ PageSchema.statics.insert = async function(url: URL) {
             address:href,
             path: pathname
         });
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+PageSchema.statics.findAndUpdate = async function(url: URL, id: string) {
+    try {
+        const {href, hostname, pathname} = url;
+
+        const filter = { _id: id };
+        const update = {
+            domain: hostname,
+            address:href,
+            path: pathname
+        };
+
+        return await Page.findOneAndUpdate(filter, update, {
+            new: true
+        });
+
     } catch (error) {
         throw createHttpError(400);
     }
