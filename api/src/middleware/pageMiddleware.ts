@@ -10,4 +10,10 @@ export default class PageMiddleware {
         }
         next();
     }
+
+    public requestParamsHasId(req: Request, next: NextFunction): void {
+        const { id } = req.params;
+        if(!id) next(createHttpError(400, 'Parameter { id } is missing'));
+        next();
+    }
 }
