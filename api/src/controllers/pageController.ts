@@ -15,7 +15,7 @@ export default class PageController {
     public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             await this.service.updatePage(req);
-            res.status(204);
+            res.sendStatus(204);
         } catch (error) {
             next(error);
         }
