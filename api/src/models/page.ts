@@ -12,7 +12,7 @@ export interface IPageModel extends Model<IPage> {
     getById(id: number) : Promise<IPage>
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
-    getAllPages(pageIds: string): Promise<IPage[]>
+    getAllPages(pageIds: string[]): Promise<IPage[]>
     findAndUpdate(url: URL, id: string): Promise<IPage>
 }
 
@@ -59,6 +59,8 @@ PageSchema.statics.insert = async function(url: URL) {
 
         if (existingPage) {
             console.log(existingPage);
+
+            console.log('hahaha');
             return existingPage;
         }
         return await Page.create({

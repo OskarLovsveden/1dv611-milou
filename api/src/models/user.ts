@@ -7,7 +7,7 @@ const { isEmail } = validator;
 export interface IUser extends Document {
     email: string
     password: string
-    domainIds: Array<string>
+    pageIds: Array<string>
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -29,7 +29,7 @@ export const schema = new Schema({
         minlength: [10, 'The password must be of minimum length 10 characters.'],
         required: true
     },
-    domainIds: {
+    pageIds: {
         type: Array,
     },
 
@@ -45,7 +45,7 @@ schema.pre<IUser>('save', async function () {
 schema.statics.authenticate = async function(email: string, password: string): Promise<IUser> {
     const user = await this.findOne({email});
 
-    if (!user || (await bcrypt.compare(password, user.password))) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
         throw createHttpError(401, 'Invalid email or password');
     }
 

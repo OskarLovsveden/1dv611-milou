@@ -15,27 +15,33 @@ export default class PageService {
     // Change from any to request. -------------------------------------------
     public async createPage(req: any): Promise<IPage> {
         try {
+            console.log(req.body.address);
             const foundPage = await Page.findOne({address: req.body.address});
-            if(!foundPage){
-                const newPage = await Page.insert(new URL(req.body.address));
-                
-                // Change to req.user.email or use jwt token -------------------------------------------------------
+
+            console.log(foundPage);
+            if(foundPage){
+                console.log('skapa inte ny');
                 const user = await User.findOne({email: req.user.email});
                 if (user){
-                    user.domainIds.push(newPage.id);
-                    await user.save();
-                }
-                return newPage;
-            } else {
-                const user = await User.findOne({email: req.user.email});
-                if (user){
-                    if(!user.domainIds.includes(foundPage.id)){
-                        user.domainIds.push(foundPage.id);
+                    if(!user.pageIds.includes(foundPage.id)){
+                        user.pageIds.push(foundPage.id);
                         await user.save();
                     }
                 }
                 return foundPage;
+            } 
+                
+            console.log('SKapa ny');
+            const newPage = await Page.insert(new URL(req.body.address));
+            
+            // Change to req.user.email or use jwt token -------------------------------------------------------
+            const user = await User.findOne({email: req.user.email});
+            if (user){
+                user.pageIds.push(newPage.id);
+                await user.save();
             }
+            return newPage;
+            
             
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
@@ -47,10 +53,10 @@ export default class PageService {
 
     public async getDomainPages(req: any): Promise<IPage[]> {
         try {
-            const user = await User.findOne(req.user.email);
-
+            console.log(req.user.email);
+            const user = await User.findOne({email: req.user.email});
             if(user) {  
-                return await Page.getAllPages(user.domainIds);
+                return await Page.getAllPages(user.pageIds);
             }
             throw createHttpError(404);
         } catch (error) {

@@ -1,7 +1,7 @@
 import { IRouter } from '../interfaces/IRouter';
 import express from 'express';
 import AuthMiddleware from '../middleware/authMiddleware';
-import AuthController from 'controllers/authController';
+import AuthController from '../controllers/authController';
 
 export default class AuthRouter implements IRouter {
     private controller: AuthController = new AuthController()
