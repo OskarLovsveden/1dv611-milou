@@ -65,23 +65,16 @@ export default class PageService {
 
     public async updatePage(req: any): Promise<void> {
         try {
-            // Find user
             const user = await User.findOne({email: req.user.email});
         
-            // User not found...
             if (!user) {
-                // ... 404
                 throw createHttpError(404, 'User not found');
             }
 
-            // Add "new" address if not exists
-            const page = await Page.findOrCreate(new URL(req.body.address), req.params.id);
+            const page = await Page.findOrCreate(new URL(req.body.address));
             
-            // find old address in array using :id 
-            // replace with "new" address id
-            const index = user.pageIds.findIndex(req.params.id);
-            user.pageIds[index] = page.id;
-            user.save();
+            await User.updatePageId(user, req.params.id, page.id);
+
         } catch (error) {
             console.log('error in service: ', error);
 
