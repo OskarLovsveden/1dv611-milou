@@ -2,7 +2,6 @@ import createHttpError from 'http-errors';
 import Page, { IPage } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
-import User from '../models/user';
 
 export interface pageData {
     href: string
