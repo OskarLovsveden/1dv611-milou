@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import mongoose, { Document, Model, Schema} from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 import { URL } from 'url';
 
 export interface IPage extends Document {
@@ -12,8 +12,9 @@ export interface IPageModel extends Model<IPage> {
     getById(id: number) : Promise<IPage>
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
+    getAllPages(pageIds: string): Promise<IPage[]>
+    findAndUpdate(url: URL, id: string): Promise<IPage>
 }
-
 
 export const PageSchema = new Schema({
     domain: {
@@ -65,6 +66,39 @@ PageSchema.statics.insert = async function(url: URL) {
             address:href,
             path: pathname
         });
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+PageSchema.statics.getAllPages = async function(pageIds: string[]) {
+    try {
+        const pages = await Promise.all(pageIds.map(async (page) => {
+            return await Page.findOne({_id: page});
+
+        }));
+
+        return pages;
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+PageSchema.statics.findAndUpdate = async function(url: URL, id: string) {
+    try {
+        const {href, hostname, pathname} = url;
+
+        const filter = { _id: id };
+        const update = {
+            domain: hostname,
+            address:href,
+            path: pathname
+        };
+
+        return await Page.findOneAndUpdate(filter, update, {
+            new: true
+        });
+
     } catch (error) {
         throw createHttpError(400);
     }
