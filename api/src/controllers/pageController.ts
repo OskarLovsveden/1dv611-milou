@@ -11,4 +11,13 @@ export default class PageController {
             next(error);
         }
     }
+
+    public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            await this.service.updatePage(req);
+            res.status(204);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
