@@ -11,8 +11,8 @@ export interface IUser extends Document {
 }
 
 export interface IUserModel extends Model<IUser> {
-    authenticate(email: string, password: string): Promise<IUser>
-    getById(id: number) : Promise<IUser>
+    authenticate(email: string, password: string): Promise<IUser>,
+    updatePageId(user: IUser, currentId: string, newId: string): Promise<void>
 }
 
 export const schema = new Schema({
@@ -50,6 +50,18 @@ schema.statics.authenticate = async function(email: string, password: string): P
     }
 
     return user;
+};
+
+schema.statics.updatePageId = async function(user: IUser, currentId: string, newId: string): Promise<void> {
+    if(user) {
+        const newIds = user.pageIds.map(id => {
+            return id === currentId 
+                ? newId 
+                : id;
+        });
+
+        await User.updateOne({_id: user.id}, {pageIds: newIds});
+    }
 };
 
 const User: IUserModel = mongoose.model<IUser, IUserModel>('User', schema);
