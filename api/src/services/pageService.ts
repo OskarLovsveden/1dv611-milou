@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import createHttpError from 'http-errors';
 import Page, { IPage } from '../models/page';
 import User from '../models/user';
