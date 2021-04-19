@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import PageService from '../services/pageService';
-import Page from '../models/page';
 
 export default class PageController {
     private service: PageService = new PageService()

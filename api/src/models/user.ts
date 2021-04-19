@@ -7,6 +7,7 @@ const { isEmail } = validator;
 export interface IUser extends Document {
     email: string
     password: string
+    domainIds: Array<string>
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -27,7 +28,11 @@ export const schema = new Schema({
         type: String,
         minlength: [10, 'The password must be of minimum length 10 characters.'],
         required: true
-    }
+    },
+    domainIds: {
+        type: Array,
+    },
+
     
 }, {
     timestamps: true
