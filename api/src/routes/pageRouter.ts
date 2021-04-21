@@ -17,14 +17,14 @@ export default class PageRouter implements IRouter {
     initializeRoutes(): void {
         this.expressRouter.post('/',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
-            (req, res, next) => this.middleware.requestBodyHasAddress(req, next),
+            (req, res, next) => this.middleware.bodyHasAddress(req, next),
             (req, res, next) => this.controller.create(req, res, next)
         );
         
         this.expressRouter.put('/:id',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
-            (req, res, next) => this.middleware.requestParamsHasId(req, next),
-            (req, res, next) => this.middleware.requestBodyHasAddress(req, next),
+            (req, res, next) => this.middleware.paramsHasObjectId(req, next),
+            (req, res, next) => this.middleware.bodyHasAddress(req, next),
             (req, res, next) => this.controller.update(req, res, next)
         );
         
