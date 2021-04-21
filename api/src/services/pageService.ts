@@ -14,8 +14,10 @@ export default class PageService {
     // Change from any to request. -------------------------------------------
     public async createPage(req: any): Promise<IPage> {
         try {
-            const foundPage = await Page.findOne({address: req.body.address});
+            const url = new URL(req.body.address);
 
+            const foundPage = await Page.findOne({address: url.href});
+            
             if(foundPage){
                 const user = await User.findOne({email: req.user.email});
                 if (user){
@@ -27,9 +29,8 @@ export default class PageService {
                 return foundPage;
             }
 
-            const newPage = await Page.insert(new URL(req.body.address));
+            const newPage = await Page.insert(url);
             
-            // Change to req.user.email or use jwt token -------------------------------------------------------
             const user = await User.findOne({email: req.user.email});
             if (user){
                 user.pageIds.push(newPage.id);
