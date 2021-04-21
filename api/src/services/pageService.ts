@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import Page, { IPage } from '../models/page';
+import Page, { IPage, IPageModel } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
 
@@ -21,6 +21,7 @@ export default class PageService {
             if(foundPage){
                 const user = await User.findOne({email: req.user.email});
                 if (user){
+                    console.log(user.pageIds.includes(foundPage.id), 'url-check');
                     if(!user.pageIds.includes(foundPage.id)){
                         user.pageIds.push(foundPage.id);
                         await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
@@ -37,8 +38,6 @@ export default class PageService {
                 await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
             }
             return newPage;
-            
-            
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
@@ -50,8 +49,13 @@ export default class PageService {
     public async getDomainPages(req: any): Promise<IPage[]> {
         try {
             const user = await User.findOne({email: req.user.email});
-            if(user) {  
-                return await Page.getAllPages(user.pageIds);
+            if(user) { 
+                if(req.body.address) {
+                    const domainPages = await Page.getAllDomainPages(req.body.address);
+                    return this.sortAlphabetically(domainPages, 'path');
+                }
+                const allPages = await Page.getAllPages(user.pageIds);
+                return this.sortAlphabetically(allPages, 'domain');
             }
             throw createHttpError(404);
         } catch (error) {
@@ -80,6 +84,14 @@ export default class PageService {
             }
             throw createHttpError(400);
         }
+    }
+
+    private sortAlphabetically(address: IPage[], sortType: string) {
+        return address.sort((a, b) => {
+            if (a[sortType as keyof IPage] < b[sortType as keyof IPage]) return -1;
+            else if (a[sortType as keyof IPage] > b[sortType as keyof IPage]) return 1;
+            return 0;
+        });
     }
 
     public async deletePage(req: any): Promise<void> {
