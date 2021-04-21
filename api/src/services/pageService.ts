@@ -49,16 +49,22 @@ export default class PageService {
     public async getDomainPages(req: any): Promise<IPage[]> {
         try {
             const user = await User.findOne({email: req.user.email});
+            
             if(user) { 
                 if(req.body.address) {
-                    const domainPages = await Page.getAllDomainPages(req.body.address);
+                    const url = new URL(req.body.address);
+                    const domainPages = await Page.getAllDomainPages(url.href);
                     return this.sortAlphabetically(domainPages, 'path');
                 }
                 const allPages = await Page.getAllPages(user.pageIds);
                 return this.sortAlphabetically(allPages, 'domain');
             }
-            throw createHttpError(404);
+            throw createHttpError(400);
         } catch (error) {
+            if(error.code === 'ERR_INVALID_URL') {
+                console.log(error);
+                throw createHttpError(400, `${error.input} is not a valid address.`);
+            }
             throw createHttpError(400);
         }
     }
