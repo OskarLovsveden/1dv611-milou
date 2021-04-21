@@ -101,7 +101,6 @@ export default class PageService {
             if (!user) {
                 throw createHttpError(404, 'User not found');
             }
-            console.log(req.params.id, 'id');
 
             await User.deletePageId(user, req.params.id);
 
