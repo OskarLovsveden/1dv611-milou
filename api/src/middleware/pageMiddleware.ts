@@ -1,19 +1,33 @@
 import { NextFunction, Request } from 'express';
 import createHttpError from 'http-errors';
+import { isValidObjectId } from 'mongoose';
 
 export default class PageMiddleware {
-    public requestBodyHasAddress(req: Request, next: NextFunction): void {
+    public bodyHasAddress(req: Request, next: NextFunction): void {
         const { address } = req.body;
-        console.log(address);
         if(!address) {
-            next(createHttpError(400, 'Missing parameters'));
+            next(createHttpError(400, { 
+                message: {
+                    'detail': 'Required parameter is missing.', 
+                    'parameter': 'address'
+                }})
+            );
         }
         next();
     }
 
-    public requestParamsHasId(req: Request, next: NextFunction): void {
+    public paramsHasObjectId(req: Request, next: NextFunction): void {
         const { id } = req.params;
-        if(!id) next(createHttpError(400, 'Parameter { id } is missing'));
+
+        if(!isValidObjectId(id)) {
+            next(createHttpError(400, { 
+                message: {
+                    'detail': 'Required parameter is not a valid page ID.', 
+                    'parameter': 'id'
+                }
+            }));
+        }
+
         next();
     }
 }
