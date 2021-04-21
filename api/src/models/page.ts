@@ -13,6 +13,7 @@ export interface IPageModel extends Model<IPage> {
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
     getAllPages(pageIds: string[]): Promise<IPage[]>
+    getAllDomainPages(domain: string): Promise<IPage[]>
     findOrCreate(url: URL): Promise<IPage>
 }
 
@@ -77,10 +78,17 @@ PageSchema.statics.getAllPages = async function(pageIds: string[]) {
     try {
         const pages = await Promise.all(pageIds.map(async (page) => {
             return await Page.findOne({_id: page});
-
         }));
-
         return pages;
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+PageSchema.statics.getAllDomainPages = async function(address: string) {
+    try { 
+        const url = new URL(address);
+        return await Page.find({domain: url.hostname});
     } catch (error) {
         throw createHttpError(400);
     }
