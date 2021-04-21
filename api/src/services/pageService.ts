@@ -14,7 +14,10 @@ export default class PageService {
     // Change from any to request. -------------------------------------------
     public async createPage(req: any): Promise<IPage> {
         try {
-            const foundPage = await Page.findOne({address: req.body.address});
+            const url = new URL(req.body.address);
+
+            const foundPage = await Page.findOne({address: url.href});
+
             if(foundPage){
                 const user = await User.findOne({email: req.user.email});
                 if (user){
@@ -26,7 +29,9 @@ export default class PageService {
                 }
                 return foundPage;
             }
-            const newPage = await Page.insert(new URL(req.body.address));
+
+            const newPage = await Page.insert(url);
+            
             const user = await User.findOne({email: req.user.email});
             if (user){
                 user.pageIds.push(newPage.id);
@@ -43,7 +48,6 @@ export default class PageService {
  
     public async getDomainPages(req: any): Promise<IPage[]> {
         try {
-            console.log(req.user.email);
             const user = await User.findOne({email: req.user.email});
             if(user) { 
                 if(req.body.address) {
@@ -68,6 +72,7 @@ export default class PageService {
             }
 
             const page = await Page.findOrCreate(new URL(req.body.address));
+            console.log(page);
             
             await User.updatePageId(user, req.params.id, page.id);
 
@@ -89,4 +94,23 @@ export default class PageService {
         });
     }
 
+    public async deletePage(req: any): Promise<void> {
+        try {
+            const user = await User.findOne({email: req.user.email});
+        
+            if (!user) {
+                throw createHttpError(404, 'User not found');
+            }
+            const url = new URL(req.body.address);
+            await User.deletePageId(user, url.href);
+
+        } catch (error) {
+            console.log('error in service: ', error);
+
+            if(error.code === 'ERR_INVALID_URL') {
+                throw createHttpError(400, `${error.input} is not a valid address.`);
+            }
+            throw createHttpError(400);
+        }
+    }
 }
