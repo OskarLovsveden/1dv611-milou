@@ -35,7 +35,6 @@ export default class PageRouter implements IRouter {
                 
         this.expressRouter.delete('/:id',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
-            (req, res, next) => this.middleware.bodyHasAddress(req, next),
             (req, res, next) => this.controller.delete(req, res, next)
         );
     }
