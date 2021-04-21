@@ -32,8 +32,8 @@ export default class PageController {
 
     public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const domainInfo = await this.service.deletePage(req);
-            res.status(200).json(domainInfo);
+            await this.service.deletePage(req);
+            res.status(200).json({message: 'Page deleted from user'});
         } catch (error) {
             next(error);
         }
