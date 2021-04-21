@@ -17,7 +17,7 @@ export default class PageService {
             const url = new URL(req.body.address);
 
             const foundPage = await Page.findOne({address: url.href});
-            
+
             if(foundPage){
                 const user = await User.findOne({email: req.user.email});
                 if (user){
@@ -49,7 +49,6 @@ export default class PageService {
  
     public async getDomainPages(req: any): Promise<IPage[]> {
         try {
-            console.log(req.user.email);
             const user = await User.findOne({email: req.user.email});
             if(user) {  
                 return await Page.getAllPages(user.pageIds);
@@ -69,8 +68,29 @@ export default class PageService {
             }
 
             const page = await Page.findOrCreate(new URL(req.body.address));
+            console.log(page);
             
             await User.updatePageId(user, req.params.id, page.id);
+
+        } catch (error) {
+            console.log('error in service: ', error);
+
+            if(error.code === 'ERR_INVALID_URL') {
+                throw createHttpError(400, `${error.input} is not a valid address.`);
+            }
+            throw createHttpError(400);
+        }
+    }
+
+    public async deletePage(req: any): Promise<void> {
+        try {
+            const user = await User.findOne({email: req.user.email});
+        
+            if (!user) {
+                throw createHttpError(404, 'User not found');
+            }
+            const url = new URL(req.body.address);
+            await User.deletePageId(user, url.href);
 
         } catch (error) {
             console.log('error in service: ', error);
