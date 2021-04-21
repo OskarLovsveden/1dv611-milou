@@ -14,7 +14,7 @@ export interface IUser extends Document {
 export interface IUserModel extends Model<IUser> {
     authenticate(email: string, password: string): Promise<IUser>,
     updatePageId(user: IUser, currentId: string, newId: string): Promise<void>
-    deletePageId(user: IUser, url: string): Promise<void>
+    deletePageId(user: IUser, currentId: string): Promise<void>
 }
 
 export const schema = new Schema({
@@ -66,13 +66,14 @@ schema.statics.updatePageId = async function(user: IUser, currentId: string, new
     }
 };
 
-schema.statics.deletePageId = async function(user: IUser, url: string): Promise<void> {
+schema.statics.deletePageId = async function(user: IUser, currentId: string): Promise<void> {
     if(user) {
-        const foundPage = await Page.findOne({address: url});
+
+        const foundPage = await Page.findOne({_id: currentId});
 
         if(foundPage){
-            const newIds = user.pageIds.filter(id => id !== foundPage.id);
-            await User.updateOne({_id: user.id}, {pageIds: newIds});
+            const filteredIds = user.pageIds.filter(id => id !== foundPage.id);
+            await User.updateOne({_id: user.id}, {pageIds: filteredIds});
         }
     }
 };
