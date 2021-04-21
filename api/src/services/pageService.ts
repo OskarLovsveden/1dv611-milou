@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import Page, { IPage } from '../models/page';
+import Page, { IPage, IPageModel } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
 
@@ -14,34 +14,25 @@ export default class PageService {
     // Change from any to request. -------------------------------------------
     public async createPage(req: any): Promise<IPage> {
         try {
-            console.log(req.body.address);
             const foundPage = await Page.findOne({address: req.body.address});
-
-            console.log(foundPage);
             if(foundPage){
-                console.log('skapa inte ny');
                 const user = await User.findOne({email: req.user.email});
                 if (user){
+                    console.log(user.pageIds.includes(foundPage.id), 'url-check');
                     if(!user.pageIds.includes(foundPage.id)){
                         user.pageIds.push(foundPage.id);
-                        await user.save();
+                        await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
                     }
                 }
                 return foundPage;
-            } 
-                
-            console.log('SKapa ny');
+            }
             const newPage = await Page.insert(new URL(req.body.address));
-            
-            // Change to req.user.email or use jwt token -------------------------------------------------------
             const user = await User.findOne({email: req.user.email});
             if (user){
                 user.pageIds.push(newPage.id);
-                await user.save();
+                await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
             }
             return newPage;
-            
-            
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
@@ -54,8 +45,13 @@ export default class PageService {
         try {
             console.log(req.user.email);
             const user = await User.findOne({email: req.user.email});
-            if(user) {  
-                return await Page.getAllPages(user.pageIds);
+            if(user) { 
+                if(req.body.address) {
+                    const domainPages = await Page.getAllDomainPages(req.body.address);
+                    return this.sortAlphabetically(domainPages, 'path');
+                }
+                const allPages = await Page.getAllPages(user.pageIds);
+                return this.sortAlphabetically(allPages, 'domain');
             }
             throw createHttpError(404);
         } catch (error) {
@@ -84,4 +80,13 @@ export default class PageService {
             throw createHttpError(400);
         }
     }
+
+    private sortAlphabetically(address: IPage[], sortType: string) {
+        return address.sort((a, b) => {
+            if (a[sortType as keyof IPage] < b[sortType as keyof IPage]) return -1;
+            else if (a[sortType as keyof IPage] > b[sortType as keyof IPage]) return 1;
+            return 0;
+        });
+    }
+
 }
