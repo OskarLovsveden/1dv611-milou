@@ -2,6 +2,7 @@ import mongoose, { Document, Model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import createHttpError from 'http-errors';
+import Page from './page';
 const { isEmail } = validator;
 
 export interface IUser extends Document {
@@ -13,6 +14,7 @@ export interface IUser extends Document {
 export interface IUserModel extends Model<IUser> {
     authenticate(email: string, password: string): Promise<IUser>,
     updatePageId(user: IUser, currentId: string, newId: string): Promise<void>
+    deletePageId(user: IUser, url: string): Promise<void>
 }
 
 export const schema = new Schema({
@@ -61,6 +63,17 @@ schema.statics.updatePageId = async function(user: IUser, currentId: string, new
         });
 
         await User.updateOne({_id: user.id}, {pageIds: newIds});
+    }
+};
+
+schema.statics.deletePageId = async function(user: IUser, url: string): Promise<void> {
+    if(user) {
+        const foundPage = await Page.findOne({address: url});
+
+        if(foundPage){
+            const newIds = user.pageIds.filter(id => id !== foundPage.id);
+            await User.updateOne({_id: user.id}, {pageIds: newIds});
+        }
     }
 };
 

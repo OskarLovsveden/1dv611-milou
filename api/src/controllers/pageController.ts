@@ -29,4 +29,13 @@ export default class PageController {
             next(error);
         }
     }
+
+    public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const domainInfo = await this.service.deletePage(req);
+            res.status(200).json(domainInfo);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
