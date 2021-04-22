@@ -59,9 +59,6 @@ PageSchema.statics.insert = async function(url: URL) {
         const existingPage = await Page.findOne({address: href});
 
         if (existingPage) {
-            console.log(existingPage);
-
-            console.log('hahaha');
             return existingPage;
         }
         return await Page.create({
@@ -110,10 +107,7 @@ PageSchema.statics.findOrCreate = async function(url: URL) {
             upsert: true, 
             new: true
         }, (err: any, page: IPage) => {
-            if (err) {
-                console.log('Origin: Page.findOneAndUpdate');
-                console.log(err);
-            }
+            if (err) {/* empty */}
             return page;
         });
 

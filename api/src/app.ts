@@ -9,7 +9,6 @@ const main = async () => {
         server.run();
     } catch (error) {
         console.error(error);
-        console.log('test');
     }
 };
 

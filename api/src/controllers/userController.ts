@@ -12,13 +12,10 @@ export default class UserController {
             
         } catch (error) {
             if (error.code === 11000) {
-            // Duplicated keys.
+                // Duplicated keys.
                 error = createHttpError(409, 'This email is already registered');
             } else if (error.name === 'ValidationError') {
-            // Validation error(s).
-                console.log('============');
-                console.log(error.message);
-                console.log('============');
+                // Validation error(s).
                 error = createHttpError(400, error.message);
             }
             next(error);
