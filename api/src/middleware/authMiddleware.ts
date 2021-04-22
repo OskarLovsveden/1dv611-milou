@@ -42,7 +42,6 @@ export default class AuthMiddleware {
             const payload = jwt.verify(authorization[1], publicKey);
 
             req.user = payload;
-            console.log(payload);
             next();
         } catch (error) {
             next(createHttpError(403));

@@ -21,7 +21,6 @@ export default class PageService {
             if(foundPage){
                 const user = await User.findOne({email: req.user.email});
                 if (user){
-                    console.log(user.pageIds.includes(foundPage.id), 'url-check');
                     if(!user.pageIds.includes(foundPage.id)){
                         user.pageIds.push(foundPage.id);
                         await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
@@ -62,7 +61,6 @@ export default class PageService {
             throw createHttpError(400);
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
-                console.log(error);
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
             throw createHttpError(400);
@@ -78,13 +76,9 @@ export default class PageService {
             }
 
             const page = await Page.findOrCreate(new URL(req.body.address));
-            console.log(page);
-            
             await User.updatePageId(user, req.params.id, page.id);
 
         } catch (error) {
-            console.log('error in service: ', error);
-
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
@@ -111,8 +105,6 @@ export default class PageService {
             await User.deletePageId(user, req.params.id);
 
         } catch (error) {
-            console.log('error in service: ', error);
-
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }

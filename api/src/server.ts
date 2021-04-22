@@ -20,7 +20,6 @@ export default class Server {
 
     private errorHandler(): void {
         this.app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
-            console.log(err);
             res
                 .status(err.status)
                 .json({
