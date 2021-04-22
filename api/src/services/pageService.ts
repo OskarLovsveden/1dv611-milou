@@ -53,7 +53,7 @@ export default class PageService {
             if(user) { 
                 if(req.body.address) {
                     const url = new URL(req.body.address);
-                    const domainPages = await Page.getAllDomainPages(url.href);
+                    const domainPages = await Page.getAllDomainPages(url.href, user.pageIds);
                     return this.sortAlphabetically(domainPages, 'path');
                 }
                 const allPages = await Page.getAllPages(user.pageIds);
