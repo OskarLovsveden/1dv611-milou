@@ -16,6 +16,21 @@ export default class GPSIRouter implements IRouter {
     }
 
     initializeRoutes(): void {
+        /**
+         * @swagger
+         * /measure:
+         *   get:
+         *     summary: Single GPSI reading.
+         *     tags:
+         *       - gpsi
+         *     description: Get a reading with GPSI with a specific page.
+         *     operationId: getPages
+         *     responses:
+         *       200:
+         *         description: Returns an JSON object of GPSI readings.
+         *       401:
+         *         description: Unauthorized.
+         */
         this.expressRouter.get('/measure', 
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.requestHasAddresses(req, next),

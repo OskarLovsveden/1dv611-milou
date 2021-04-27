@@ -1,0 +1,16 @@
+{
+    "components": {
+        "schemas": {
+            "page": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
