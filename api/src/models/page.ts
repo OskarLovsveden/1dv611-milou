@@ -83,11 +83,23 @@ PageSchema.statics.getAllPages = async function(pageIds: string[]) {
 };
 PageSchema.statics.getAllDomainPages = async function(address: string, pageIds: string[]) {
     try { 
-        const pages = await Promise.all(pageIds.map(async (page) => {
-            return await Page.findOne({_id: page});
-        })); // try to find specific domain of the pages
+        const pages: IPage[] = [];
+        for (const pageId of pageIds) {
+            const verifiedList = await Page.findOne({_id: pageId});
+            if(verifiedList) {
+                pages.push(verifiedList);
+            }
+        }
+
         const url = new URL(address);
-        return await Page.find({domain: url.hostname});
+
+        if(pages) {
+            return pages.filter((page: IPage) => {
+                return page.domain === url.hostname;
+            }).map((page: IPage) => {
+                return page;
+            });
+        }
     } catch (error) {
         throw createHttpError(400);
     }

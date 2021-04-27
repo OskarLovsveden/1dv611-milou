@@ -50,8 +50,9 @@ export default class PageService {
             const user = await User.findOne({email: req.user.email});
             
             if(user) { 
-                if(req.body.address) {
-                    const url = new URL(req.body.address);
+                if(req.query.address) {
+                    const url = new URL(req.query.address);
+                    const allPages = await Page.getAllPages(user.pageIds);
                     const domainPages = await Page.getAllDomainPages(url.href, user.pageIds);
                     return this.sortAlphabetically(domainPages, 'path');
                 }
