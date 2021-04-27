@@ -75,6 +75,10 @@ export default class PageService {
                 throw createHttpError(404, 'User not found');
             }
 
+            if (!user.pageIds.includes(req.params.id)) {
+                throw createHttpError(403, 'Forbidden');
+            }
+
             const page = await Page.findOrCreate(new URL(req.body.address));
             await User.updatePageId(user, req.params.id, page.id);
 
@@ -82,7 +86,7 @@ export default class PageService {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
-            throw createHttpError(400);
+            throw createHttpError(400, 'here');
         }
     }
 
@@ -97,9 +101,13 @@ export default class PageService {
     public async deletePage(req: any): Promise<void> {
         try {
             const user = await User.findOne({email: req.user.email});
-        
+
             if (!user) {
                 throw createHttpError(404, 'User not found');
+            }
+
+            if (!user.pageIds.includes(req.params.id)) {
+                throw createHttpError(403, 'Forbidden');
             }
 
             await User.deletePageId(user, req.params.id);
