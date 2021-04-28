@@ -21,9 +21,9 @@ export default class PageController {
         }
     }
     
-    public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async getPages(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const domainInfo = await this.service.getDomainPages(req);
+            const domainInfo = await this.service.getPages(req);
             res.status(200).json(domainInfo);
         } catch (error) {
             next(error);

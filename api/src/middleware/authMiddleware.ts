@@ -7,7 +7,11 @@ import { IPayload } from '../interfaces/IPayload';
 export default class AuthMiddleware {
     public requestIncludesEmail(req: Request, next: NextFunction): void {
         if (!req.body.email) {
-            next(createHttpError(400, 'Email needs to be provided'));
+            next(createHttpError(400, { 
+                message: {
+                    detail: 'Email needs to be provided'
+                }
+            }));
             return;
         }
 
@@ -16,7 +20,11 @@ export default class AuthMiddleware {
 
     public requestIncludesPassword(req: Request, next: NextFunction): void {
         if (!req.body.password) {
-            next(createHttpError(400, 'password needs to be provided'));
+            next(createHttpError(400, { 
+                message: {
+                    detail: 'password needs to be provided'
+                }
+            }));
             return;
         }
 
@@ -32,7 +40,11 @@ export default class AuthMiddleware {
         const authorization = req.headers.authorization.split(' ');
 
         if (authorization[0] !== 'Bearer') {
-            next(createHttpError(401));
+            next(createHttpError(401, { 
+                message: {
+                    detail: 'Access token missing'
+                }
+            }));
             return;
         }
 
@@ -41,7 +53,11 @@ export default class AuthMiddleware {
             req.user = jwt.verify(authorization[1], publicKey) as IPayload;
             next();
         } catch (error) {
-            next(createHttpError(403));
+            next(createHttpError(403, { 
+                message: {
+                    detail: 'Invalid access token'
+                }
+            }));
         }
     }
 

@@ -104,7 +104,7 @@ export default class PageRouter implements IRouter {
          */
         this.expressRouter.get('/', 
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
-            (req, res, next) => this.controller.getAll(req, res, next)
+            (req, res, next) => this.controller.getPages(req, res, next)
         );
               
         /**

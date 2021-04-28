@@ -8,8 +8,7 @@ export default class PageMiddleware {
         if(!address) {
             next(createHttpError(400, { 
                 message: {
-                    'detail': 'Required parameter is missing.', 
-                    'parameter': 'address'
+                    detail: 'Required parameter is missing.'
                 }})
             );
         }
@@ -22,8 +21,8 @@ export default class PageMiddleware {
         if(!isValidObjectId(id)) {
             next(createHttpError(400, { 
                 message: {
-                    'detail': 'Required parameter is not a valid page ID.', 
-                    'parameter': 'id'
+                    detail: 'Required parameter is not a valid page ID.', 
+                    id: id
                 }
             }));
         }

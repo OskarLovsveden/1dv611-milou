@@ -39,13 +39,18 @@ export default class PageService {
             return newPage;
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
-                throw createHttpError(400, `${error.input} is not a valid address.`);
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${error.input} is not a valid address.`, 
+                        address: error.input
+                    }
+                });
             }
             throw error;
         }
     }
  
-    public async getDomainPages(req: Request): Promise<IPage[]> {
+    public async getPages(req: Request): Promise<IPage[]> {
         try {
             const user = await User.findOne({email: req?.user?.email});
             
@@ -61,7 +66,12 @@ export default class PageService {
             throw createHttpError(400);
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
-                throw createHttpError(400, `${error.input} is not a valid address.`);
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${error.input} is not a valid address.`, 
+                        address: error.input
+                    }
+                });
             }
             throw error;
         }
@@ -83,8 +93,14 @@ export default class PageService {
             await User.updatePageId(user, req.params.id, page.id);
 
         } catch (error) {
+            console.log(error);
             if(error.code === 'ERR_INVALID_URL') {
-                throw createHttpError(400, `${error.input} is not a valid address.`);
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${error.input} is not a valid address.`, 
+                        address: error.input
+                    }
+                });
             }
             throw error;
         }

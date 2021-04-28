@@ -44,14 +44,16 @@ schema.pre<IUser>('save', async function () {
     this.password = await bcrypt.hash(this.password, 10);
 });
 
-schema.statics.authenticate = async function(email: string, password: string): Promise<IUser> {
+schema.statics.authenticate = async function(email: string, password: string): Promise<boolean> {
     const user = await this.findOne({email});
+    
+    const isNotAuthenticated = (!user || !(await bcrypt.compare(password, user.password)));
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-        throw createHttpError(401, 'Invalid email or password');
+    if(!isNotAuthenticated) {
+        return isNotAuthenticated;
     }
-
-    return user;
+    
+    throw new Error('Invalid email or password');
 };
 
 schema.statics.updatePageId = async function(user: IUser, currentId: string, newId: string): Promise<void> {

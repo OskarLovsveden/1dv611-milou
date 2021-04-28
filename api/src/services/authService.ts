@@ -3,14 +3,24 @@ import { IPayload } from '../interfaces/IPayload';
 import User from '../models/user';
 import * as jwt from 'jsonwebtoken';
 import fs from 'fs';
+import createHttpError from 'http-errors';
 
 export default class AuthService {
 
     public async authenticateUser(req: Request): Promise<string> {
-        const { email, password } = req.body;
-        await User.authenticate(email, password);
-        
-        return await this.createToken({email});
+        try {
+            const { email, password } = req.body;
+            await User.authenticate(email, password);
+            
+            return await this.createToken({email});
+
+        } catch (error) {
+            throw createHttpError(401, { 
+                message: {
+                    detail: error.message
+                }
+            });
+        }
     }
 
     private async createToken(payload: IPayload): Promise<string> {

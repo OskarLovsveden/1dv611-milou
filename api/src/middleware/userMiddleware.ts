@@ -6,11 +6,19 @@ export default class UserMiddleware {
         const { email, password } = req.body;
         
         if(!email) {
-            next(createHttpError(400, 'Please provide an email'));
+            next(createHttpError(400, { 
+                message: {
+                    detail: 'Please provide an email'
+                }
+            }));
         }
         
         if(!password) {
-            next(createHttpError(400, 'Please provide a password'));
+            next(createHttpError(400, { 
+                message: {
+                    detail: 'Please provide a password'
+                }
+            }));
         }
         next();
     }
