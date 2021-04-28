@@ -1,5 +1,6 @@
 import { connectDB } from './config/mongoose';
 import Server from './server';
+
 const main = async () => {
     try {
         await connectDB();

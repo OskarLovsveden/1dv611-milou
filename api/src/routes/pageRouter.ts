@@ -8,7 +8,8 @@ export default class PageRouter implements IRouter {
     private controller: PageController = new PageController()
     private middleware: PageMiddleware = new PageMiddleware()
     private authMiddleware: AuthMiddleware = new AuthMiddleware()
-    expressRouter: express.Router = express.Router()
+
+    public router: express.Router = express.Router()
 
     constructor() {
         this.initializeRoutes();
@@ -42,7 +43,7 @@ export default class PageRouter implements IRouter {
          *       401:
          *         description: Unauthorized.
          */
-        this.expressRouter.post('/',
+        this.router.post('/',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.bodyHasAddress(req, next),
             (req, res, next) => this.controller.create(req, res, next)
@@ -80,7 +81,7 @@ export default class PageRouter implements IRouter {
          *       401:
          *         description: Unauthorized.
          */
-        this.expressRouter.put('/:id',
+        this.router.put('/:id',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.paramsHasObjectId(req, next),
             (req, res, next) => this.middleware.bodyHasAddress(req, next),
@@ -107,7 +108,7 @@ export default class PageRouter implements IRouter {
          *       401:
          *         description: Unauthorized.
          */
-        this.expressRouter.get('/', 
+        this.router.get('/', 
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.controller.getPages(req, res, next)
         );
@@ -134,7 +135,7 @@ export default class PageRouter implements IRouter {
          *       401:
          *         description: Unauthorized.
          */
-        this.expressRouter.delete('/:id',
+        this.router.delete('/:id',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.controller.delete(req, res, next)
         );

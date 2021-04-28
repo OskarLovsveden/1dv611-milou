@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import IndexRouter from './routes/indexRouter';
 import swaggerUI from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import { HttpError } from 'http-errors';
 // import * as swaggerDoc from './swagger.json';
 
 export default class Server {
@@ -46,13 +47,12 @@ export default class Server {
             ]
         };
 
-        const swaggerDocs = await swaggerJSDoc(options);
+        const swaggerDocs = swaggerJSDoc(options);
         this.app.use('/api-documentation', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-        
     }
 
     private errorHandler(): void {
-        this.app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
+        this.app.use(function (err: HttpError, req: Request, res: Response, next: NextFunction) {
             res
                 .status(err.status)
                 .json({

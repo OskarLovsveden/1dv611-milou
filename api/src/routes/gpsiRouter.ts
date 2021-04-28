@@ -4,12 +4,12 @@ import GPSIController from '../controllers/gpsiController';
 import AuthMiddleware from '../middleware/authMiddleware';
 import GPSIMiddleware from '../middleware/gpsiMiddleware';
 
-
 export default class GPSIRouter implements IRouter {
-    expressRouter: express.Router = express.Router()
     private controller: GPSIController = new GPSIController()
     private middleware: GPSIMiddleware = new GPSIMiddleware()
     private authMiddleware: AuthMiddleware = new AuthMiddleware()
+    
+    public router: express.Router = express.Router()
 
     constructor() {
         this.initializeRoutes();
@@ -31,7 +31,7 @@ export default class GPSIRouter implements IRouter {
          *       401:
          *         description: Unauthorized.
          */
-        this.expressRouter.get('/measure', 
+        this.router.get('/measure', 
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.requestHasAddresses(req, next),
             (req, res, next) => this.controller.getMeasurement(req, res, next),

@@ -6,7 +6,8 @@ import AuthController from '../controllers/authController';
 export default class AuthRouter implements IRouter {
     private controller: AuthController = new AuthController()
     private middleware: AuthMiddleware = new AuthMiddleware()
-    expressRouter: express.Router = express.Router()
+    
+    public router: express.Router = express.Router()
 
     constructor() {
         this.initializeRoutes();
@@ -44,7 +45,7 @@ export default class AuthRouter implements IRouter {
          *       401:
          *         description: Invalid email or password.
          */
-        this.expressRouter.post('/login', 
+        this.router.post('/login', 
             (req, res, next) => this.middleware.requestIncludesEmail(req, next),
             (req, res, next) => this.middleware.requestIncludesPassword(req, next),
             (req, res, next) => this.controller.login(req, res, next)
