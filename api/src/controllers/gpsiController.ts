@@ -3,7 +3,8 @@ import GPSIService from '../services/gpsiService';
 
 export default class GPSIController {
     private service: GPSIService = new GPSIService()
-    public async getMeasurement(req: Request, res: Response, next: NextFunction) {
+
+    public async getMeasurement(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const data = await this.service.measurePages(req);
 

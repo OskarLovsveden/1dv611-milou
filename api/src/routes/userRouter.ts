@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import UserController from '../controllers/userController';
-import { IRouter } from '../interfaces/IRouter';
 import UserMiddleware from '../middleware/userMiddleware';
+import { IRouter } from '../interfaces/IRouter';
 
 export default class UserRouter implements IRouter {
-    expressRouter: Router = Router()
-    controller: UserController = new UserController()
-    middleware: UserMiddleware = new UserMiddleware()
+    private controller: UserController = new UserController()
+    private middleware: UserMiddleware = new UserMiddleware()
+    
+    public router: Router = Router()
     
     constructor() {
         this.initializeRoutes();
@@ -44,7 +45,7 @@ export default class UserRouter implements IRouter {
          *       409:
          *         description: This email is already registered.
          */
-        this.expressRouter.post('/',
+        this.router.post('/',
             (req, res, next) => this.middleware.validateRequestData(req, next), 
             (req, res, next) => this.controller.register(req, res, next)
         );

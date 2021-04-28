@@ -1,7 +1,6 @@
-import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { URL } from 'url';
 import { schema } from './user';
+// import { URL } from 'url';
 
 export interface ICategory {
     id: string
@@ -22,11 +21,9 @@ export interface IMeasurement extends Document {
     scores: IScore[]
 }
 
-
 export interface IMeasurementModel extends Model<IMeasurement> {
     test(id: string): Promise<void>
 }
-
 
 export const CategorySchema = new Schema({
     id: { type: String },
@@ -54,8 +51,6 @@ export const MeasurementSchema = new Schema({
 schema.statics.test = async function(id: string): Promise<void> {
     console.log('test');
 };
-
-
 
 const Measurement: IMeasurementModel = mongoose.model<IMeasurement, IMeasurementModel>('Measurement', MeasurementSchema);
 

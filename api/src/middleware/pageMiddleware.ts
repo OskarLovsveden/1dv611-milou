@@ -8,7 +8,8 @@ export default class PageMiddleware {
         if(!address) {
             next(createHttpError(400, { 
                 message: {
-                    detail: 'Required parameter is missing.'
+                    detail: 'Required parameter is missing.',
+                    parameter: 'address'
                 }})
             );
         }

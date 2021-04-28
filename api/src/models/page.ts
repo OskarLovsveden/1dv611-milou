@@ -80,6 +80,7 @@ PageSchema.statics.getAllPages = async function(pageIds: string[]) {
         throw createHttpError(400);
     }
 };
+
 PageSchema.statics.getAllDomainPages = async function(address: string, pageIds: string[]) {
     try { 
         const pages: IPage[] = [];
@@ -117,9 +118,6 @@ PageSchema.statics.findOrCreate = async function(url: URL) {
         return await Page.findOneAndUpdate(address, address, {
             upsert: true, 
             new: true
-        }, (err: any, page: IPage) => {
-            if (err) {/* empty */}
-            return page;
         });
 
     } catch (error) {

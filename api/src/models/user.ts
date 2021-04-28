@@ -1,8 +1,8 @@
 import mongoose, { Document, Model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import createHttpError from 'http-errors';
 import Page from './page';
+
 const { isEmail } = validator;
 
 export interface IUser extends Document {
@@ -44,16 +44,12 @@ schema.pre<IUser>('save', async function () {
     this.password = await bcrypt.hash(this.password, 10);
 });
 
-schema.statics.authenticate = async function(email: string, password: string): Promise<boolean> {
-    const user = await this.findOne({email});
-    
-    const isNotAuthenticated = (!user || !(await bcrypt.compare(password, user.password)));
+schema.statics.authenticate = async function(email: string, password: string): Promise<void> {
+    const user = await this.findOne({ email });
 
-    if(!isNotAuthenticated) {
-        return isNotAuthenticated;
+    if(!user || !(await bcrypt.compare(password, user.password))) {
+        throw new Error('Invalid email or password');
     }
-    
-    throw new Error('Invalid email or password');
 };
 
 schema.statics.updatePageId = async function(user: IUser, currentId: string, newId: string): Promise<void> {

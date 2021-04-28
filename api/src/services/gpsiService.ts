@@ -2,7 +2,7 @@ import { Request } from 'express';
 import fetch from 'node-fetch';
 
 export default class GPSIService {
-    public async measurePages(req: Request) {
+    public async measurePages(req: Request) : Promise<any> {
         try {
             const { addresses } = req.body;
             const address = encodeURI(addresses[0]);

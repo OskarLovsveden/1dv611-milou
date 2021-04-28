@@ -1,5 +1,6 @@
 import { Router } from 'express';
+
 export interface IRouter {
-    expressRouter: Router
+    router: Router
     initializeRoutes: () => void
 }

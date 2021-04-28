@@ -25,9 +25,7 @@ export default class AuthService {
 
     private async createToken(payload: IPayload): Promise<string> {
         const privateKey = await fs.promises.readFile('./private.pem', 'utf8');
-
         const signOptions: jwt.SignOptions = { algorithm: 'RS256', expiresIn: '1h' };
-
         return jwt.sign(payload, privateKey, signOptions);
     }
 }
