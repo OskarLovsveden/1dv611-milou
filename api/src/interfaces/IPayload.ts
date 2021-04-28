@@ -1,3 +1,3 @@
-export default interface Payload {
+export interface IPayload {
     email: string;
-};
+}

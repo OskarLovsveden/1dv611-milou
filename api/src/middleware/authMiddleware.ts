@@ -2,7 +2,7 @@ import { NextFunction, Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import fs from 'fs';
 import createHttpError from 'http-errors';
-import IPayload from '../interfaces/IPayload';
+import { IPayload } from '../interfaces/IPayload';
 
 export default class AuthMiddleware {
     public requestIncludesEmail(req: Request, next: NextFunction): void {
@@ -31,8 +31,7 @@ export default class AuthMiddleware {
         next();
     }
 
-    // Find soulution to add variables to request object
-    public async isAuthenticated(req: any, next: NextFunction): Promise<void> {
+    public async isAuthenticated(req: Request, next: NextFunction): Promise<void> {
         if (!req.headers.authorization) {
             next(createHttpError(401));
             return;
@@ -50,10 +49,8 @@ export default class AuthMiddleware {
         }
 
         try {
-            const publicKey = await fs.promises.readFile('./public.pem'); 
-            const payload = jwt.verify(authorization[1], publicKey);
-
-            req.user = payload;
+            const publicKey = await fs.promises.readFile('./public.pem');
+            req.user = jwt.verify(authorization[1], publicKey) as IPayload;
             next();
         } catch (error) {
             next(createHttpError(403, { 

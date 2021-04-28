@@ -22,7 +22,7 @@ export default class GPSIService {
                 } 
             };
         } catch (error) {
-            console.log(error);
+            throw error;
         }
     }
 }

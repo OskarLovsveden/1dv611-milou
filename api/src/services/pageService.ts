@@ -1,5 +1,6 @@
+import { Request } from 'express';
 import createHttpError from 'http-errors';
-import Page, { IPage, IPageModel } from '../models/page';
+import Page, { IPage } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
 
@@ -11,15 +12,14 @@ export interface pageData {
 
 export default class PageService {
 
-    // Change from any to request. -------------------------------------------
-    public async createPage(req: any): Promise<IPage> {
+    public async createPage(req: Request): Promise<IPage> {
         try {
             const url = new URL(req.body.address);
 
             const foundPage = await Page.findOne({address: url.href});
 
             if(foundPage){
-                const user = await User.findOne({email: req.user.email});
+                const user = await User.findOne({email: req?.user?.email});
                 if (user){
                     if(!user.pageIds.includes(foundPage.id)){
                         user.pageIds.push(foundPage.id);
@@ -31,7 +31,7 @@ export default class PageService {
 
             const newPage = await Page.insert(url);
             
-            const user = await User.findOne({email: req.user.email});
+            const user = await User.findOne({email: req?.user?.email});
             if (user){
                 user.pageIds.push(newPage.id);
                 await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
@@ -46,17 +46,17 @@ export default class PageService {
                     }
                 });
             }
-            throw createHttpError(400);
+            throw error;
         }
     }
  
-    public async getPages(req: any): Promise<IPage[]> {
+    public async getPages(req: Request): Promise<IPage[]> {
         try {
-            const user = await User.findOne({email: req.user.email});
+            const user = await User.findOne({email: req?.user?.email});
             
             if(user) { 
                 if(req.query.address) {
-                    const url = new URL(req.query.address);
+                    const url = new URL(req.query.address as string);
                     const domainPages = await Page.getAllDomainPages(url.href, user.pageIds);
                     return this.sortAlphabetically(domainPages, 'path');
                 }
@@ -73,13 +73,13 @@ export default class PageService {
                     }
                 });
             }
-            throw createHttpError(400);
+            throw error;
         }
     }
 
-    public async updatePage(req: any): Promise<void> {
+    public async updatePage(req: Request): Promise<void> {
         try {
-            const user = await User.findOne({email: req.user.email});
+            const user = await User.findOne({email: req?.user?.email});
         
             if (!user) {
                 throw createHttpError(404, 'User not found');
@@ -102,21 +102,13 @@ export default class PageService {
                     }
                 });
             }
-            throw createHttpError(400, 'here');
+            throw error;
         }
     }
 
-    private sortAlphabetically(address: IPage[], sortType: string) {
-        return address.sort((a, b) => {
-            if (a[sortType as keyof IPage] < b[sortType as keyof IPage]) return -1;
-            else if (a[sortType as keyof IPage] > b[sortType as keyof IPage]) return 1;
-            return 0;
-        });
-    }
-
-    public async deletePage(req: any): Promise<void> {
+    public async deletePage(req: Request): Promise<void> {
         try {
-            const user = await User.findOne({email: req.user.email});
+            const user = await User.findOne({email: req?.user?.email});
 
             if (!user) {
                 throw createHttpError(404, 'User not found');
@@ -132,7 +124,15 @@ export default class PageService {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
-            throw createHttpError(400);
+            throw error;
         }
+    }
+    
+    private sortAlphabetically(address: IPage[], sortType: string) {
+        return address.sort((a, b) => {
+            if (a[sortType as keyof IPage] < b[sortType as keyof IPage]) return -1;
+            else if (a[sortType as keyof IPage] > b[sortType as keyof IPage]) return 1;
+            return 0;
+        });
     }
 }
