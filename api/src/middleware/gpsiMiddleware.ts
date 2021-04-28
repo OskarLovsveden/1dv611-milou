@@ -6,7 +6,11 @@ export default class GPSIMiddleware {
         const { addresses } = req.body;
 
         if (!addresses || !Array.isArray(addresses) || addresses.length < 1) {
-            next(createHttpError(400, 'Invalid parameters, Adresses should be sent as an array'));
+            next(createHttpError(400, { 
+                message: {
+                    detail: 'Invalid parameters, Adresses should be sent as an array'
+                }
+            }));
             return;
         }
 

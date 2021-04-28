@@ -39,20 +39,24 @@ export default class PageService {
             return newPage;
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
-                throw createHttpError(400, `${error.input} is not a valid address.`);
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${error.input} is not a valid address.`, 
+                        address: error.input
+                    }
+                });
             }
             throw createHttpError(400);
         }
     }
  
-    public async getDomainPages(req: any): Promise<IPage[]> {
+    public async getPages(req: any): Promise<IPage[]> {
         try {
             const user = await User.findOne({email: req.user.email});
             
             if(user) { 
                 if(req.query.address) {
                     const url = new URL(req.query.address);
-                    const allPages = await Page.getAllPages(user.pageIds);
                     const domainPages = await Page.getAllDomainPages(url.href, user.pageIds);
                     return this.sortAlphabetically(domainPages, 'path');
                 }
@@ -62,7 +66,12 @@ export default class PageService {
             throw createHttpError(400);
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
-                throw createHttpError(400, `${error.input} is not a valid address.`);
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${error.input} is not a valid address.`, 
+                        address: error.input
+                    }
+                });
             }
             throw createHttpError(400);
         }
@@ -84,8 +93,14 @@ export default class PageService {
             await User.updatePageId(user, req.params.id, page.id);
 
         } catch (error) {
+            console.log(error);
             if(error.code === 'ERR_INVALID_URL') {
-                throw createHttpError(400, `${error.input} is not a valid address.`);
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${error.input} is not a valid address.`, 
+                        address: error.input
+                    }
+                });
             }
             throw createHttpError(400, 'here');
         }

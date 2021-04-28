@@ -1,6 +1,5 @@
 import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { truncate } from 'node:fs';
 import { URL } from 'url';
 
 export interface IPage extends Document {

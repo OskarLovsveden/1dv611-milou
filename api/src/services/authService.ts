@@ -9,10 +9,19 @@ import fs from 'fs';
 export default class AuthService {
 
     public async authenticateUser(req: Request): Promise<string> {
-        const { email, password } = req.body;
-        const user = await User.authenticate(email, password);
-        
-        return await this.createToken({email});
+        try {
+            const { email, password } = req.body;
+            await User.authenticate(email, password);
+            
+            return await this.createToken({email});
+
+        } catch (error) {
+            throw createHttpError(401, { 
+                message: {
+                    detail: error.message
+                }
+            });
+        }
     }
 
     private async createToken(payload: Payload): Promise<string> {

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/userService';
-import createHttpError from 'http-errors';
 
 export default class UserController {
     private service: UserService = new UserService();
@@ -11,13 +10,6 @@ export default class UserController {
             res.status(201).json({message: 'User created'});
             
         } catch (error) {
-            if (error.code === 11000) {
-                // Duplicated keys.
-                error = createHttpError(409, 'This email is already registered');
-            } else if (error.name === 'ValidationError') {
-                // Validation error(s).
-                error = createHttpError(400, error.message);
-            }
             next(error);
         }
     }
