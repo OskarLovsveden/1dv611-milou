@@ -94,8 +94,13 @@ export default class PageRouter implements IRouter {
          *     summary: Get a specific users pages.
          *     tags:
          *       - pages
-         *     description: Get all URLs that are in a users list.
+         *     description: Get all URLs that are in a users list, if adding query parameter, get domain specific URLs.
          *     operationId: getPages
+         *     parameters:
+         *       - name: address
+         *         in: path
+         *         description: full address in which the domain will be selected and found.
+         *         required: false
          *     responses:
          *       200:
          *         description: Returns an JSON object of pages.
