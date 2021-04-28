@@ -41,7 +41,7 @@ export default class PageService {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
-            throw createHttpError(400);
+            throw error;
         }
     }
  
@@ -63,7 +63,7 @@ export default class PageService {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
-            throw createHttpError(400);
+            throw error;
         }
     }
 
@@ -86,7 +86,7 @@ export default class PageService {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
-            throw createHttpError(400, 'here');
+            throw error;
         }
     }
 
@@ -116,7 +116,7 @@ export default class PageService {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);
             }
-            throw createHttpError(400);
+            throw error;
         }
     }
 }
