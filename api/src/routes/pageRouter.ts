@@ -30,7 +30,7 @@ export default class PageRouter implements IRouter {
          *         in: body
          *         description: address that needs to be created
          *         required: true
-         *      - name: timeInterval
+         *       - name: timeInterval
          *         in: body
          *         description: time interval for the page being created
          *         required: true

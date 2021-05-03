@@ -23,7 +23,7 @@ export default class GPSIRouter implements IRouter {
          *     summary: GPSI readings.
          *     tags:
          *       - gpsi
-         *     description: Get a reading with GPSI with a specific page.
+         *     description: Get readings with GPSI by inputting one or more addresses.
          *     operationId: getMeasurements
          *     responses:
          *       200:
