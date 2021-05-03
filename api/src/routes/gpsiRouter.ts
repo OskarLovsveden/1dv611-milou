@@ -20,7 +20,7 @@ export default class GPSIRouter implements IRouter {
          * @swagger
          * /measure:
          *   get:
-         *     summary: Single GPSI reading.
+         *     summary: GPSI readings.
          *     tags:
          *       - gpsi
          *     description: Get a reading with GPSI with a specific page.
@@ -34,7 +34,7 @@ export default class GPSIRouter implements IRouter {
         this.router.get('/measure', 
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.requestHasAddresses(req, next),
-            (req, res, next) => this.controller.getMeasurement(req, res, next),
+            (req, res, next) => this.controller.getMeasurements(req, res, next),
         );
     }
 }

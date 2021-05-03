@@ -4,7 +4,9 @@ import Page, { IPage } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
 import UserPage, { MeasureAt } from '../models/userPage';
+import { validateUrlResponse } from '../utils/urlUtilities';
 import Measurement from '../models/measurements';
+
 
 export interface pageData {
     href: string
@@ -82,6 +84,7 @@ export default class PageService {
                 throw createHttpError(403, 'Forbidden');
             }
 
+            await validateUrlResponse(req.body.address);
             const page = await Page.findOrCreate(new URL(req.body.address));
             await User.updatePageId(user, req.params.id, page.id);
 
