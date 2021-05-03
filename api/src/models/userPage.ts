@@ -1,3 +1,4 @@
+import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema} from 'mongoose';
 
 export enum MeasureAt {
@@ -13,7 +14,7 @@ export interface IUserPage extends Document {
 }
 
 export interface IUserPageModel extends Model<IUserPage> {
-    test(): void
+    findOrCreate(userId: string, pageId: string, interval: MeasureAt): Promise<IUserPage>
 }
 
 export const schema = new Schema({
@@ -28,6 +29,20 @@ export const schema = new Schema({
 }, {
     timestamps: true
 });
+
+schema.statics.findOrCreate = async function(userId: string, pageId: string, interval: MeasureAt): Promise<IUserPage> {
+    try {
+        const findCriteria = { userID: userId, addressID: pageId };
+        const create = {userID: userId, addressID: pageId, measureAt: interval};
+
+        return await UserPage.findOneAndUpdate(findCriteria,create, {
+            upsert: true, 
+            new: true
+        });
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
 
 const UserPage: IUserPageModel = mongoose.model<IUserPage, IUserPageModel>('UserPage', schema);
 

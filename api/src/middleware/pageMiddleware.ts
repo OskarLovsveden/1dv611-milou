@@ -16,6 +16,19 @@ export default class PageMiddleware {
         next();
     }
 
+    public bodyHasTestInterval(req: Request, next: NextFunction): void {
+        const { testInterval } = req.body;
+        if (!testInterval) {
+            next(createHttpError(400, {
+                message: {
+                    detail: 'Required parameter is missing.',
+                    parameter: 'testInterval'
+                }})
+            );
+        }
+        next();
+    }
+
     public paramsHasObjectId(req: Request, next: NextFunction): void {
         const { id } = req.params;
 
