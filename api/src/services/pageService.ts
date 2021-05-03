@@ -4,6 +4,9 @@ import Page, { IPage } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
 import { validateUrlResponse } from '../utils/urlUtilities';
+import UserPage from '../models/userPage';
+import Measurement from '../models/measurements';
+
 
 export interface pageData {
     href: string
@@ -17,27 +20,81 @@ export default class PageService {
         try {
             const url = new URL(req.body.address);
 
-            const foundPage = await Page.findOne({address: url.href});
-
-            if(foundPage){
-                const user = await User.findOne({email: req?.user?.email});
-                if (user){
-                    if(!user.pageIds.includes(foundPage.id)){
-                        user.pageIds.push(foundPage.id);
-                        await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
-                    }
-                }
-                return foundPage;
-            }
-
-            const newPage = await Page.insert(url);
-            
             const user = await User.findOne({email: req?.user?.email});
+            const page = await Page.findOrCreate(url);
+            const measurement = await Measurement.findOrCreate(page.id);
+            const userPage = await UserPage.findOrCreate(user?.id, page.id, );
+
+            /*  const foundPage = await Page.findOne({address: url.href});
+
+            const user = await User.findOne({email: req?.user?.email}); */
+
+            /*   if(foundPage){
+
+
+                const measurement = await Measurement.findOne({addressID: foundPage.id});
+
+                const userPage = await UserPage.create({
+                    addressID: foundPage.id,
+                    measurementID: measurement?.id,
+                    userID: user?.id,
+                    measureAt: 'tjoflöjt'
+                }); */
+                
+            /*  
+                {
+                    'domain', 
+                    'address', 
+                    'path',
+                    measurementLink: http://localhost:1337/measurements/:id    
+                } 
+                */
+            // /create
+            // shouldMeasureInstantly=true
+            // measuremntInterval[In_Days]
+                
+            /* return foundPage; */
+            /*   } else {
+                const page = await Page.insert(url);
+
+
+
+                const measurement = await Measurement.create({
+                    addressID: page.id,
+                    scores: []
+                });
+
+                const userPage = await UserPage.create({
+                    addressID: page.id,
+                    measurementID: measurement?.id,
+                    userID: user?.id,
+                    measureAt: 'tjoflöjt'
+                }); */
+            // Create Page
+            // Create measurement
+            // Create UserPage    
+            /*      } */
+
+
+
+
+            // Kolla om det ska mätas
+            
+
+            /*     if(!user.pageIds.includes(foundPage.id)){
+                    user.pageIds.push(foundPage.id);
+                    await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
+                }
+                 */
+
+            /* const newPage = await Page.insert(url); */
+            
+            /*  const user = await User.findOne({email: req?.user?.email});
             if (user){
                 user.pageIds.push(newPage.id);
                 await User.updateOne({_id: user.id}, {pageIds: user.pageIds});
             }
-            return newPage;
+            return newPage; */
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, { 

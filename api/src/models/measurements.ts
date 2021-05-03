@@ -1,3 +1,4 @@
+import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { schema } from './user';
 // import { URL } from 'url';
@@ -22,7 +23,7 @@ export interface IMeasurement extends Document {
 }
 
 export interface IMeasurementModel extends Model<IMeasurement> {
-    test(id: string): Promise<void>
+    findOrCreate(addressID: string): Promise<IMeasurement>
 }
 
 export const CategorySchema = new Schema({
@@ -41,15 +42,24 @@ export const ScoreSchema = new Schema({
 );
 
 export const MeasurementSchema = new Schema({
-    address: {
+    addressID: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     scores: [ScoreSchema]
 });
 
-schema.statics.test = async function(id: string): Promise<void> {
-    console.log('test');
+schema.statics.findOrCreate = async function(addressID: string): Promise<IMeasurement> {
+    try {
+
+        return await Measurement.findOneAndUpdate({addressID},{addressID, score: []}, {
+            upsert: true, 
+            new: true
+        });
+    } catch (error) {
+        throw createHttpError(400);
+    }
 };
 
 const Measurement: IMeasurementModel = mongoose.model<IMeasurement, IMeasurementModel>('Measurement', MeasurementSchema);
