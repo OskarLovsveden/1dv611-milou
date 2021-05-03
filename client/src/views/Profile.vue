@@ -1,7 +1,5 @@
 <template>
-  <div class="home">
-    <button @click="goToLogin()">Login</button>
-    
+  <div class="profile">    
   </div>
 </template>
 
@@ -11,11 +9,6 @@ import { Options, Vue } from 'vue-class-component';
 @Options({
   components: {
   },
-  methods: {
-    goToLogin() {
-      this.$router.push("/login")
-    }
-  }
 })
 export default class Home extends Vue {}
 </script>
