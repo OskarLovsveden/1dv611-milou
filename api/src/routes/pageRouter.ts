@@ -30,6 +30,10 @@ export default class PageRouter implements IRouter {
          *         in: body
          *         description: address that needs to be created
          *         required: true
+         *      - name: timeInterval
+         *         in: body
+         *         description: time interval for the page being created
+         *         required: true
          *     requestBody:
          *       content:
          *         application/json:
@@ -46,6 +50,7 @@ export default class PageRouter implements IRouter {
         this.router.post('/',
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.bodyHasAddress(req, next),
+            (req, res, next) => this.middleware.bodyHasTestInterval(req, next),
             (req, res, next) => this.controller.create(req, res, next)
         );
         
