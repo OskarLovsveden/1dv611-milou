@@ -24,7 +24,7 @@ export default class GPSIRouter implements IRouter {
          *     tags:
          *       - gpsi
          *     description: Get a reading with GPSI with a specific page.
-         *     operationId: getPages
+         *     operationId: getMeasurements
          *     responses:
          *       200:
          *         description: Returns an JSON object of GPSI readings.
