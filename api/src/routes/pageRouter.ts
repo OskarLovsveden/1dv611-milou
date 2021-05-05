@@ -30,9 +30,13 @@ export default class PageRouter implements IRouter {
          *         in: body
          *         description: address that needs to be created
          *         required: true
-         *      - name: timeInterval
+         *       - name: timeInterval
          *         in: body
          *         description: time interval for the page being created
+         *         required: true
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
          *         required: true
          *     requestBody:
          *       content:
@@ -73,6 +77,10 @@ export default class PageRouter implements IRouter {
          *         in: body
          *         description: address that will replace the current address
          *         required: true
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
+         *         required: true
          *     requestBody:
          *       content:
          *         application/json:
@@ -107,6 +115,10 @@ export default class PageRouter implements IRouter {
          *         in: path
          *         description: full address in which the domain will be selected and found.
          *         required: false
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
+         *         required: true
          *     responses:
          *       200:
          *         description: Returns an JSON object of pages.
@@ -132,9 +144,13 @@ export default class PageRouter implements IRouter {
          *         in: path
          *         description: Id of the address that needs to be updated
          *         required: true
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
+         *         required: true
          *     responses:
          *       200:
-         *         description: Page deleted from user.
+         *         description: Page deleted from user. 
          *       400:
          *         description: id is not a valid page.
          *       401:

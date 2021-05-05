@@ -11,5 +11,15 @@ export default class AuthController {
         } catch (error) {
             next(error);
         }
-    } 
+    }
+
+    public async isAuthenticated(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            res.status(200).json({
+                authenticatedUser: req.user?.email
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
