@@ -6,7 +6,6 @@ import AuthController from '../controllers/authController';
 export default class AuthRouter implements IRouter {
     private controller: AuthController = new AuthController()
     private middleware: AuthMiddleware = new AuthMiddleware()
-    
     public router: express.Router = express.Router()
 
     constructor() {
@@ -49,6 +48,11 @@ export default class AuthRouter implements IRouter {
             (req, res, next) => this.middleware.requestIncludesEmail(req, next),
             (req, res, next) => this.middleware.requestIncludesPassword(req, next),
             (req, res, next) => this.controller.login(req, res, next)
+        );
+
+        this.router.post('/authenticate',
+            (req, res, next) => this.middleware.isAuthenticated(req, next),
+            (req, res, next) => this.controller.isAuthenticated(req, res, next)
         );
     }
 }
