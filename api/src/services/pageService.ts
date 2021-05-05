@@ -16,14 +16,14 @@ export interface pageData {
 
 export default class PageService {
 
-    public async createPage(req: Request): Promise<IPage> {
+    public async createPage(req: Request): Promise<void> {
         try {
             const url = new URL(req.body.address);
 
             const user = await User.findOne({email: req?.user?.email});
             const page = await Page.findOrCreate(url);
             const measurement = await Measurement.findOrCreate(page.id);
-            const userPage = await UserPage.findOrCreate(user?.id, page.id, );
+            // const userPage = await UserPage.findOrCreate(user?.id, page.id, );
 
             /*  const foundPage = await Page.findOne({address: url.href});
 
