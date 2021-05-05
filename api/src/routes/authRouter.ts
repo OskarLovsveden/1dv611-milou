@@ -49,7 +49,26 @@ export default class AuthRouter implements IRouter {
             (req, res, next) => this.middleware.requestIncludesPassword(req, next),
             (req, res, next) => this.controller.login(req, res, next)
         );
-
+        /**
+         * @swagger
+         * /authenticate:
+         *   post:
+         *     summary: Authenticate a user.
+         *     tags:
+         *       - auth
+         *     description: Authenticate a specified user.
+         *     operationId: AuthenticateUser
+         *     parameters:
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
+         *         required: true
+         *     responses:
+         *       200:
+         *         description: Logged in users username.
+         *       401:
+         *         description: User is not authenticated.
+         */
         this.router.post('/authenticate',
             (req, res, next) => this.middleware.isAuthenticated(req, next),
             (req, res, next) => this.controller.isAuthenticated(req, res, next)

@@ -25,6 +25,11 @@ export default class GPSIRouter implements IRouter {
          *       - gpsi
          *     description: Get readings with GPSI by inputting one or more addresses.
          *     operationId: getMeasurements
+         *     parameters:
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
+         *         required: true
          *     responses:
          *       200:
          *         description: Returns an JSON object of GPSI readings.
