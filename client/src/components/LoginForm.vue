@@ -22,29 +22,25 @@ import { Options, Vue } from 'vue-class-component';
 import axios from "axios"
 
 @Options({
-  components: {
-  },
   methods: {
     async submitForm() {
       try {
-        if(await this.usernameAndPasswordIsValid) return true
+        this.login()
+        this.$emit('logged-in')
       } catch (error) {
         console.log(error, "error")
       }
-    }
-  },
-  computed: {
-    async usernameAndPasswordIsValid() {
-      return await axios.post("/auth/login",{
+    },
+    async login() {
+      const response = await axios("/auth/login",{
+        method: 'POST',
+        data: {
           email: this.form.username,
           password: this.form.password
+        }
       })
-      .then((response)=>{
-        localStorage.user = response.data.token
-      })
-      .catch(()=> {
-        throw new Error("Invalid email or password")
-      })
+
+      localStorage.user = response.data.token
     }
   },
   data() {
