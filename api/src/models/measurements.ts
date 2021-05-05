@@ -23,6 +23,7 @@ export interface IMeasurement extends Document {
 
 export interface IMeasurementModel extends Model<IMeasurement> {
     findOrCreate(addressID: string): Promise<IMeasurement>
+    addScore(score: IScore, addressID: string): Promise<IScore>
 }
 
 export const CategorySchema = new Schema({
@@ -49,9 +50,22 @@ export const MeasurementSchema = new Schema({
     scores: [ScoreSchema]
 });
 
+MeasurementSchema.statics.addScore = async function(scores: IScore, addressID: string): Promise<IScore> {
+    try {
+        const measurement = await Measurement.findOrCreate(addressID);
+
+        measurement.scores.push(scores);
+
+        await measurement.save();
+
+        return scores;
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
 MeasurementSchema.statics.findOrCreate = async function(addressID: string): Promise<IMeasurement> {
     try {
-        console.log('==============================aeasd');
         return await Measurement.findOneAndUpdate({addressID: addressID},{addressID: addressID, score: []}, {
             upsert: true, 
             new: true
@@ -60,6 +74,8 @@ MeasurementSchema.statics.findOrCreate = async function(addressID: string): Prom
         throw createHttpError(400);
     }
 };
+
+
 
 const Measurement: IMeasurementModel = mongoose.model<IMeasurement, IMeasurementModel>('Measurement', MeasurementSchema);
 
