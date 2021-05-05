@@ -20,11 +20,16 @@ export default class GPSIRouter implements IRouter {
          * @swagger
          * /measure:
          *   get:
-         *     summary: Single GPSI reading.
+         *     summary: GPSI readings.
          *     tags:
          *       - gpsi
-         *     description: Get a reading with GPSI with a specific page.
-         *     operationId: getPages
+         *     description: Get readings with GPSI by inputting one or more addresses.
+         *     operationId: getMeasurements
+         *     parameters:
+         *       - name: bearer-token
+         *         in: header
+         *         description: Bearer token that the user supplies
+         *         required: true
          *     responses:
          *       200:
          *         description: Returns an JSON object of GPSI readings.

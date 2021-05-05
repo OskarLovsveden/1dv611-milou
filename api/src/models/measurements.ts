@@ -1,6 +1,5 @@
 import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { schema } from './user';
 // import { URL } from 'url';
 
 export interface ICategory {
@@ -50,10 +49,10 @@ export const MeasurementSchema = new Schema({
     scores: [ScoreSchema]
 });
 
-schema.statics.findOrCreate = async function(addressID: string): Promise<IMeasurement> {
+MeasurementSchema.statics.findOrCreate = async function(addressID: string): Promise<IMeasurement> {
     try {
-
-        return await Measurement.findOneAndUpdate({addressID},{addressID, score: []}, {
+        console.log('==============================aeasd');
+        return await Measurement.findOneAndUpdate({addressID: addressID},{addressID: addressID, score: []}, {
             upsert: true, 
             new: true
         });
