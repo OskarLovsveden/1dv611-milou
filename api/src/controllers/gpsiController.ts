@@ -6,9 +6,17 @@ export default class GPSIController {
 
     public async getMeasurements(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const data = await this.service.measurePages(req);
+            const gpsiResults = [];
 
-            res.status(200).json(data);
+            for (const address of req.body.addresses) {
+                const data = await this.service.measurePages(address);
+                gpsiResults.push(data);
+                console.log(data);
+            }
+
+            console.log(gpsiResults);
+
+            res.status(200).json(gpsiResults);
         } catch (error) {
             next(error);
         }
