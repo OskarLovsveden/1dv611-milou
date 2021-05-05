@@ -23,7 +23,6 @@ const router = createRouter({
 })
 
 // router.beforeEach((to, from, next) => {
-//   // TODO: ping API to check if authenticated
 //   const authenticatedUser = true;
 //   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
