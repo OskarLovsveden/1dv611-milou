@@ -16,7 +16,7 @@ export interface pageData {
 
 export default class PageService {
 
-    public async createPage(req: Request): Promise<IPage> {
+    public async createPage(req: Request): Promise<void> {
         try {
 
             const url = new URL(req.body.address);
