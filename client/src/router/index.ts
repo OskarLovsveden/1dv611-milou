@@ -1,25 +1,38 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 
-const routes: Array<RouteRecordRaw> = [
+const routes: Array<RouteRecordRaw> = [ 
   {
     path: '/',
     name: 'Home',
     component: Home
   },
-  {
-    path: '/addwebpage',
-    name: 'AddWebPage',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AddWebPage.vue')
-  }
+  // {
+  //   path: '/profile',
+  //   name: 'Profile',
+  //   component: Profile,
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+//   // TODO: ping API to check if authenticated
+//   const authenticatedUser = true;
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+//   // Check for protected route
+//   if (requiresAuth && !authenticatedUser) {
+//     next('');
+//   } else {
+//     next();
+//   }
+// });
 
 export default router
