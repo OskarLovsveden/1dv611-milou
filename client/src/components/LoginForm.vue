@@ -13,7 +13,6 @@
       </div>
       <button type="submit">Submit</button>
     </form>
-    
   </div>
 </template>
 
@@ -23,10 +22,9 @@ import axios from "axios"
 
 @Options({
   methods: {
-    async submitForm() {
+    submitForm() {
       try {
         this.login()
-        this.$emit('logged-in')
       } catch (error) {
         console.log(error, "error")
       }
@@ -40,7 +38,10 @@ import axios from "axios"
         }
       })
 
-      localStorage.user = response.data.token
+      if (response.status === 200) {
+        localStorage.user = response.data.token
+        this.$emit('logged-in')
+      }
     }
   },
   data() {
