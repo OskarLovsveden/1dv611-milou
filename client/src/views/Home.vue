@@ -22,8 +22,6 @@ import Profile from "../components/Profile.vue";
 
 import axios from 'axios';
 
-const localStorageUserKey = "user";
-
 @Options({
   components: {
     LoginForm,
@@ -41,7 +39,7 @@ const localStorageUserKey = "user";
         const response = await axios("/auth/authenticate", {
           method: 'POST',
           headers: {
-            authorization: 'Bearer ' + localStorage.getItem(localStorageUserKey)
+            authorization: 'Bearer ' + localStorage.user
           }
         })
         
