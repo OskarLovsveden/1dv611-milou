@@ -1,9 +1,7 @@
 <template>
     <li class="list-item">
-       {{address}}
-       <button>edit</button>
-       <ChartModal />
-       <button>delete</button>
+       <button @click="showModal" class="url-button">{{address}}</button>
+       <!-- <ChartModal /> -->
     </li>
 </template>
 
@@ -21,6 +19,11 @@ import ChartModal from '../components/ChartModal.vue'
             type: String,
             required: true
         }
+    },
+    methods: {
+        showModal(e:any) {
+            console.log(e.target)
+        }
     }
 })
 
@@ -30,5 +33,11 @@ export default class PageListItem extends Vue {}
 <style scoped>
     .list-item {
         list-style: none;
+    }
+    .url-button {
+        color: white;
+        background-color: #7700ff;
+        border: none;
+
     }
 </style>

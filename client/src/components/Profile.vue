@@ -1,15 +1,13 @@
 <template>
   <div class="addwebpage">
-    <h1>person@email.com</h1>
-
-    <AddWebpageForm />
+    <AddWebpageForm @added-page="getPages"/>
     <form>
       <select>
         <option>google.se</option>
         <option>facebook.se</option>
       </select>
     </form>
-    <PageList />
+    <PageList :pages="pages"/>
   </div>
 </template>
 
@@ -18,13 +16,27 @@ import { Options, Vue } from 'vue-class-component';
 import AddWebpageForm from "../components/AddWebpageForm.vue";
 import PageList from "../components/PageList.vue";
 
+import AxiosHelper from "../helpers/AxiosHelper"
+const axios = new AxiosHelper();
+
 @Options({
   components: {
     AddWebpageForm,
     PageList
   },
+  data() {
+    return {
+      pages: []
+    }
+  },
   methods: {
-    
+    async getPages() {
+      const response = await axios.get('/pages')
+      this.pages = response.data
+    }
+  },
+  mounted() {
+    this.getPages()
   }
 })
 

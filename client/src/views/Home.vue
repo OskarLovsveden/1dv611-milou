@@ -6,6 +6,7 @@
     <div v-else>
       <div v-if="isAuthenticated">
         <button @click="logout">Logout</button>
+        <h1>{{this.user}}</h1>
         <Profile />
       </div>
       <div v-else>
@@ -48,6 +49,7 @@ const axios = new AxiosHelper()
   },
   data() {
     return {
+      user: '',
       loading: true,
       isAuthenticated: false,
       registerUser: false
@@ -55,12 +57,9 @@ const axios = new AxiosHelper()
   },
   methods: {
     async checkUser() {
-      try {
-          const response = await axios.post("/auth/authenticate")
-          this.isAuthenticated = response.status === 200;
-      } catch (error) {
-        console.log(error)
-      }
+      const response = await axios.post("/auth/authenticate")
+      this.user = response?.data?.authenticatedUser
+      this.isAuthenticated = response.status === 200;
     },
     flipIsAuthenticated() {
       this.isAuthenticated = !this.isAuthenticated
@@ -69,7 +68,7 @@ const axios = new AxiosHelper()
       this.registerUser = !this.registerUser
     },
     logout() {
-      localStorage.removeItem("user")
+      document.cookie = "token=;max-age=0"
       this.flipIsAuthenticated()
     }
   },

@@ -1,7 +1,7 @@
 <template>
   <div>
     <form v-on:submit.prevent>
-        <input type="text" v-model="url" :placeholder="placeholder" required>
+        <input type="url" v-model="url" :placeholder="placeholder" required>
         <button @click="submitUrl" type="submit">Register URL</button>
         <br/>
         <span>Test interval: </span>
@@ -24,15 +24,20 @@ const axios = new AxiosHelper()
 @Options({
   data() {
     return {
-      placeholder: 'enter an URL...',
+      placeholder: 'http://example.com',
       url: '',
       interval: ''
     }
   },
   methods: {
     async submitUrl(){
-      // console.log(this.value, typeof this.interval, 'hej')
-      await axios.post('/pages', {address: this.url, testInterval: this.interval})
+      // console.log(new URL(this.url))
+
+      if(this.interval){
+        await axios.post('/pages', {address: this.url, testInterval: this.interval})
+        this.url = ""
+        this.$emit('added-page')
+      }
     } 
   }
 })
