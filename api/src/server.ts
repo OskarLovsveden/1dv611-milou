@@ -3,7 +3,7 @@ import IndexRouter from './routes/indexRouter';
 import swaggerUI from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { HttpError } from 'http-errors';
-// import * as swaggerDoc from './swagger.json';
+import { startCronJob } from './utils/cronJob';
 
 export default class Server {
     private app: express.Application = express()
@@ -16,6 +16,7 @@ export default class Server {
         // Call everything that needs to be run before starting the server//
         //===============================================================//
         this.app.use(express.json());
+        startCronJob();
         // Setting up routes
         this.app.use('/', this.indexRouter.router);
         this.swaggerExecution();

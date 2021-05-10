@@ -18,6 +18,17 @@ export default class GPSIService {
         }
     }
 
+    public async performScheduledMeasures() : Promise<void> {
+        try {
+            const date = new Date();
+
+            console.log(date.getDay());
+            console.log(date.getDate());
+        } catch (error) {
+            
+        }
+    }
+
     private async gpsiAPIRequest(address: string): Promise<any> {
         const encodedAddress = encodeURI(address);
         const response = await fetch(`${process.env.GPSI_URL}?url=${encodedAddress}&access_token=${process.env.GPSI_TOKEN}&category=PERFORMANCE`);
