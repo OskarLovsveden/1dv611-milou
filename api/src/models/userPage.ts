@@ -15,6 +15,9 @@ export interface IUserPage extends Document {
 
 export interface IUserPageModel extends Model<IUserPage> {
     findOrCreate(userId: string, pageId: string, interval: MeasureAt): Promise<IUserPage>
+    getAllUserPages(userID: string): Promise<IUserPage[]>
+    deletePageId(userID: string, addressID: string): Promise<void>
+    updateAddressID(userID: string, previousID: string, newID: string): Promise<void>
 }
 
 export const schema = new Schema({
@@ -41,6 +44,48 @@ schema.statics.findOrCreate = async function(userId: string, pageId: string, int
         });
     } catch (error) {
         throw createHttpError(400);
+    }
+};
+
+schema.statics.getAllUserPages = async function(userID: string): Promise<IUserPage[]> {
+    try {
+        const userPages = await UserPage.find({userID});
+
+        if (userPages) {
+            return userPages;
+        }
+
+        return [];
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+schema.statics.deletePageId = async function(userID: string, addressID: string): Promise<void> {
+    try {
+        const foundPage = await UserPage.findOne({userID: userID, addressID: addressID});
+
+        if(foundPage){
+            await UserPage.deleteOne({_id: foundPage._id});
+        } else {
+            throw new Error();
+        }
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+schema.statics.updateAddressID = async function(userID: string, previousID: string, newID: string): Promise<void> {
+    try {
+        const updatedUserPage = await this.updateOne({userID: userID, addressID: previousID}, {
+            addressID: newID
+        });
+
+        if (updatedUserPage.nModified !== 1) {
+            throw new Error();
+        }
+    } catch (error) {
+        throw createHttpError(400, 'Failed to update page');
     }
 };
 

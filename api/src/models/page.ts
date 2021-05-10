@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { URL } from 'url';
+import { IUserPage } from './userPage';
 
 export interface IPage extends Document {
     domain: string
@@ -11,8 +12,8 @@ export interface IPage extends Document {
 export interface IPageModel extends Model<IPage> {
     getByAddress(address: string): Promise<IPage>
     insert(url: URL): Promise<IPage>
-    getAllPages(pageIds: string[]): Promise<IPage[]>
-    getAllDomainPages(domain: string, pageIds: string[]): Promise<IPage[]>
+    getAllPages(userPages: IUserPage[]): Promise<IPage[]>
+    getAllDomainPages(domain: string, userPages: IUserPage[]): Promise<IPage[]>
     findOrCreate(url: URL): Promise<IPage>
 }
 
@@ -70,9 +71,11 @@ PageSchema.statics.insert = async function(url: URL) {
     }
 };
 
-PageSchema.statics.getAllPages = async function(pageIds: string[]) {
+PageSchema.statics.getAllPages = async function(userPages: IUserPage[]) {
     try {
-        const pages = await Promise.all(pageIds.map(async (page) => {
+        const pageIDS = userPages.map((up: IUserPage) => up.addressID);
+
+        const pages = await Promise.all(pageIDS.map(async (page: string) => {
             return await Page.findOne({_id: page});
         }));
         return pages;
@@ -81,11 +84,11 @@ PageSchema.statics.getAllPages = async function(pageIds: string[]) {
     }
 };
 
-PageSchema.statics.getAllDomainPages = async function(address: string, pageIds: string[]) {
+PageSchema.statics.getAllDomainPages = async function(address: string, userPages: IUserPage[]) {
     try { 
         const pages: IPage[] = [];
-        for (const pageId of pageIds) {
-            const verifiedList = await Page.findOne({_id: pageId});
+        for (const userPage of userPages) {
+            const verifiedList = await Page.findOne({_id: userPage.addressID});
             if(verifiedList) {
                 pages.push(verifiedList);
             }
