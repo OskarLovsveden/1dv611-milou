@@ -10,27 +10,39 @@ export default class AxiosHelper {
 
     // Post request using the current JWT
     async post(url: string, data?: any): Promise<any> {
-        return await axios({
-            method: 'POST',
-            url: url,
-            headers: {
-                authorization: 'Bearer ' + this.cookieValue
-            },
-            data: data
-        })
-    }
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: url,
+                headers: {
+                    authorization: 'Bearer ' + this.cookieValue
+                },
+                data: data
+            })
 
+            return response
+        } catch (error) {
+            console.log(error.response, 'error axios POST')
+            return error.response
+        }
+        
+    }
+    
     // Get request using the current JWT
     async get(url: string) {
-        const response = await axios({
-            method: 'GET',
-            url: url,
-            headers: {
-                authorization: 'Bearer ' + this.cookieValue
-            }
-        })
-
-        // console.log(response, "data")
-        // console.log(response.data)
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: url,
+                headers: {
+                    authorization: 'Bearer ' + this.cookieValue
+                }
+            })
+            
+            return response
+        } catch (error) {
+            console.log(error.response, 'error axios GET')
+            return error.response
+        }
     }
 }

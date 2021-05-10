@@ -32,25 +32,28 @@ const axios = new AxiosHelper();
 @Options({
   methods: {
     async submitForm() {
-      try {
         if(this.form.password === this.form.passwordRepeat){
           await this.registerUser()
-          this.login()
+          
         } else {
           const message = "Password and repeated password do not match"
           if (this.errors.indexOf(message) === -1) this.errors.push(message);
         }
-      } catch (error) {
-        console.log(error, "error")
-      }
     },
     async registerUser() {
       const response = await axios.post("/users", {
           email: this.form.username,
           password: this.form.password
       })
+      
+      if(response.status === 400){
+        if(this.errors.indexOf(response.data.message.detail) === -1) this.errors.push(response.data.message.detail);
+      }
 
-      console.log(response.status);
+      if(response.status === 201){
+        this.login();
+      }
+
     },
     async login() {
       const response = await axios.post("/auth/login",{

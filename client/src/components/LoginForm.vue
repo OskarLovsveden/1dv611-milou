@@ -23,7 +23,7 @@ import axios from "axios"
       try {
         this.login()
       } catch (error) {
-        console.log(error, "error")
+        console.log(error.message, "error")
       }
     },
     async login() {
