@@ -8,13 +8,10 @@ const { isEmail } = validator;
 export interface IUser extends Document {
     email: string
     password: string
-    pageIds: Array<string>
 }
 
 export interface IUserModel extends Model<IUser> {
-    authenticate(email: string, password: string): Promise<IUser>,
-    updatePageId(user: IUser, currentId: string, newId: string): Promise<void>
-    deletePageId(user: IUser, currentId: string): Promise<void>
+    authenticate(email: string, password: string): Promise<IUser>
 }
 
 export const schema = new Schema({
@@ -31,11 +28,6 @@ export const schema = new Schema({
         minlength: [10, 'The password must be of minimum length 10 characters.'],
         required: true
     },
-    pageIds: {
-        type: Array,
-    },
-
-    
 }, {
     timestamps: true
 });
@@ -52,29 +44,6 @@ schema.statics.authenticate = async function(email: string, password: string): P
     }
 };
 
-schema.statics.updatePageId = async function(user: IUser, currentId: string, newId: string): Promise<void> {
-    if(user) {
-        const newIds = user.pageIds.map(id => {
-            return id === currentId 
-                ? newId 
-                : id;
-        });
-
-        await User.updateOne({_id: user.id}, {pageIds: newIds});
-    }
-};
-
-schema.statics.deletePageId = async function(user: IUser, currentId: string): Promise<void> {
-    if(user) {
-
-        const foundPage = await Page.findOne({_id: currentId});
-
-        if(foundPage){
-            const filteredIds = user.pageIds.filter(id => id !== foundPage.id);
-            await User.updateOne({_id: user.id}, {pageIds: filteredIds});
-        }
-    }
-};
 
 const User: IUserModel = mongoose.model<IUser, IUserModel>('User', schema);
 

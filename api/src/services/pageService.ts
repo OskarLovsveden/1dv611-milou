@@ -3,7 +3,7 @@ import createHttpError from 'http-errors';
 import Page, { IPage } from '../models/page';
 import User from '../models/user';
 import { URL } from 'url';
-import UserPage, { MeasureAt } from '../models/userPage';
+import UserPage, { IUserPage, MeasureAt } from '../models/userPage';
 import { validateUrlResponse } from '../utils/urlUtilities';
 import Measurement from '../models/measurements';
 
@@ -50,12 +50,14 @@ export default class PageService {
             const user = await User.findOne({email: req?.user?.email});
             
             if(user) { 
+                const userPages = await UserPage.getAllUserPages(user.id);
+
                 if(req.query.address) {
                     const url = new URL(req.query.address as string);
-                    const domainPages = await Page.getAllDomainPages(url.href, user.pageIds);
+                    const domainPages = await Page.getAllDomainPages(url.href, userPages);
                     return this.sortAlphabetically(domainPages, 'path');
                 }
-                const allPages = await Page.getAllPages(user.pageIds);
+                const allPages = await Page.getAllPages(userPages);
                 return this.sortAlphabetically(allPages, 'domain');
             }
             throw createHttpError(400);
@@ -75,18 +77,21 @@ export default class PageService {
     public async updatePage(req: Request): Promise<void> {
         try {
             const user = await User.findOne({email: req?.user?.email});
-        
+            
+            const userPages = await UserPage.getAllUserPages(user?.id);
+            const userPageIDS = userPages.map((userPage: IUserPage) => userPage.addressID);
+
             if (!user) {
                 throw createHttpError(404, 'User not found');
             }
 
-            if (!user.pageIds.includes(req.params.id)) {
+            if (!userPageIDS.includes(req.params.id)) {
                 throw createHttpError(403, 'Forbidden');
             }
 
             await validateUrlResponse(req.body.address);
             const page = await Page.findOrCreate(new URL(req.body.address));
-            await User.updatePageId(user, req.params.id, page.id);
+            await UserPage.updateAddressID(user.id, req.params.id, page.id);
 
         } catch (error) {
             console.log(error);
@@ -106,15 +111,18 @@ export default class PageService {
         try {
             const user = await User.findOne({email: req?.user?.email});
 
+            const userPages = await UserPage.getAllUserPages(user?.id);
+            const userPageIDS = userPages.map((userPage: IUserPage) => userPage.addressID);
+
             if (!user) {
                 throw createHttpError(404, 'User not found');
             }
 
-            if (!user.pageIds.includes(req.params.id)) {
+            if (!userPageIDS.includes(req.params.id)) {
                 throw createHttpError(403, 'Forbidden');
             }
 
-            await User.deletePageId(user, req.params.id);
+            await UserPage.deletePageId(user.id, req.params.id);
 
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
