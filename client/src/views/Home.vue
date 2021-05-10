@@ -41,6 +41,9 @@ import Profile from "../components/Profile.vue";
 import AxiosHelper from '../helpers/AxiosHelper';
 const axios = new AxiosHelper()
 
+import Cookie from '../helpers/Cookie';
+const cookie = new Cookie('token')
+
 @Options({
   components: {
     LoginForm,
@@ -68,12 +71,15 @@ const axios = new AxiosHelper()
       this.registerUser = !this.registerUser
     },
     logout() {
-      document.cookie = "token=;max-age=0"
+      cookie.delete()
       this.flipIsAuthenticated()
     }
   },
   async mounted() {
-    await this.checkUser()
+    if (cookie.get()) {
+      await this.checkUser()
+    }
+    
     this.loading = false;
   }
 })
