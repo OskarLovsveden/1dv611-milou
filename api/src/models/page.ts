@@ -11,6 +11,7 @@ export interface IPage extends Document {
 
 export interface IPageModel extends Model<IPage> {
     getByAddress(address: string): Promise<IPage>
+    getAllPagesByIDS(pageIDS: string[]): Promise<IPage[]>
     insert(url: URL): Promise<IPage>
     getAllPages(userPages: IUserPage[]): Promise<IPage[]>
     getAllDomainPages(domain: string, userPages: IUserPage[]): Promise<IPage[]>
@@ -78,6 +79,23 @@ PageSchema.statics.getAllPages = async function(userPages: IUserPage[]) {
         const pages = await Promise.all(pageIDS.map(async (page: string) => {
             return await Page.findOne({_id: page});
         }));
+        return pages;
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+PageSchema.statics.getAllPagesByIDS = async function(pageIDS: string[]): Promise<IPage[]> {
+    try {
+        const pages: IPage[] = [];
+
+        for (const pageID of pageIDS) {
+            const page = await Page.findOne({_id: pageID});
+
+            if (page) {
+                pages.push(page);
+            }
+        }
         return pages;
     } catch (error) {
         throw createHttpError(400);

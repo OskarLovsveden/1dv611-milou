@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import Measurement, { IScore } from '../models/measurements';
-import Page from '../models/page';
+import Page, { IPage } from '../models/page';
+import UserPage, { IUserPage } from '../models/userPage';
 import fetch from 'node-fetch';
 import { URL } from 'url';
 
@@ -20,18 +21,39 @@ export default class GPSIService {
 
     public async performScheduledMeasures() : Promise<void> {
         try {
-            const date = new Date();
-
-            console.log(date.getDay());
-            console.log(date.getDate());
-        } catch (error) {
+            const newGPSIResults = [];
+            const uniquePageIDS = await this.getPageIDS();
+            const pages = await Page.getAllPagesByIDS(uniquePageIDS);
             
+            for (const page of pages) {
+                const data = await this.measurePages(page.address);
+                newGPSIResults.push(data);
+                console.log(data);
+            }
+            
+        } catch (error) {
+            console.log(error);
         }
+    }
+
+    private async getPageIDS(): Promise<string[]> {
+        const date = new Date();
+        const pagesToMeasure: IUserPage[] = [];
+        pagesToMeasure.push(...await UserPage.find({ measureAt: 'Daily' }));
+
+        if (date.getDay() === 1) {
+            pagesToMeasure.push(...await UserPage.find({ measureAt: 'Weekly' }));
+        } 
+        if (date.getDate() === 28) {
+            pagesToMeasure.push(...await UserPage.find({ measureAt: 'Monthly' }));
+        }
+        return [...new Set(pagesToMeasure.map((page: IUserPage) => page.addressID))];
     }
 
     private async gpsiAPIRequest(address: string): Promise<any> {
         const encodedAddress = encodeURI(address);
-        const response = await fetch(`${process.env.GPSI_URL}?url=${encodedAddress}&access_token=${process.env.GPSI_TOKEN}&category=PERFORMANCE`);
+        const response = await fetch(`${process.env.GPSI_URL}?url=${encodedAddress}&key=${process.env.GPSI_TOKEN}&category=PERFORMANCE`);
+        console.log(response);
         return await response.json();
     }
 
