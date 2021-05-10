@@ -21,6 +21,12 @@ module.exports = {
         logLevel: "debug",
         pathRewrite: {'^/pages': '/pages'},
       },
+      '^/users': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        logLevel: "debug",
+        pathRewrite: {'^/users': '/users'},
+      },
     }
   }
 }

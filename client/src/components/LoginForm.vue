@@ -1,17 +1,14 @@
 <template>
   <div class="login">
     <form @submit.prevent="submitForm" autocomplete='off'>
-    <h3>Login</h3>
       <div class="form-group">
-        <label for="username">Username: </label>
-        <input type="text" id="username" name="username" v-model="form.username" required>
+        <input placeholder="E-mail" type="text" id="username" name="username" autocomplete="on" v-model="form.username" required>
       </div>
 
       <div class="form-group">
-        <label for="password">Password: </label>
-        <input type="password" id="password" name="password" v-model="form.password" required>
+        <input placeholder="Password" type="password" id="password" name="password" autocomplete="off" v-model="form.password" required>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit">Login</button>
     </form>
   </div>
 </template>
@@ -57,9 +54,9 @@ import axios from "axios"
           username: null,
           password: null
         },
-
+        errors: []
     };
   }
 })
-export default class Home extends Vue {}
+export default class LoginForm extends Vue {}
 </script>

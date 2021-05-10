@@ -9,8 +9,8 @@ export default class AxiosHelper {
     }
 
     // Post request using the current JWT
-    async post(url: string, data: any) {
-        await axios({
+    async post(url: string, data?: any): Promise<any> {
+        return await axios({
             method: 'POST',
             url: url,
             headers: {
@@ -30,7 +30,7 @@ export default class AxiosHelper {
             }
         })
 
-        console.log(response, "data")
-        console.log(response.data)
+        // console.log(response, "data")
+        // console.log(response.data)
     }
 }
