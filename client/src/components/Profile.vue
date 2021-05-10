@@ -1,18 +1,14 @@
 <template>
   <div class="addwebpage">
-    <AddWebpageForm @added-page="getPages"/>
-    <form>
-      <select>
-        <option>google.se</option>
-        <option>facebook.se</option>
-      </select>
-    </form>
-    <PageList :pages="pages"/>
+    <AddWebpageForm @added-page="getPages" />
+    <DomainSelector :pages="pages" />
+    <PageList :pages="pages" />
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
+import DomainSelector from "../components/DomainSelector.vue";
 import AddWebpageForm from "../components/AddWebpageForm.vue";
 import PageList from "../components/PageList.vue";
 
@@ -21,6 +17,7 @@ const axios = new AxiosHelper();
 
 @Options({
   components: {
+    DomainSelector,
     AddWebpageForm,
     PageList
   },

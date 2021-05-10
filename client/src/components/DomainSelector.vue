@@ -1,9 +1,9 @@
 <template>
-    <div v-if="pages.length > 0">
-        <ul v-for="page in pages" :key="page.id">
-            <PageListItem :address="page.address"/>
-        </ul>
-    </div>
+    <form>
+      <select>
+        <option v-for="domain in domains" :key="domain.id">{{domain}}</option>
+      </select>
+    </form>
 </template>
 
 <script lang="ts">
@@ -18,8 +18,14 @@ import PageListItem from "../components/PageListItem.vue";
         pages: {
             type: Array,
         }
-    }
-})
+    },
+    computed: {
+            domains() {
+                const domains = this.pages.map((p: any) => p.domain)
+                return [...new Set(domains)]
+            }
+        }
+    })
 
 export default class PageList extends Vue {}
 </script>

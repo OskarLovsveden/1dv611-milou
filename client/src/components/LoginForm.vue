@@ -15,7 +15,12 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import axios from "axios"
+
+import AxiosHelper from '../helpers/AxiosHelper';
+const axios = new AxiosHelper()
+
+import Cookie from '../helpers/Cookie';
+const cookie = new Cookie('token')
 
 @Options({
   methods: {
@@ -27,24 +32,15 @@ import axios from "axios"
       }
     },
     async login() {
-      const response = await axios("/auth/login",{
-        method: 'POST',
-        data: {
-          email: this.form.username,
-          password: this.form.password
-        }
+      const response = await axios.post("/auth/login", {
+        email: this.form.username,
+        password: this.form.password
       })
 
       if (response.status === 200) {
-        this.setCookie('token', response.data.token)
+        cookie.set(response.data.token)
         this.$emit('logged-in')
       }
-    },
-    setCookie(cname: string, cvalue: string) {
-      const d: Date = new Date();
-      d.setTime(d.getTime() + (2 * 60 * 60 * 1000));
-      const expires: string = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";secure;samesite=lax;";
     }
   },
   data() {

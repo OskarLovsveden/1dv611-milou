@@ -1,25 +1,25 @@
 import axios from 'axios'
+import Cookie from './Cookie'
 
 export default class AxiosHelper {
-    private cookieValue: string | undefined
+    private cookie: Cookie
 
     constructor () {
-        // Gets the cookie containing the JWT
-        this.cookieValue = document?.cookie?.split('; ')?.find(row => row?.startsWith('token='))?.split('=')[1]
+        this.cookie = new Cookie('token')
     }
 
-    // Post request using the current JWT
+    // POST request using the current JWT
     async post(url: string, data?: any): Promise<any> {
         try {
             const response = await axios({
                 method: 'POST',
                 url: url,
                 headers: {
-                    authorization: 'Bearer ' + this.cookieValue
+                    authorization: 'Bearer ' + this.cookie.get()
                 },
                 data: data
             })
-
+            
             return response
         } catch (error) {
             console.log(error.response, 'error axios POST')
@@ -28,14 +28,14 @@ export default class AxiosHelper {
         
     }
     
-    // Get request using the current JWT
+    // GET request using the current JWT
     async get(url: string) {
         try {
             const response = await axios({
                 method: 'GET',
                 url: url,
                 headers: {
-                    authorization: 'Bearer ' + this.cookieValue
+                    authorization: 'Bearer ' + this.cookie.get()
                 }
             })
             
