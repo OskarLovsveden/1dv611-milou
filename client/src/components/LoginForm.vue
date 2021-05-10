@@ -39,9 +39,15 @@ import axios from "axios"
       })
 
       if (response.status === 200) {
-        localStorage.user = response.data.token
+        this.setCookie('token', response.data.token)
         this.$emit('logged-in')
       }
+    },
+    setCookie(cname: string, cvalue: string) {
+      const d: Date = new Date();
+      d.setTime(d.getTime() + (2 * 60 * 60 * 1000));
+      const expires: string = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";secure;samesite=lax;";
     }
   },
   data() {

@@ -1,6 +1,7 @@
 <template>
   <div class="addwebpage">
     <h1>person@email.com</h1>
+
     <AddWebpageForm />
     <form>
       <select>
@@ -21,6 +22,9 @@ import PageList from "../components/PageList.vue";
   components: {
     AddWebpageForm,
     PageList
+  },
+  methods: {
+    
   }
 })
 

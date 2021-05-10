@@ -5,6 +5,7 @@
     </div>
     <div v-else>
       <div v-if="isAuthenticated">
+        <button @click="logout">Logout</button>
         <Profile />
       </div>
       <div v-else>
@@ -19,13 +20,13 @@
 import { Options, Vue } from 'vue-class-component';
 import LoginForm from "../components/LoginForm.vue";
 import Profile from "../components/Profile.vue";
-
 import axios from 'axios';
+
 
 @Options({
   components: {
     LoginForm,
-    Profile
+    Profile,
   },
   data() {
     return {
@@ -36,20 +37,25 @@ import axios from 'axios';
   methods: {
     async checkUser() {
       try {
-        const response = await axios("/auth/authenticate", {
-          method: 'POST',
-          headers: {
-            authorization: 'Bearer ' + localStorage.user
-          }
-        })
-        
-        this.isAuthenticated = response.status === 200;
+          const cookieValue = document?.cookie?.split('; ')?.find(row => row?.startsWith('token='))?.split('=')[1]
+          const response = await axios("/auth/authenticate", {
+            method: 'POST',
+            headers: {
+              authorization: 'Bearer ' + cookieValue
+            }
+          })
+          
+          this.isAuthenticated = response.status === 200;
       } catch (error) {
         console.log(error)
       }
     },
     flipIsAuthenticated() {
       this.isAuthenticated = !this.isAuthenticated
+    },
+    logout() {
+      localStorage.removeItem("user")
+      this.flipIsAuthenticated()
     }
   },
   async mounted() {
