@@ -33,9 +33,7 @@ export const schema = new Schema({
     },
     pageIds: {
         type: Array,
-    },
-
-    
+    } 
 }, {
     timestamps: true
 });

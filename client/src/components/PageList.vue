@@ -9,7 +9,9 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import PageListItem from "../components/PageListItem.vue";
-// import axios from 'axios'
+import AxiosHelper from "../helpers/AxiosHelper"
+
+const axios = new AxiosHelper();
 
 @Options({
     components: {
@@ -18,25 +20,16 @@ import PageListItem from "../components/PageListItem.vue";
     data() {
         return {
             // TEMP DATA
-            pages: [
-                {
-                    address: 'http://google.se',
-                    id: '1'
-                }, 
-                {
-                    address: 'http://facebook.se',
-                    id: '2'
-                }
-            ]
+            pages: []
             // TEMP DATA
         }
     },
-    // async mounted() {
-    //     console.log('test')
-     
-    //     const response = await axios('/pages')
-    //     this.pages = response
-    // }
+    async mounted() {
+        const data = await axios.get('/pages')
+        // console.log(data)
+
+        this.pages = data
+    }
 })
 
 export default class PageList extends Vue {}
