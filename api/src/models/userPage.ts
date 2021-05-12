@@ -18,6 +18,7 @@ export interface IUserPageModel extends Model<IUserPage> {
     getAllUserPages(userID: string): Promise<IUserPage[]>
     deletePageId(userID: string, addressID: string): Promise<void>
     updateAddressID(userID: string, previousID: string, newID: string): Promise<void>
+    findUserIdsOfPage(addressID: string): Promise<string[]>
 }
 
 export const schema = new Schema({
@@ -84,6 +85,15 @@ schema.statics.updateAddressID = async function(userID: string, previousID: stri
         if (updatedUserPage.nModified !== 1) {
             throw new Error();
         }
+    } catch (error) {
+        throw createHttpError(400, 'Failed to update page');
+    }
+};
+
+schema.statics.findUserIdsOfPage = async function(addressID: string): Promise<string[]> {
+    try {
+        const userPages = await UserPage.find({ addressID });
+        return userPages.map((xd: IUserPage) => xd.userID);
     } catch (error) {
         throw createHttpError(400, 'Failed to update page');
     }

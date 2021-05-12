@@ -24,6 +24,7 @@ export default class PageService {
 
             const user = await User.findOne({email: req?.user?.email});
             /* console.log(user) */
+            await validateUrlResponse(req.body.address);
             const page = await Page.findOrCreate(url);
             console.log(page);
             const measurement = await Measurement.findOrCreate(page.id);
