@@ -7,6 +7,7 @@
       <div v-if="isAuthenticated">
         <button @click="logout">Logout</button>
         <h1>{{this.user}}</h1>
+        <hr />
         <Profile />
       </div>
       <div v-else>

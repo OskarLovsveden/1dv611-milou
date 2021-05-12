@@ -27,6 +27,26 @@ export default class AxiosHelper {
         }
         
     }
+
+    async update(url: string, data?: any): Promise<any> {
+        try {
+            console.log(data, "axios put")
+            const response = await axios({
+                method: 'PUT',
+                url: url,
+                headers: {
+                    authorization: 'Bearer ' + this.cookie.get()
+                },
+                data: data
+            })
+            
+            return response
+        } catch (error) {
+            console.log(error.response, 'error axios PUT (update)')
+            return error.response
+        }
+        
+    }
     
     // GET request using the current JWT
     async get(url: string) {
@@ -42,6 +62,22 @@ export default class AxiosHelper {
             return response
         } catch (error) {
             console.log(error.response, 'error axios GET')
+            return error.response
+        }
+    }
+    async delete(url: string) {
+        try {
+            const response = await axios({
+                method: 'DELETE',
+                url: url,
+                headers: {
+                    authorization: 'Bearer ' + this.cookie.get()
+                }
+            })
+            
+            return response
+        } catch (error) {
+            console.log(error.response, 'error axios DELETE')
             return error.response
         }
     }
