@@ -17,13 +17,14 @@ export interface IScore {
 }
 
 export interface IMeasurement extends Document {
-    address: string
+    addressID: string
     scores: IScore[]
 }
 
 export interface IMeasurementModel extends Model<IMeasurement> {
     findOrCreate(addressID: string): Promise<IMeasurement>
     addScore(score: IScore, addressID: string): Promise<IScore>
+    getLatestMeasurement(addressID: string): Promise<IScore>
 }
 
 export const CategorySchema = new Schema({
@@ -70,6 +71,19 @@ MeasurementSchema.statics.findOrCreate = async function(addressID: string): Prom
             upsert: true, 
             new: true
         });
+    } catch (error) {
+        throw createHttpError(400);
+    }
+};
+
+MeasurementSchema.statics.getLatestMeasurement = async function(addressID: string): Promise<IScore> {
+    try {
+        let scores: IScore = { totalScore: 0, categories: []};
+        const pageMeasurements = await Measurement.findOne({addressID});
+        if (pageMeasurements && pageMeasurements.scores.length > 0) {
+            scores = pageMeasurements.scores[pageMeasurements?.scores.length - 1];
+        }
+        return scores;
     } catch (error) {
         throw createHttpError(400);
     }
