@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <form @submit.prevent="submitForm" autocomplete='off'>
+    <form @submit.prevent="login" autocomplete='off'>
       <div class="form-group">
         <input placeholder="E-mail" type="text" id="username" name="username" autocomplete="on" v-model="form.username" required>
       </div>
@@ -24,13 +24,6 @@ const cookie = new Cookie('token')
 
 @Options({
   methods: {
-    submitForm() {
-      try {
-        this.login()
-      } catch (error) {
-        console.log(error.message, "error")
-      }
-    },
     async login() {
       const response = await axios.post("/auth/login", {
         email: this.form.username,
