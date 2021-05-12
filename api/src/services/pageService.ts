@@ -8,30 +8,37 @@ import { validateUrlResponse } from '../utils/urlUtilities';
 import Measurement from '../models/measurements';
 
 
-export interface pageData {
-    href: string
-    hostname: string
-    pathname: string
+export interface IPageData {
+    page: IPage
+    measureAt: 'Daily' | 'Weekly' | 'Monthly'
 }
 
 export default class PageService {
 
-    public async createPage(req: Request): Promise<IPage> {
+    public async createPage(req: Request): Promise<IPageData> {
         try {
+            if (!this.testIntervalIsValid(req.body.testInterval)) {
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${req.body.testInterval} is not a valid testInterval.`, 
+                        testInterval: req.body.testInterval
+                    } 
+                });
+            }
 
             const url = new URL(req.body.address);
-            const testInterval: MeasureAt = (<any>MeasureAt)[req.body.testInterval];
 
+            const testInterval: MeasureAt = (<any>MeasureAt)[req.body.testInterval];
             const user = await User.findOne({email: req?.user?.email});
-            /* console.log(user) */
             await validateUrlResponse(req.body.address);
             const page = await Page.findOrCreate(url);
-            console.log(page);
-            const measurement = await Measurement.findOrCreate(page.id);
-            console.log(measurement);
+            await Measurement.findOrCreate(page.id);
             const userPage = await UserPage.findOrCreate(user?.id, page.id, testInterval);
 
-            return page;
+            return {
+                page,
+                measureAt: userPage.measureAt
+            };
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, { 
@@ -46,20 +53,21 @@ export default class PageService {
         }
     }
  
-    public async getPages(req: Request): Promise<IPage[]> {
+    public async getPages(req: Request): Promise<IPageData[]> {
         try {
             const user = await User.findOne({email: req?.user?.email});
             
             if(user) { 
                 const userPages = await UserPage.getAllUserPages(user.id);
 
-                if(req.query.address) {
-                    const url = new URL(req.query.address as string);
-                    const domainPages = await Page.getAllDomainPages(url.href, userPages);
-                    return this.sortAlphabetically(domainPages, 'path');
+                if(req.query.domain) {
+                    /* const url = new URL(req.query.address as string); */
+                    const domainPages = await Page.getAllDomainPages((req.query.domain as string), userPages);
+                    const sortedDomainPages = this.sortAlphabeticallyByPath(domainPages);
+                    return sortedDomainPages; 
                 }
                 const allPages = await Page.getAllPages(userPages);
-                return this.sortAlphabetically(allPages, 'domain');
+                return this.sortAlphabeticallyByDomain(allPages);
             }
             throw createHttpError(400);
         } catch (error) {
@@ -77,22 +85,28 @@ export default class PageService {
 
     public async updatePage(req: Request): Promise<void> {
         try {
+
+            await validateUrlResponse(req.body.address);
+            if (!this.testIntervalIsValid(req.body.testInterval)) {
+                throw createHttpError(400, { 
+                    message: {
+                        detail: `${req.body.testInterval} is not a valid testInterval.`, 
+                        testInterval: req.body.testInterval
+                    } 
+                });
+            }
+            const testInterval: MeasureAt = (<any>MeasureAt)[req.body.testInterval];
             const user = await User.findOne({email: req?.user?.email});
-            
             const userPages = await UserPage.getAllUserPages(user?.id);
             const userPageIDS = userPages.map((userPage: IUserPage) => userPage.addressID);
 
-            if (!user) {
-                throw createHttpError(404, 'User not found');
-            }
 
             if (!userPageIDS.includes(req.params.id)) {
                 throw createHttpError(403, 'Forbidden');
             }
 
-            await validateUrlResponse(req.body.address);
             const page = await Page.findOrCreate(new URL(req.body.address));
-            await UserPage.updateAddressID(user.id, req.params.id, page.id);
+            await UserPage.updateAddressID(user?.id, req.params.id, page.id, testInterval);
 
         } catch (error) {
             console.log(error);
@@ -132,11 +146,23 @@ export default class PageService {
             throw error;
         }
     }
+
+    private testIntervalIsValid(testInterval: string) : boolean{
+        return (testInterval in MeasureAt);
+    }
     
-    private sortAlphabetically(address: IPage[], sortType: string) {
+    private sortAlphabeticallyByPath(address: IPageData[]) {
         return address.sort((a, b) => {
-            if (a[sortType as keyof IPage] < b[sortType as keyof IPage]) return -1;
-            else if (a[sortType as keyof IPage] > b[sortType as keyof IPage]) return 1;
+            if (a.page.path < b.page.path) return -1;
+            else if (a.page.path > b.page.path) return 1;
+            return 0;
+        });
+    }
+
+    private sortAlphabeticallyByDomain(address: IPageData[]) {
+        return address.sort((a, b) => {
+            if (a.page.domain < b.page.domain) return -1;
+            else if (a.page.domain > b.page.domain) return 1;
             return 0;
         });
     }

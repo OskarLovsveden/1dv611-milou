@@ -17,7 +17,7 @@ export interface IUserPageModel extends Model<IUserPage> {
     findOrCreate(userId: string, pageId: string, interval: MeasureAt): Promise<IUserPage>
     getAllUserPages(userID: string): Promise<IUserPage[]>
     deletePageId(userID: string, addressID: string): Promise<void>
-    updateAddressID(userID: string, previousID: string, newID: string): Promise<void>
+    updateAddressID(userID: string, previousID: string, newID: string, measureAt: MeasureAt): Promise<void>
     findUserIdsOfPage(addressID: string): Promise<string[]>
 }
 
@@ -76,10 +76,11 @@ schema.statics.deletePageId = async function(userID: string, addressID: string):
     }
 };
 
-schema.statics.updateAddressID = async function(userID: string, previousID: string, newID: string): Promise<void> {
+schema.statics.updateAddressID = async function(userID: string, previousID: string, newID: string, measureAt: MeasureAt): Promise<void> {
     try {
         const updatedUserPage = await this.updateOne({userID: userID, addressID: previousID}, {
-            addressID: newID
+            addressID: newID,
+            measureAt
         });
 
         if (updatedUserPage.nModified !== 1) {
