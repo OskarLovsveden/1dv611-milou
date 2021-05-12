@@ -2,6 +2,7 @@ import mongoose, { Document, Model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import Page from './page';
+import createHttpError from 'http-errors';
 
 const { isEmail } = validator;
 
@@ -12,6 +13,7 @@ export interface IUser extends Document {
 
 export interface IUserModel extends Model<IUser> {
     authenticate(email: string, password: string): Promise<IUser>
+    findUserEmailsFromIDS(userIDS: string[]): Promise<string[]>
 }
 
 export const schema = new Schema({
@@ -43,6 +45,23 @@ schema.statics.authenticate = async function(email: string, password: string): P
         throw new Error('Invalid email or password');
     }
 };
+
+schema.statics.findUserEmailsFromIDS = async function(userIDS: string[]): Promise<string[]> {
+    try {
+        const userEmails = [];
+
+        for (const userID of userIDS) {
+            const user = await User.findOne({_id: userID});
+            if (user) {
+                userEmails.push(user?.email);
+            }
+        }
+        return userEmails;
+    } catch (error) {
+        throw createHttpError(400, 'Failed to find user emails');
+    }
+};
+
 
 
 const User: IUserModel = mongoose.model<IUser, IUserModel>('User', schema);

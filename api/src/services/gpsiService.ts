@@ -2,10 +2,14 @@ import { Request } from 'express';
 import Measurement, { IScore } from '../models/measurements';
 import Page, { IPage } from '../models/page';
 import UserPage, { IUserPage } from '../models/userPage';
+import User, { IUserModel } from '../models/user';
 import fetch from 'node-fetch';
 import { URL } from 'url';
+import EmailService from './emailService';
+import { isLastDayOfTheWeek, isLastDayOfTheMonth } from '../utils/cronJob';
 
 export default class GPSIService {
+    private emailService: EmailService = new EmailService()
     public async measurePages(address: string) : Promise<any> {
         try {
             const gpsiResultData = await this.gpsiAPIRequest(address);
@@ -21,34 +25,40 @@ export default class GPSIService {
 
     public async performScheduledMeasures() : Promise<void> {
         try {
-            const newGPSIResults = [];
             const uniquePageIDS = await this.getPageIDS();
             const pages = await Page.getAllPagesByIDS(uniquePageIDS);
-            
+
             for (const page of pages) {
-                const data = await this.measurePages(page.address);
-                newGPSIResults.push(data);
-                console.log(data);
+                console.log('starting');
+                const previousResult = await Measurement.getLatestMeasurement(page.id);
+                const newResult = await this.measurePages(page.address);
+                if (this.shouldNotifyUser(previousResult.totalScore, newResult.totalScore)) {
+                    this.emailService.notifyDecreasedGPSIResults(page.id);
+                }
             }
-            
         } catch (error) {
             console.log(error);
         }
     }
 
+    private shouldNotifyUser(previousScore: number, newScore: number): boolean {
+        return previousScore > newScore || previousScore === 0;
+    }
+
     private async getPageIDS(): Promise<string[]> {
-        const date = new Date();
         const pagesToMeasure: IUserPage[] = [];
         pagesToMeasure.push(...await UserPage.find({ measureAt: 'Daily' }));
 
-        if (date.getDay() === 1) {
+        if (isLastDayOfTheWeek()) {
             pagesToMeasure.push(...await UserPage.find({ measureAt: 'Weekly' }));
         } 
-        if (date.getDate() === 28) {
+        if (isLastDayOfTheMonth()) {
             pagesToMeasure.push(...await UserPage.find({ measureAt: 'Monthly' }));
         }
         return [...new Set(pagesToMeasure.map((page: IUserPage) => page.addressID))];
     }
+
+  
 
     private async gpsiAPIRequest(address: string): Promise<any> {
         const encodedAddress = encodeURI(address);
