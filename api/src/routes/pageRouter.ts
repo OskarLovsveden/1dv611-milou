@@ -98,6 +98,7 @@ export default class PageRouter implements IRouter {
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.paramsHasObjectId(req, next),
             (req, res, next) => this.middleware.bodyHasAddress(req, next),
+            (req, res, next) => this.middleware.bodyHasTestInterval(req, next),
             (req, res, next) => this.controller.update(req, res, next)
         );
         
