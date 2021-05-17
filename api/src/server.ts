@@ -19,15 +19,14 @@ export default class Server {
         startCronJob();
         // Setting up routes
         this.app.use('/', this.indexRouter.router);
-        this.swaggerExecution();
+        this.swaggerBoot();
         this.errorHandler();
         this.listen();
     }
 
-    private async swaggerExecution(): Promise<void> {
+    private async swaggerBoot(): Promise<void> {
         const options = {
             swaggerDefinition: {
-                // openapi: '3.0.0',
                 info: {
                     title: 'Project Hermes',
                     version: '1.0.0',
@@ -36,7 +35,7 @@ export default class Server {
             },
             servers: [
                 { 
-                    url: 'http://localhost:5000/'
+                    url: process.env.BASE_URL
                 }
             ],
             apis: 
@@ -49,7 +48,7 @@ export default class Server {
         };
 
         const swaggerDocs = swaggerJSDoc(options);
-        this.app.use('/api-documentation', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+        this.app.use('/api', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
     }
 
     private errorHandler(): void {
