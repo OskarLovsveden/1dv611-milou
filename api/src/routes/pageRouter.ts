@@ -24,30 +24,24 @@ export default class PageRouter implements IRouter {
          *     tags:
          *       - pages
          *     description: This can only be done by a registered user and links it to the user adding it.
-         *     operationId: createAddress
          *     parameters:
          *       - name: address
          *         in: body
-         *         description: address that needs to be created
+         *         description: Valid address that needs to be created.
          *         required: true
          *       - name: timeInterval
          *         in: body
-         *         description: time interval for the page being created
+         *         description: Time interval for the page being created, "Daily", "Weekly", or "Monthly".
          *         required: true
          *       - name: bearer-token
          *         in: header
-         *         description: Bearer token that the user supplies
+         *         description: Bearer token that the user supplies.
          *         required: true
-         *     requestBody:
-         *       content:
-         *         application/json:
-         *       description: Create address
-         *       required: true
          *     responses:
          *       201:
-         *         description: Created address
+         *         description: Created address.
          *       400:
-         *         description: Invalid address supplied
+         *         description: Invalid address supplied.
          *       401:
          *         description: Unauthorized.
          */
@@ -58,7 +52,6 @@ export default class PageRouter implements IRouter {
             (req, res, next) => this.controller.create(req, res, next)
         );
         
-        //Todo fix id and address in this, wont do its thing
         /**
          * @swagger
          * /pages/{id}:
@@ -67,30 +60,28 @@ export default class PageRouter implements IRouter {
          *     tags:
          *       - pages
          *     description: This can only be done by a registered user and links it to the user adding it.
-         *     operationId: updateAddress
          *     parameters:
          *       - name: id
          *         in: path
-         *         description: Id of the address that needs to be updated
+         *         description: Id of the address that needs to be updated.
          *         required: true
          *       - name: address
          *         in: body
-         *         description: address that will replace the current address
+         *         description: Valid address that will replace the current address.
+         *         required: true
+         *       - name: timeInterval
+         *         in: body
+         *         description: Time interval for the page being created, "Daily", "Weekly", or "Monthly".
          *         required: true
          *       - name: bearer-token
          *         in: header
-         *         description: Bearer token that the user supplies
+         *         description: Bearer token that the user supplies.
          *         required: true
-         *     requestBody:
-         *       content:
-         *         application/json:
-         *       description: Update address
-         *       required: true
          *     responses:
          *       204:
-         *         description: Updated address
+         *         description: Updated selected address.
          *       400:
-         *         description: Invalid address supplied
+         *         description: Invalid address supplied.
          *       401:
          *         description: Unauthorized.
          */
@@ -104,21 +95,20 @@ export default class PageRouter implements IRouter {
         
         /**
          * @swagger
-         * /pages:
+         * /pages?domain={address}:
          *   get:
-         *     summary: Get a specific users pages.
+         *     summary: Get a specific user's pages.
          *     tags:
          *       - pages
-         *     description: Get all URLs that are in a users list, if adding query parameter, get domain specific URLs.
-         *     operationId: getPages
+         *     description: Get the URLs that are in a the user's list, with query parameter - get domain specific URLs, remove query parameter for all of the user's URLs.
          *     parameters:
          *       - name: address
          *         in: path
-         *         description: full address in which the domain will be selected and found.
+         *         description: Full address in which the domain will be selected and found.
          *         required: false
          *       - name: bearer-token
          *         in: header
-         *         description: Bearer token that the user supplies
+         *         description: Bearer token that the user supplies.
          *         required: true
          *     responses:
          *       200:
@@ -139,21 +129,20 @@ export default class PageRouter implements IRouter {
          *     tags:
          *       - pages
          *     description: Removes a specific page from the user.
-         *     operationId: deletePage
          *     parameters:
          *       - name: id
          *         in: path
-         *         description: Id of the address that needs to be updated
+         *         description: Id of the address that needs to be deleted.
          *         required: true
          *       - name: bearer-token
          *         in: header
-         *         description: Bearer token that the user supplies
+         *         description: Bearer token that the user supplies.
          *         required: true
          *     responses:
          *       200:
          *         description: Page deleted from user. 
          *       400:
-         *         description: id is not a valid page.
+         *         description: Id is not a valid page.
          *       401:
          *         description: Unauthorized.
          */
