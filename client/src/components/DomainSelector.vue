@@ -2,14 +2,14 @@
     <form>
       <select @change="emitDomain">
         <option value="">All</option>
-        <option v-for="domain in domains" :key="domain.id">{{domain}}</option>
+        <option v-for="(domain, index) in domains" :key="index">{{domain}}</option>
       </select>
     </form>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import PageListItem from "../components/PageListItem.vue";
+import PageListItem from '../components/PageListItem.vue';
 
 @Options({
     components: {
@@ -22,7 +22,7 @@ import PageListItem from "../components/PageListItem.vue";
     },
     methods: {
         emitDomain(element: any) {
-            this.$emit("domain-selected", element.target.value)
+            this.$emit('domain-selected', element.target.value);
         }
     }
 })

@@ -17,35 +17,35 @@
 import { Options, Vue } from 'vue-class-component';
 
 import AxiosHelper from '../helpers/AxiosHelper';
-const axios = new AxiosHelper()
+const axios = new AxiosHelper();
 
 import Cookie from '../helpers/Cookie';
-const cookie = new Cookie('token')
+const cookie = new Cookie('token');
 
 @Options({
-  methods: {
-    async login() {
-      const response = await axios.post("/auth/login", {
-        email: this.form.username,
-        password: this.form.password
-      })
+    methods: {
+        async login() {
+            const response = await axios.post('/auth/login', {
+                email: this.form.username,
+                password: this.form.password
+            });
 
-      if (response.status === 200) {
-        cookie.set(response.data.token)
-        this.$emit('logged-in')
-      }
-    }
-  },
-  data() {
-    return {
-      form: 
+            if (response.status === 200) {
+                cookie.set(response.data.token);
+                this.$emit('logged-in');
+            }
+        }
+    },
+    data() {
+        return {
+            form: 
         {
-          username: null,
-          password: null
+            username: null,
+            password: null
         },
-        errors: []
-    };
-  }
+            errors: []
+        };
+    }
 })
 export default class LoginForm extends Vue {}
 </script>

@@ -30,27 +30,27 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import WebpageForm from "../components/WebpageForm.vue";
-import DeleteButton from "../components/DeleteButton.vue";
+import WebpageForm from '../components/WebpageForm.vue';
+import DeleteButton from '../components/DeleteButton.vue';
 
 @Options({
-  components: {
-    WebpageForm,
-    DeleteButton
-  },
-  props: {
-    address: {
-      type: String
+    components: {
+        WebpageForm,
+        DeleteButton
     },
-    pageID: {
-      type: String
+    props: {
+        address: {
+            type: String
+        },
+        pageID: {
+            type: String
+        }
+    },
+    methods: {
+        emitCloseEvent() {
+            this.$emit('close');
+        }
     }
-  },
-  methods: {
-    emitCloseEvent() {
-      this.$emit("close")
-    }
-  }
 })
 
 export default class Modal extends Vue {}

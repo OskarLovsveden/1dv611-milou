@@ -1,11 +1,11 @@
-import axios from 'axios'
-import Cookie from './Cookie'
+import axios from 'axios';
+import Cookie from './Cookie';
 
 export default class AxiosHelper {
     private cookie: Cookie
 
     constructor () {
-        this.cookie = new Cookie('token')
+        this.cookie = new Cookie('token');
     }
 
     // POST request using the current JWT
@@ -18,19 +18,19 @@ export default class AxiosHelper {
                     authorization: 'Bearer ' + this.cookie.get()
                 },
                 data: data
-            })
+            });
             
-            return response
+            return response;
         } catch (error) {
-            console.log(error.response, 'error axios POST')
-            return error.response
+            console.log(error.response, 'error axios POST');
+            return error.response;
         }
         
     }
 
     async update(url: string, data?: any): Promise<any> {
         try {
-            console.log(data, "axios put")
+            console.log(data, 'axios put');
             const response = await axios({
                 method: 'PUT',
                 url: url,
@@ -38,12 +38,12 @@ export default class AxiosHelper {
                     authorization: 'Bearer ' + this.cookie.get()
                 },
                 data: data
-            })
+            });
             
-            return response
+            return response;
         } catch (error) {
-            console.log(error.response, 'error axios PUT (update)')
-            return error.response
+            console.log(error.response, 'error axios PUT (update)');
+            return error.response;
         }
         
     }
@@ -57,12 +57,12 @@ export default class AxiosHelper {
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 }
-            })
+            });
             
-            return response
+            return response;
         } catch (error) {
-            console.log(error.response, 'error axios GET')
-            return error.response
+            console.log(error.response, 'error axios GET');
+            return error.response;
         }
     }
     async delete(url: string) {
@@ -73,12 +73,12 @@ export default class AxiosHelper {
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 }
-            })
+            });
             
-            return response
+            return response;
         } catch (error) {
-            console.log(error.response, 'error axios DELETE')
-            return error.response
+            console.log(error.response, 'error axios DELETE');
+            return error.response;
         }
     }
 }

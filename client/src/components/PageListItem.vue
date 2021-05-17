@@ -7,13 +7,13 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import Modal from '../components/Modal.vue'
+import Modal from '../components/Modal.vue';
 
 @Options({
     data() {
         return {
             showModal: false
-        }
+        };
     },
     components: {
         PageListItem,
@@ -30,8 +30,8 @@ import Modal from '../components/Modal.vue'
     },
     methods: {
         toggleModal() {
-            this.showModal = !this.showModal
-            this.$emit("close")
+            this.showModal = !this.showModal;
+            this.$emit('close');
         }
     }
 })

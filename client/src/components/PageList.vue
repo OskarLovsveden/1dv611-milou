@@ -1,14 +1,14 @@
 <template>
     <div v-if="pages.length > 0">
-        <ul v-for="page in pages" :key="page.id">
-            <PageListItem :address="page.address" :pageID="page._id" @close="closeModal"/>
+        <ul v-for="(item, index) in pages" :key="index">
+            <PageListItem :address="item.page.address" :pageID="item.page._id" @close="closeModal"/>
         </ul>
     </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import PageListItem from "../components/PageListItem.vue";
+import PageListItem from '../components/PageListItem.vue';
 
 @Options({
     components: {
@@ -21,7 +21,7 @@ import PageListItem from "../components/PageListItem.vue";
     },
     methods: {
         closeModal() {
-            this.$emit("close")
+            this.$emit('close');
         }
     }
 })
