@@ -63,7 +63,7 @@ const axios = new AxiosHelper();
 
             if (response.status === 200) {
                 this.setCookie('token', response.data.token);
-                this.$emit('logged-in');
+                await this.$store.dispatch('checkUser');
             }
         },
         setCookie(cname: string, cvalue: string) {

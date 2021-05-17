@@ -1,6 +1,6 @@
 <template>
-    <form v-on:submit.prevent>
-        <input type="url" v-model="url" :placeholder="placeholder" required>
+    <form v-on:submit.prevent autocomplete="on">
+        <input :placeholder="placeholder" type="url" name="url" autocomplete="on" v-model="url" required>
         <button v-if="address" @click="updateWebPage" type="submit">Update</button>
         <button v-else @click="addWebPage" type="submit">Add</button>
         <div id="radio-buttons">

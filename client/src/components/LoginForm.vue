@@ -32,7 +32,7 @@ const cookie = new Cookie('token');
 
             if (response.status === 200) {
                 cookie.set(response.data.token);
-                this.$emit('logged-in');
+                await this.$store.dispatch('checkUser');
             }
         }
     },
