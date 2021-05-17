@@ -1,8 +1,6 @@
-import { Request } from 'express';
 import Measurement, { IScore } from '../models/measurements';
-import Page, { IPage } from '../models/page';
+import Page from '../models/page';
 import UserPage, { IUserPage } from '../models/userPage';
-import User, { IUserModel } from '../models/user';
 import fetch from 'node-fetch';
 import { URL } from 'url';
 import EmailService from './emailService';
@@ -10,13 +8,14 @@ import { isLastDayOfTheWeek, isLastDayOfTheMonth } from '../utils/cronJob';
 
 export default class GPSIService {
     private emailService: EmailService = new EmailService()
-    public async measurePages(address: string) : Promise<any> {
+    private numberOfTestRuns = 2
+    
+    public async measurePages(address: string) : Promise<IScore> {
         try {
-            const gpsiResultData = await this.gpsiAPIRequest(address);
-            const formattedData = this.gpsiDataFormatter(gpsiResultData);
+            const measurement: IScore = await this.getGPSIResults(address);
             const page = await Page.findOrCreate(new URL(address));
 
-            return await Measurement.addScore(formattedData, page.id);
+            return await Measurement.addScore(measurement, page.id);
         } catch (error) {
             console.log(error);
             throw error;
@@ -29,16 +28,30 @@ export default class GPSIService {
             const pages = await Page.getAllPagesByIDS(uniquePageIDS);
 
             for (const page of pages) {
-                console.log('starting');
                 const previousResult = await Measurement.getLatestMeasurement(page.id);
                 const newResult = await this.measurePages(page.address);
                 if (this.shouldNotifyUser(previousResult.totalScore, newResult.totalScore)) {
-                    this.emailService.notifyDecreasedGPSIResults(page.id);
+                    this.emailService.notifyDecreasedGPSIResults(page.id, previousResult, newResult, page.address);
                 }
             }
+
+          
         } catch (error) {
             console.log(error);
         }
+    }
+
+    private async getGPSIResults(address: string): Promise<IScore> {
+        const gpsiResults: IScore[] = [];
+        for (let index = 0; index < this.numberOfTestRuns; index++) {
+            const gpsiData = await this.gpsiAPIRequest(address);
+            gpsiResults.push(this.gpsiDataFormatter(gpsiData));
+        }
+        return this.compareGPSIResults(gpsiResults);
+    }
+
+    private compareGPSIResults(scores: IScore[]): IScore {
+        return scores.reduce((scoreOne: IScore, scoreTwo: IScore) => scoreOne.totalScore > scoreTwo.totalScore ? scoreOne : scoreTwo);    
     }
 
     private shouldNotifyUser(previousScore: number, newScore: number): boolean {
@@ -63,7 +76,6 @@ export default class GPSIService {
     private async gpsiAPIRequest(address: string): Promise<any> {
         const encodedAddress = encodeURI(address);
         const response = await fetch(`${process.env.GPSI_URL}?url=${encodedAddress}&key=${process.env.GPSI_TOKEN}&category=PERFORMANCE`);
-        console.log(response);
         return await response.json();
     }
 
@@ -72,11 +84,11 @@ export default class GPSIService {
             .filter((metric: any) => metric.group === 'metrics')
             .map((category: any) => category.id)
             .map((result: any) => unformattedData.lighthouseResult.audits[result]);
-
-        console.log(unformattedData.lighthouseResult.categories.performance.score);
         return {
             totalScore: unformattedData.lighthouseResult.categories.performance.score,
             categories
         };
     }
 }
+
+
