@@ -1,19 +1,25 @@
 <template>
-  <div class="addwebpage">
-    <div class="domain-menu">
-      <DomainSelector :domains="domains" @domain-selected="setDomain"/>
-      <button id="show-modal" @click="toggleModal">Add new webpage</button>
+  <div>
+    <div id="measurepage">
+      <DirectSearch />
     </div>
-    <Modal v-if="showModal" @close="toggleModal"/>
-    <PageList :pages="pagesToShow" @close="toggleModal"/>
+    <div class="addwebpage">
+      <div class="domain-menu">
+        <DomainSelector :domains="domains" @domain-selected="setDomain"/>
+        <button id="show-modal" @click="toggleModal">Add new webpage</button>
+      </div>
+      <Modal v-if="showModal" @close="toggleModal"/>
+      <PageList :pages="pagesToShow" @close="toggleModal"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import DomainSelector from '../components/DomainSelector.vue';
-import PageList from '../components/PageList.vue';
-import Modal from '../components/Modal.vue';
+import DirectSearch from "../components/DirectSearch.vue";
+import DomainSelector from "../components/DomainSelector.vue";
+import PageList from "../components/PageList.vue";
+import Modal from "../components/Modal.vue";
 
 import AxiosHelper from '../helpers/AxiosHelper';
 const axios = new AxiosHelper();
@@ -22,6 +28,7 @@ const axios = new AxiosHelper();
 @Options({
     components: {
         DomainSelector,
+        DirectSearch,
         PageList,
         Modal
     },
@@ -78,4 +85,9 @@ export default class Profile extends Vue {}
     display: flex;
     flex-direction: row;
   }
+
+  .domain-menu form {
+    margin-right: 10px;
+  }
+
 </style>

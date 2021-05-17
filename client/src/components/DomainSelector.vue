@@ -29,4 +29,3 @@ import PageListItem from '../components/PageListItem.vue';
 
 export default class PageList extends Vue {}
 </script>
-
