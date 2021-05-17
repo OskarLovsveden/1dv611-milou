@@ -2,7 +2,7 @@ import { scheduleJob } from 'node-schedule';
 import GPSIService from '../services/gpsiService';
 export const startCronJob = () => {
     const gpsiService = new GPSIService();
-    scheduleJob('* 1 23 * *', () => gpsiService.performScheduledMeasures());
+    scheduleJob('1 23 * * *', () => gpsiService.performScheduledMeasures());
 };
 
 export const isLastDayOfTheWeek = (): boolean => {
