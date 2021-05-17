@@ -26,64 +26,64 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
-import AxiosHelper from "../helpers/AxiosHelper";
+import AxiosHelper from '../helpers/AxiosHelper';
 const axios = new AxiosHelper();
  
 @Options({
-  methods: {
-    async submitForm() {
-        if(this.form.password === this.form.passwordRepeat){
-          await this.registerUser()
+    methods: {
+        async submitForm() {
+            if(this.form.password === this.form.passwordRepeat){
+                await this.registerUser();
           
-        } else {
-          const message = "Password and repeated password do not match"
-          if (this.errors.indexOf(message) === -1) this.errors.push(message);
+            } else {
+                const message = 'Password and repeated password do not match';
+                if (this.errors.indexOf(message) === -1) this.errors.push(message);
+            }
+        },
+        async registerUser() {
+            const response = await axios.post('/users', {
+                email: this.form.username,
+                password: this.form.password
+            });
+      
+            if(response.status === 400){
+                if(this.errors.indexOf(response.data.message.detail) === -1) this.errors.push(response.data.message.detail);
+            }
+
+            if(response.status === 201){
+                this.login();
+            }
+
+        },
+        async login() {
+            const response = await axios.post('/auth/login',{
+                email: this.form.username,
+                password: this.form.password
+            });
+
+            if (response.status === 200) {
+                this.setCookie('token', response.data.token);
+                this.$emit('logged-in');
+            }
+        },
+        setCookie(cname: string, cvalue: string) {
+            const d: Date = new Date();
+            d.setTime(d.getTime() + (2 * 60 * 60 * 1000));
+            const expires: string = 'expires=' + d.toUTCString();
+            document.cookie = cname + '=' + cvalue + ';' + expires + ';secure;samesite=lax;';
         }
     },
-    async registerUser() {
-      const response = await axios.post("/users", {
-          email: this.form.username,
-          password: this.form.password
-      })
-      
-      if(response.status === 400){
-        if(this.errors.indexOf(response.data.message.detail) === -1) this.errors.push(response.data.message.detail);
-      }
-
-      if(response.status === 201){
-        this.login();
-      }
-
-    },
-    async login() {
-      const response = await axios.post("/auth/login",{
-          email: this.form.username,
-          password: this.form.password
-      })
-
-      if (response.status === 200) {
-        this.setCookie('token', response.data.token)
-        this.$emit('logged-in')
-      }
-    },
-    setCookie(cname: string, cvalue: string) {
-      const d: Date = new Date();
-      d.setTime(d.getTime() + (2 * 60 * 60 * 1000));
-      const expires: string = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";secure;samesite=lax;";
-    }
-  },
-  data() {
-    return {
-      form: 
+    data() {
+        return {
+            form: 
         {
-          username: null,
-          password: null,
-          passwordRepeat: null
+            username: null,
+            password: null,
+            passwordRepeat: null
         },
-        errors: []
-    };
-  }
+            errors: []
+        };
+    }
 })
 export default class RegisterForm extends Vue {}
 </script>

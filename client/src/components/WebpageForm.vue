@@ -19,44 +19,44 @@
 import { Options, Vue } from 'vue-class-component';
 
 import AxiosHelper from '../helpers/AxiosHelper';
-const axios = new AxiosHelper()
+const axios = new AxiosHelper();
 
 @Options({
-  props: {
-      address: {
-        type: String
-      },
-      testInterval: {
-        type: String
-      },
-      pageID: {
-        type: String
-      }
-  },
-  data() {
-    return {
-      url: '',
-      interval: ''
-    }
-  },
-  computed: {
-    placeholder() { 
-      return this.address ? this.address : 'http://example.com'
+    props: {
+        address: {
+            type: String
+        },
+        testInterval: {
+            type: String
+        },
+        pageID: {
+            type: String
+        }
     },
-  },
-  methods: {
-    async addWebPage(){
-      if(this.interval){
-        await axios.post('/pages', {address: this.url, testInterval: this.interval})
-        this.url = ""
-        this.$emit('added-page')
-      }
+    data() {
+        return {
+            url: '',
+            interval: ''
+        };
     },
-    async updateWebPage() {
-      console.log(this.pageID, this.url, "Från update")
-      await axios.update("/pages/" + this.pageID, {address: this.url})
+    computed: {
+        placeholder() { 
+            return this.address ? this.address : 'http://example.com';
+        },
+    },
+    methods: {
+        async addWebPage(){
+            if(this.interval){
+                await axios.post('/pages', {address: this.url, testInterval: this.interval});
+                this.url = '';
+                this.$emit('added-page');
+            }
+        },
+        async updateWebPage() {
+            console.log(this.pageID, this.url, 'Från update');
+            await axios.update('/pages/' + this.pageID, {address: this.url});
+        }
     }
-  }
 })
 
 export default class WebpageForm extends Vue {}
