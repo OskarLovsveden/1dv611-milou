@@ -25,12 +25,16 @@ const cookie = new Cookie('token')
 @Options({
   methods: {
     async login() {
+      console.log("response")
+
       const response = await axios.post("/auth/login", {
         email: this.form.username,
         password: this.form.password
       })
+      console.log(response, "Response after")
 
       if (response.status === 200) {
+        console.log("Fick en 200")
         cookie.set(response.data.token)
         this.$emit('logged-in')
       }
