@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <Logo />
     <div v-if="loading">
       <h1>Loading...</h1>
     </div>
@@ -11,12 +10,15 @@
         <Profile />
       </div>
       <div v-else>
+
         <div v-if="!registerUser">
+          <h1>Milou Project</h1>
           <h3>Login existing user</h3>
           <LoginForm @logged-in="checkUser" />
           <span>New user? Register </span>
           <a @submit.prevent @click="flipRegisterUser" href="#">here</a>
         </div>
+        
         <div v-else>
           <h1>Milou Project</h1>
           <h3>Register new user</h3>
@@ -31,19 +33,19 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
+
 import LoginForm from '../components/LoginForm.vue';
 import RegisterForm from '../components/RegisterForm.vue';
 import Profile from '../components/Profile.vue';
-import Logo from '../components/Logo.vue';
-import AxiosHelper from '../helpers/AxiosHelper';
 
+import AxiosHelper from '../helpers/AxiosHelper';
 const axios = new AxiosHelper();
+
 import Cookie from '../helpers/Cookie';
 const cookie = new Cookie('token');
 
 @Options({
     components: {
-        Logo,
         LoginForm,
         Profile,
         RegisterForm,
@@ -61,8 +63,6 @@ const cookie = new Cookie('token');
             const response = await axios.post('/auth/authenticate');
             this.user = response?.data?.authenticatedUser;
             this.isAuthenticated = response.status === 200;
-            console.log(this.user);
-            console.log(this.isAuthenticated);
         },
         flipIsAuthenticated() {
             this.isAuthenticated = !this.isAuthenticated;
@@ -79,9 +79,9 @@ const cookie = new Cookie('token');
         if (cookie.get()) {
             await this.checkUser();
         }
+    
         this.loading = false;
     }
 })
 export default class Home extends Vue {}
 </script>
-

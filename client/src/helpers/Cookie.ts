@@ -2,11 +2,11 @@ export default class Cookie {
     private key: string
 
     constructor (key: string) {
-        this.key = key
+        this.key = key;
     }
 
     get() : string | undefined {
-        return document?.cookie?.split('; ')?.find(row => row?.startsWith(this.key + '='))?.split('=')[1]
+        return document?.cookie?.split('; ')?.find(row => row?.startsWith(this.key + '='))?.split('=')[1];
     }
 
     set(value: string) : void {
@@ -17,6 +17,6 @@ export default class Cookie {
     }
 
     delete() : void {
-        document.cookie = this.key + '=;max-age=0'
+        document.cookie = this.key + '=;max-age=0';
     }
 }

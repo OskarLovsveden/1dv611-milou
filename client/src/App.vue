@@ -1,6 +1,19 @@
 <template>
-  <router-view />
+  <Home />
 </template>
+
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import Home from './components/Home.vue';
+
+@Options({
+    components: {
+        Home,
+    },
+})
+
+export default class App extends Vue {}
+</script>
 
 <style>
 
@@ -23,7 +36,7 @@
   color: #2c3e50;
 }
 
-#nav a.router-link-exact-active { 
+#nav a.router-link-exact-active {
   color: #42b983;
 }
 </style>

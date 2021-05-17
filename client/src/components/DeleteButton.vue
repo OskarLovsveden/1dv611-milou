@@ -7,8 +7,8 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
-import AxiosHelper from '../helpers/AxiosHelper'
-const axios = new AxiosHelper()
+import AxiosHelper from '../helpers/AxiosHelper';
+const axios = new AxiosHelper();
 
 @Options({
     props: {
@@ -19,7 +19,7 @@ const axios = new AxiosHelper()
     },
     methods: {
         async doDelete() {
-            await axios.delete('/pages/' + this.pageID)
+            await axios.delete('/pages/' + this.pageID);
         }
     }
 })

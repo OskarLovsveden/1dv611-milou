@@ -21,54 +21,53 @@ import DomainSelector from "../components/DomainSelector.vue";
 import PageList from "../components/PageList.vue";
 import Modal from "../components/Modal.vue";
 
-import AxiosHelper from "../helpers/AxiosHelper"
+import AxiosHelper from '../helpers/AxiosHelper';
 const axios = new AxiosHelper();
 
 
 @Options({
-  components: {
-    DirectSearch,
-    DomainSelector,
-    PageList,
-    Modal
-  },
-  mounted() {
-    this.getPages()
-  },
-  data() {
-    return {
-      pages: [],
-      domain: null,
-      showModal: false
-    }
-  },
-  methods: {
-    async getPages() {
-      // console.log(this.$store.state.count)
-      const response = await axios.get('/pages')
-      this.pages = response.data
+    components: {
+        DomainSelector,
+        DirectSearch,
+        PageList,
+        Modal
     },
-    setDomain(value: string) {
-      this.domain = value
+    mounted() {
+        this.getPages();
     },
-    toggleModal() {
-      this.showModal = !this.showModal
-      this.getPages()
-    }
-  },
-  computed: {
-    domains() {
-      const domains = this.pages.map((p: any) => p.domain)
-      return [...new Set(domains)]
+    data() {
+        return {
+            pages: [],
+            domain: null,
+            showModal: false
+        };
     },
-    pagesToShow() {
-      if (this.domain) {
-        return this.pages.filter((p: any) => p.domain === this.domain)
-      }
+    methods: {
+        async getPages() {
+            const response = await axios.get('/pages');
+            this.pages = response.data;
+        },
+        setDomain(value: string) {
+            this.domain = value;
+        },
+        toggleModal() {
+            this.showModal = !this.showModal;
+            this.getPages();
+        }
+    },
+    computed: {
+        domains() {
+            const domains = this.pages.map((p: any) => p.page.domain);
+            return [...new Set(domains)];
+        },
+        pagesToShow() {
+            if (this.domain) {
+                return this.pages.filter((p: any) => p.page.domain === this.domain);
+            }
 
-      return this.pages
+            return this.pages;
+        }
     }
-  }
 })
 
 export default class Profile extends Vue {}
