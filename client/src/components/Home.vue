@@ -48,6 +48,7 @@ const cookie = new Cookie('token');
           this.registerUser = !this.registerUser;
         },
         logout() {
+          this.$toast.success("Logged out")
           cookie.delete();
           this.$store.commit('FLIP_IS_AUTHENTICATED');
         }

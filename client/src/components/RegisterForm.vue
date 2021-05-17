@@ -51,6 +51,7 @@ const axios = new AxiosHelper();
             }
 
             if(response.status === 201){
+                this.$toast.success("User registered")
                 this.login();
             }
 
