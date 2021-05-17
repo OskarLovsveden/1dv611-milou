@@ -70,4 +70,24 @@ export default class App extends Vue {}
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+button {
+  color: white;
+  background-color: #00ccff;
+  border-radius: 10px;
+  padding: 10px;
+  border: solid 1px rgba(0, 0, 0, 0);
+  box-shadow: 2px 2px 5px 5px rgba(22, 21, 21, 0.05);
+}
+
+button:hover {
+  background-color: #00a2ca;
+  border-radius: 10px;
+  padding: 10px;
+  border: solid 1px rgba(0, 0, 0, 0);
+  box-shadow: 2px 2px 5px 5px rgba(22, 21, 21, 0.05);
+  transition: 0.3s background-color;
+}
+
+
 </style>

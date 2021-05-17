@@ -31,6 +31,7 @@ const cookie = new Cookie('token');
             });
 
             if (response.status === 200) {
+                this.$toast.success('Logged in!');
                 cookie.set(response.data.token);
                 await this.$store.dispatch('checkUser');
             }
