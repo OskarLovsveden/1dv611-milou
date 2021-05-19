@@ -23,14 +23,13 @@ export default class AxiosHelper {
             return response;
         } catch (error) {
             console.log(error.response, 'error axios POST');
-            return error.response;
+            throw new Error(error.response.data.message.detail);
         }
         
     }
 
     async update(url: string, data?: any): Promise<any> {
         try {
-            console.log(data, 'axios put');
             const response = await axios({
                 method: 'PUT',
                 url: url,
@@ -43,7 +42,7 @@ export default class AxiosHelper {
             return response;
         } catch (error) {
             console.log(error.response, 'error axios PUT (update)');
-            return error.response;
+            throw new Error(error.response.data.message.detail)
         }
         
     }
@@ -62,7 +61,7 @@ export default class AxiosHelper {
             return response;
         } catch (error) {
             console.log(error.response, 'error axios GET');
-            return error.response;
+            throw new Error(error.response.data.message.detail)
         }
     }
     async delete(url: string) {
@@ -78,7 +77,7 @@ export default class AxiosHelper {
             return response;
         } catch (error) {
             console.log(error.response, 'error axios DELETE');
-            return error.response;
+            throw new Error(error.response.data.message.detail)
         }
     }
 }

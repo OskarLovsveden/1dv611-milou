@@ -34,27 +34,27 @@ const user = {
   },
 }
 
-// interface IPagesState {
-//   list: Array<Record<string, unknown>>
-// }
+interface IModalState {
+  isOpen: boolean
+}
 
-// const pages = {
-//   state: (): IPagesState => ({
-//     list: []
-//   }),
-//   mutations: {
+const modal = {
+  state: (): IModalState => ({
+    isOpen: false
+  }),
+  mutations: {
+    FLIP_IS_OPEN(state: IModalState) {
+      state.isOpen = !state.isOpen
+    },
+  },
+  actions: {
 
-
-//   },
-//   actions: {
-
-//   },
-// }
-
+  },
+}
 
 export default createStore({
   modules: {
     user: user,
-    // pages: pages
+    modal: modal
   }
 })
