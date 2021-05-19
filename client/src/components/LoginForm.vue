@@ -10,6 +10,11 @@
       </div>
       <button type="submit">Login</button>
     </form>
+    <div v-if="errors">
+      <div v-for="(error, index) in errors" :key="index">
+        <p>{{error}}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,16 +30,19 @@ const cookie = new Cookie('token');
 @Options({
     methods: {
         async login() {
+          try {
             const response = await axios.post('/auth/login', {
                 email: this.form.username,
                 password: this.form.password
             });
+            this.$toast.success('Logged in!');
+            cookie.set(response.data.token);
+            await this.$store.dispatch('checkUser');
+            
+          } catch (error) {
+             if (this.errors.indexOf(error.message) === -1) this.errors.push(error.message);
+          }
 
-            if (response.status === 200) {
-                this.$toast.success('Logged in!');
-                cookie.set(response.data.token);
-                await this.$store.dispatch('checkUser');
-            }
         }
     },
     data() {
@@ -50,3 +58,10 @@ const cookie = new Cookie('token');
 })
 export default class LoginForm extends Vue {}
 </script>
+
+<style scoped>
+  form input,
+  form button{
+    margin-bottom: 10px;
+  }
+</style>
