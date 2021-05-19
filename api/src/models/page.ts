@@ -43,13 +43,16 @@ export const PageSchema = new Schema({
     }
 });
 
-PageSchema.statics.getByAddress = async function(address: string) {
+PageSchema.statics.getByAddress = async function(address: string): Promise<IPage> {
     try {
         const existingPage = await Page.findOne({address});
 
-        return existingPage;
-    } catch (error) {
-        return null;
+        if (existingPage) {
+            return existingPage;
+        }
+        throw createHttpError(404, 'Could not find page');
+    } catch (error) { 
+        throw error;
     }
 };
 
