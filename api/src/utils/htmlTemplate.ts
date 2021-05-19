@@ -1,34 +1,31 @@
-import { IScore } from '../models/measurements';
+import { ICategory, IScore } from '../models/measurements';
 import moment from 'moment';
 
 
-export const graphTemplate = (pageScore: IScore[], address: string): string => {
-    const colors = ['rgb(31, 233, 182)', 'rgb(125, 79, 255)', 'rgb(255, 178, 2)', 'rgb(3, 175, 254)', 'rgb(255, 65, 129)', 'rgb(161, 161, 161)', 'rgb(183, 24, 255)'];
-    const organizedMeasurements = getOrganizedMeasurements(pageScore);
+export const createGPSIGraphHTML = (pageScores: IScore[], address: string): string => {
+    const graphTitle = 'GPSI Measurements For: ' + address;
+    const organizedMeasurements = getOrganizedMeasurements(pageScores);
     const categories = getCategories(organizedMeasurements);
-    categories.unshift('Total Scores');
-    const dates = pageScore.map((pd: any) => moment(pd.createdAt).format('MMMM Do YYYY, HH:mm'));
-    const totalScores = pageScore.map((ps: IScore) => ps.totalScore);
-
-    const categoriyScores = categories.map((d:any) => {
-        return organizedMeasurements.filter((a: any) => a.title === d).map((c: any) => c.score);
-    });
-    categoriyScores.unshift(totalScores);
+    const dates = getDates(pageScores);
+    const scores = getScores(categories, organizedMeasurements, pageScores);
+    const datasets = createDataSets(categories, scores);
     
-    const dattaSets = categories.map((c: any, index: number) => {
-        return {
-            label: c,
-            data: categoriyScores[index],
-            fill: false,
-            borderColor: colors[index]
-        };
-    });
+    const graphObject = createGraphObject(dates, datasets, graphTitle); 
 
-    const data = {
+
+    return '<script src=\'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\'></script>'+
+    '<canvas id=\'bar-chart\' width=\'800\' height=\'450\'></canvas>'+
+    '<script>'+
+    'var logChart = new Chart(document.getElementById(\'bar-chart\'),' + JSON.stringify(graphObject) +');'+
+    '</script>';
+};
+
+const createGraphObject = (dates: string[], datasets: any, graphTitle: string) => {
+    return {
         type: 'line',
         data: {
             labels: dates,
-            datasets: dattaSets
+            datasets
         },
         options: {
             responsive: true,
@@ -39,29 +36,48 @@ export const graphTemplate = (pageScore: IScore[], address: string): string => {
             },
             title: {
                 display: true,
-                text: 'GSPI Measurements For ' + address,
+                text: graphTitle,
                 color: 'rgb(252 31 78)',
                 fontSize: 30
             }
         }
     };
-
-    return '<script src=\'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\'></script>'+
-    '<canvas id=\'bar-chart\' width=\'800\' height=\'450\'></canvas>'+
-    '<script>'+
-    'var logChart = new Chart(document.getElementById(\'bar-chart\'),' + JSON.stringify(data) +');'+
-    '</script>';
 };
 
-const getOrganizedMeasurements = (pageScore: IScore[]) => {
-    return pageScore.map((ps:any) => ps.categories)
+const createDataSets = (categories: string[], scores: any) => {
+    const colors = ['rgb(31, 233, 182)', 'rgb(125, 79, 255)', 'rgb(255, 178, 2)', 'rgb(3, 175, 254)', 'rgb(255, 65, 129)', 'rgb(161, 161, 161)', 'rgb(183, 24, 255)'];
+    return categories.map((c: any, index: number) => {
+        return {
+            label: c,
+            data: scores[index],
+            fill: false,
+            borderColor: colors[index]
+        };
+    });
+};
+
+const getOrganizedMeasurements = (pageScores: IScore[]): ICategory[] => {
+    return pageScores.map((ps: IScore) => ps.categories)
         .reduce((acc, val) => acc.concat(val), []);
 };
 
-const getCategories = (organizedMeasurements: any[]) => {
-    return [...new Set(organizedMeasurements.map((te:any) => te.title))];
+const getDates = (pageScores: IScore[]): string[] => {
+    return pageScores.map((ps: any) => moment(ps.createdAt).format('MMMM Do YYYY, HH:mm'));
 };
 
-/* const flattenArray = (arr: any[]) => {
+const getCategories = (organizedMeasurements: ICategory[]): string[] => {
+    const categories = [...new Set(organizedMeasurements.map((oM: ICategory) => oM.title))];
+    categories.unshift('Total Scores');
+    return categories;
+};
 
-}; */
+const getScores = (categories: string[], measurements: ICategory[], pageScores: IScore[]) => {
+    const totalScores = pageScores.map((ps: IScore) => ps.totalScore);
+
+    const categoriyScores = categories.map((d:any) => {
+        return measurements.filter((a: any) => a.title === d).map((c: any) => c.score);
+    });
+    categoriyScores.unshift(totalScores);
+
+    return categoriyScores;
+};
