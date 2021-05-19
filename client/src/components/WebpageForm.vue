@@ -1,6 +1,6 @@
 <template>
-    <form v-on:submit.prevent>
-        <input type="url" v-model="url" :placeholder="placeholder" required>
+    <form v-on:submit.prevent autocomplete="on">
+        <input :placeholder="placeholder" type="url" name="url" autocomplete="on" v-model="url" required>
         <button v-if="address" @click="updateWebPage" type="submit">Update</button>
         <button v-else @click="addWebPage" type="submit">Add</button>
         <div id="radio-buttons">
@@ -47,14 +47,25 @@ const axios = new AxiosHelper();
     methods: {
         async addWebPage(){
             if(this.interval){
-                await axios.post('/pages', {address: this.url, testInterval: this.interval});
-                this.url = '';
-                this.$emit('added-page');
+                try {
+                    await axios.post('/pages', {address: this.url, testInterval: this.interval});
+                    this.$toast.success("Page added")
+                    this.url = '';
+                    this.$emit('added-page');
+                } catch (error) {
+                    this.$toast.error("Error when adding page")
+                }
+
             }
         },
         async updateWebPage() {
-            console.log(this.pageID, this.url, 'Från update');
-            await axios.update('/pages/' + this.pageID, {address: this.url});
+            try {
+                await axios.update('/pages/' + this.pageID, {address: this.url, testInterval: this.interval});
+                this.$toast.success("Page updated")
+            } catch (error) {
+                this.$toast.error("Error when updating page")
+                
+            }
         }
     }
 })

@@ -22,7 +22,7 @@ export default class AuthMiddleware {
         if (!req.body.password) {
             next(createHttpError(400, { 
                 message: {
-                    detail: 'password needs to be provided'
+                    detail: 'Password needs to be provided'
                 }
             }));
             return;

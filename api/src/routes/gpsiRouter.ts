@@ -20,19 +20,22 @@ export default class GPSIRouter implements IRouter {
          * @swagger
          * /measure:
          *   get:
-         *     summary: GPSI readings.
+         *     summary: Google PageSpeed Insights readings.
          *     tags:
          *       - gpsi
          *     description: Get readings with GPSI by inputting one or more addresses.
-         *     operationId: getMeasurements
          *     parameters:
+         *       - name: addresses
+         *         in: body
+         *         description: An array of one or more addresses to be measured.
+         *         required: true
          *       - name: bearer-token
          *         in: header
          *         description: Bearer token that the user supplies
          *         required: true
          *     responses:
          *       200:
-         *         description: Returns an JSON object of GPSI readings.
+         *         description: Returns a JSON object of GPSI readings.
          *       401:
          *         description: Unauthorized.
          */

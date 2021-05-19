@@ -21,21 +21,15 @@ export default class AuthRouter implements IRouter {
          *     tags:
          *       - auth
          *     description: Log in a specified user.
-         *     operationId: LogInUser
          *     parameters:
          *       - name: email
          *         in: body
-         *         description: Email that the user supplies
+         *         description: Email that the user supplies.
          *         required: true
          *       - name: password
          *         in: body
-         *         description: Password that the user supplies
+         *         description: Password that the user supplies.
          *         required: true
-         *     requestBody:
-         *       content:
-         *         application/json:
-         *       description: Log in user
-         *       required: true
          *     responses:
          *       200:
          *         description: User logged in.
@@ -57,11 +51,10 @@ export default class AuthRouter implements IRouter {
          *     tags:
          *       - auth
          *     description: Authenticate a specified user.
-         *     operationId: AuthenticateUser
          *     parameters:
          *       - name: bearer-token
          *         in: header
-         *         description: Bearer token that the user supplies
+         *         description: Bearer token that the user supplies.
          *         required: true
          *     responses:
          *       200:

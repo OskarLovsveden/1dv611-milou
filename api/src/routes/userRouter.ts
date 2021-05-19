@@ -22,21 +22,15 @@ export default class UserRouter implements IRouter {
          *     tags:
          *       - users
          *     description: Registers a new user.
-         *     operationId: createUser
          *     parameters:
          *       - name: email
          *         in: body
-         *         description: Email that the user supplies
+         *         description: Email that the user supplies.
          *         required: true
          *       - name: password
          *         in: body
-         *         description: Password that the user supplies
+         *         description: Password that the user supplies, minimum length of ten characters.
          *         required: true
-         *     requestBody:
-         *       content:
-         *         application/json:
-         *       description: Create user
-         *       required: true
          *     responses:
          *       201:
          *         description: User created.

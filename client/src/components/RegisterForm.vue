@@ -32,28 +32,27 @@ const axios = new AxiosHelper();
 @Options({
     methods: {
         async submitForm() {
-            if(this.form.password === this.form.passwordRepeat){
+            const message = 'Password and repeated password do not match';
+            
+            if(this.form.password === this.form.passwordRepeat) {
                 await this.registerUser();
-          
+                this.errors = this.errors.filter((e: string) => e !== message)
             } else {
-                const message = 'Password and repeated password do not match';
                 if (this.errors.indexOf(message) === -1) this.errors.push(message);
             }
         },
         async registerUser() {
-            const response = await axios.post('/users', {
-                email: this.form.username,
-                password: this.form.password
-            });
-      
-            if(response.status === 400){
-                if(this.errors.indexOf(response.data.message.detail) === -1) this.errors.push(response.data.message.detail);
-            }
+            try {
+                await axios.post('/users', {
+                    email: this.form.username,
+                    password: this.form.password
+                });
 
-            if(response.status === 201){
+                this.$toast.success("User registered")
                 this.login();
+            } catch (error) {
+                if (this.errors.indexOf(error.message) === -1) this.errors.push(error.message);
             }
-
         },
         async login() {
             const response = await axios.post('/auth/login',{
@@ -63,7 +62,7 @@ const axios = new AxiosHelper();
 
             if (response.status === 200) {
                 this.setCookie('token', response.data.token);
-                this.$emit('logged-in');
+                await this.$store.dispatch('checkUser');
             }
         },
         setCookie(cname: string, cvalue: string) {
@@ -87,3 +86,10 @@ const axios = new AxiosHelper();
 })
 export default class RegisterForm extends Vue {}
 </script>
+
+<style scoped>
+  form input,
+  form button{
+    margin-bottom: 10px;
+  }
+</style>
