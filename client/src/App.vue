@@ -89,5 +89,12 @@ button:hover {
   transition: 0.3s background-color;
 }
 
+form input {
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(245, 245, 245);
+  padding: 10px;
+
+}
 
 </style>
