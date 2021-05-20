@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { graphTemplate } from '../utils/htmlTemplate';
+import { createGPSIGraphHTML } from '../utils/htmlTemplate';
 import Page from '../models/page';
 import Measurement from '../models/measurements';
 import createHttpError from 'http-errors';
@@ -14,11 +14,16 @@ export default class GraphService {
                 const measurements = await Measurement.findOne({addressID: pageAddress._id});
                 if (measurements) {
                     
-                    const graph = graphTemplate(measurements?.scores, address as string);
+                    const graph = createGPSIGraphHTML(measurements?.scores, address as string);
                     return graph;
                 }
             } 
-            throw createHttpError(404, 'wrong');
+            throw createHttpError(400, { 
+                message: {
+                    detail: `Measurements for: ${address} does not exist`, 
+                    address: address
+                }
+            });
         } catch (error) {
             console.log(error);
             throw error;
