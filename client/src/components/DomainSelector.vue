@@ -15,15 +15,9 @@ import PageListItem from '../components/PageListItem.vue';
     components: {
         PageListItem
     },
-    // props: {
-    //     domains: {
-    //         type: Array,
-    //     }
-    // },
     methods: {
         setDomain(element: any) {
             this.$store.commit('SET_DOMAIN', element.target.value);
-            // this.$emit('domain-selected', element.target.value);
         }
     },
     computed: {
@@ -43,6 +37,10 @@ export default class PageList extends Vue {}
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+
+    form select {
+        width: 160px;
     }
 
 </style>

@@ -42,7 +42,6 @@ const axios = new AxiosHelper();
     methods: {
         async updateWebPage() {
             try {
-                console.log(this.pageID);
                 await axios.update('/pages/' + this.pageID, {address: this.url, testInterval: this.interval});
                 this.$toast.success("Page updated")
                 await this.$store.dispatch('loadPages');
