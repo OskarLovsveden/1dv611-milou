@@ -36,7 +36,7 @@ export default class AxiosHelper {
         try {
             const response = await axios({
                 method: 'POST',
-                url: url,
+                url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 },
@@ -52,12 +52,12 @@ export default class AxiosHelper {
         }
         
     }
-
+    
     async update(url: string, data?: any): Promise<any> {
         try {
             const response = await axios({
                 method: 'PUT',
-                url: url,
+                url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 },
@@ -76,7 +76,7 @@ export default class AxiosHelper {
         try {
             const response = await axios({
                 method: 'GET',
-                url: url,
+                url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 }
@@ -92,7 +92,7 @@ export default class AxiosHelper {
         try {
             const response = await axios({
                 method: 'DELETE',
-                url: url,
+                url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 }
