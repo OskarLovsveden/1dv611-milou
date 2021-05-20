@@ -19,7 +19,7 @@ export default class GPSIRouter implements IRouter {
         /**
          * @swagger
          * /measure:
-         *   get:
+         *   post:
          *     summary: Google PageSpeed Insights readings.
          *     tags:
          *       - gpsi

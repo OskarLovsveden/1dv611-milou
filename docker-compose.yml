@@ -8,7 +8,12 @@ services:
       - DB_CONNECTION_STRING=mongodb://db-service/milou-project
     depends_on: 
       - db-service
-
+  client:
+    build: "./client"
+    ports:
+      - "8080:8080"
+    depends_on: 
+      - api-service
   db-service:
     image: mongo:latest
     ports: 
