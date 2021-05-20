@@ -8,6 +8,29 @@ export default class AxiosHelper {
         this.cookie = new Cookie('token');
     }
 
+    // POST request using the current JWT to check if user is authenticated
+    async authCheck(url: string, data?: any): Promise<any> {
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: url,
+                headers: {
+                    authorization: 'Bearer ' + this.cookie.get()
+                },
+                data: data
+            });
+            
+            return response;
+        } catch (error) {
+            if(error.response.status === 403) {
+              this.cookie.delete()  
+            }
+
+            return error.response;
+        }
+        
+    }
+
     // POST request using the current JWT
     async post(url: string, data?: any): Promise<any> {
         try {
@@ -22,7 +45,9 @@ export default class AxiosHelper {
             
             return response;
         } catch (error) {
-            console.log(error.response, 'error axios POST');
+            if(error.response.status === 403) {
+              this.cookie.delete()  
+            }
             throw new Error(error.response.data.message.detail);
         }
         
@@ -41,7 +66,6 @@ export default class AxiosHelper {
             
             return response;
         } catch (error) {
-            console.log(error.response, 'error axios PUT (update)');
             throw new Error(error.response.data.message.detail)
         }
         
@@ -60,7 +84,6 @@ export default class AxiosHelper {
             
             return response;
         } catch (error) {
-            console.log(error.response, 'error axios GET');
             throw new Error(error.response.data.message.detail)
         }
     }
@@ -77,7 +100,6 @@ export default class AxiosHelper {
             
             return response;
         } catch (error) {
-            console.log(error.response, 'error axios DELETE');
             throw new Error(error.response.data.message.detail)
         }
     }

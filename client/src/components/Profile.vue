@@ -21,10 +21,6 @@ import DomainSelector from "../components/DomainSelector.vue";
 import PageList from "../components/PageList.vue";
 import Modal from "../components/Modal.vue";
 
-// import AxiosHelper from '../helpers/AxiosHelper';
-// const axios = new AxiosHelper();
-
-
 @Options({
     components: {
         DomainSelector,
@@ -38,26 +34,16 @@ import Modal from "../components/Modal.vue";
     data() {
         return {
             showModal: false
-            // pages: [],
-            // domain: null
         };
     },
     methods: {
         async getPages() {
             await this.$store.dispatch('loadPages');
-            // const response = await axios.get('/pages');
-            // this.pages = response.data;
         },
         toggleModal() {
           this.showModal = !this.showModal;
           this.getPages();
         }
-    },
-    computed: {
-
-        // showModal() {
-        //   return this.$store.state.modal.addWebpage
-        // }
     }
 })
 
@@ -75,6 +61,8 @@ export default class Profile extends Vue {}
   .domain-menu {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .domain-menu form {

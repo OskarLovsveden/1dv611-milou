@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app-container">
     <Logo />
     <div v-if="loading">
       <h1>Loading...</h1>
@@ -29,14 +29,9 @@ const cookie = new Cookie('token');
             registerUser: false
         };
     },
-    methods: {
-      async checkUser() {
-        await this.$store.dispatch('checkUser');
-      }
-    },
     async mounted() {
       if (cookie.get()) {
-        await this.checkUser();
+        await this.$store.dispatch('checkUser');
       }
   
       this.loading = false;
@@ -50,12 +45,32 @@ export default class App extends Vue {}
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("../public/img/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
 #app {
   font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  padding: 50px;
+}
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(245, 245, 245, 0.942);
+  width: fit-content;
+  margin: 0 auto;
+  padding: 20px 80px;
+  border-radius: 20px;
 }
 
 #nav {
@@ -72,27 +87,31 @@ export default class App extends Vue {}
 }
 
 button {
-  color: white;
-  background-color: #00ccff;
-  border-radius: 10px;
-  padding: 10px;
-  border: solid 1px rgba(0, 0, 0, 0);
-  box-shadow: 2px 2px 5px 5px rgba(22, 21, 21, 0.05);
+    display: inline-block;
+    color: #000;
+    text-decoration: none;
+    background-color: rgb(253, 253, 253);
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
 }
 
-button:hover {
-  background-color: #00a2ca;
-  border-radius: 10px;
-  padding: 10px;
-  border: solid 1px rgba(0, 0, 0, 0);
-  box-shadow: 2px 2px 5px 5px rgba(22, 21, 21, 0.05);
-  transition: 0.3s background-color;
+button::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: red;
+    transition: width .3s;
+}
+button:hover::after {
+        width: 100%;
 }
 
 form input {
   border: none;
   border-radius: 5px;
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(209, 209, 209);
   padding: 10px;
 
 }

@@ -26,10 +26,10 @@ const user = {
   },
   actions: {
     async checkUser({ commit }: { commit: Commit }) {
-      const response = await axios.post('/auth/authenticate');
+      const response = await axios.authCheck('/auth/authenticate');
 
       commit('SET_EMAIL', response?.data?.authenticatedUser);
-      commit('SET_IS_AUTHENTICATED', response.status === 200);  
+      commit('SET_IS_AUTHENTICATED', response?.status === 200);  
     }
   },
 }
@@ -82,9 +82,7 @@ const pages = {
   },
   actions: {
     async loadPages({ commit }: { commit: Commit }) {
-      console.log('loadPages')
       const response = await axios.get('/pages');
-      console.log(response.data)
       commit('SET_PAGES', response.data);
     },
   },
