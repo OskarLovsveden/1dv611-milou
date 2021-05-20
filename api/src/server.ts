@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import IndexRouter from './routes/indexRouter';
 import swaggerUI from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import cors from 'cors';
 import { HttpError } from 'http-errors';
 import { startCronJob } from './utils/cronJob';
 
@@ -16,6 +17,9 @@ export default class Server {
         // Call everything that needs to be run before starting the server//
         //===============================================================//
         this.app.use(express.json());
+        this.app.use(cors({
+            origin: '*'
+        }));
         startCronJob();
         // Setting up routes
         this.app.use('/', this.indexRouter.router);

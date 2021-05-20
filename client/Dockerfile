@@ -5,6 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+COPY .env ./dist/
 # build app for production with minification
 RUN npm run build
 
