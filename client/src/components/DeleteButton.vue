@@ -19,7 +19,13 @@ const axios = new AxiosHelper();
     },
     methods: {
         async doDelete() {
-            await axios.delete('/pages/' + this.pageID);
+            try {
+                await axios.delete('/pages/' + this.pageID);
+                await this.$store.dispatch('loadPages');
+                this.$store.commit('FLIP_EDIT_DELETE_WEBPAGE_FORM_MODAL');
+            } catch (error) {
+                // ...
+            }
         }
     }
 })

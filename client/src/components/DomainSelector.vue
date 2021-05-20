@@ -1,6 +1,6 @@
 <template>
     <form>
-      <select @change="emitDomain">
+      <select @change="setDomain">
         <option value="">All</option>
         <option v-for="(domain, index) in domains" :key="index">{{domain}}</option>
       </select>
@@ -15,17 +15,34 @@ import PageListItem from '../components/PageListItem.vue';
     components: {
         PageListItem
     },
-    props: {
-        domains: {
-            type: Array,
+    // props: {
+    //     domains: {
+    //         type: Array,
+    //     }
+    // },
+    methods: {
+        setDomain(element: any) {
+            this.$store.commit('SET_DOMAIN', element.target.value);
+            // this.$emit('domain-selected', element.target.value);
         }
     },
-    methods: {
-        emitDomain(element: any) {
-            this.$emit('domain-selected', element.target.value);
-        }
+    computed: {
+        domains() {
+            const domains = this.$store.state.pages.list.map((p: any) => p.page.domain);
+            return [...new Set(domains)];
+        },
     }
 })
 
 export default class PageList extends Vue {}
 </script>
+
+<style scoped>
+
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+</style>
