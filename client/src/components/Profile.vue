@@ -5,11 +5,11 @@
     </div>
     <div class="addwebpage">
       <div class="domain-menu">
-        <DomainSelector :domains="domains" @domain-selected="setDomain"/>
+        <DomainSelector/>
         <button id="show-modal" @click="toggleModal">Add new webpage</button>
       </div>
       <Modal v-if="showModal" @close="toggleModal"/>
-      <PageList :pages="pagesToShow" @close="toggleModal"/>
+      <PageList />
     </div>
   </div>
 </template>
@@ -21,8 +21,8 @@ import DomainSelector from "../components/DomainSelector.vue";
 import PageList from "../components/PageList.vue";
 import Modal from "../components/Modal.vue";
 
-import AxiosHelper from '../helpers/AxiosHelper';
-const axios = new AxiosHelper();
+// import AxiosHelper from '../helpers/AxiosHelper';
+// const axios = new AxiosHelper();
 
 
 @Options({
@@ -32,41 +32,32 @@ const axios = new AxiosHelper();
         PageList,
         Modal
     },
-    mounted() {
-        this.getPages();
+    async mounted() {
+        await this.getPages();
     },
     data() {
         return {
-            pages: [],
-            domain: null,
             showModal: false
+            // pages: [],
+            // domain: null
         };
     },
     methods: {
         async getPages() {
-            const response = await axios.get('/pages');
-            this.pages = response.data;
-        },
-        setDomain(value: string) {
-            this.domain = value;
+            await this.$store.dispatch('loadPages');
+            // const response = await axios.get('/pages');
+            // this.pages = response.data;
         },
         toggleModal() {
-            this.showModal = !this.showModal;
-            this.getPages();
+          this.showModal = !this.showModal;
+          this.getPages();
         }
     },
     computed: {
-        domains() {
-            const domains = this.pages.map((p: any) => p.page.domain);
-            return [...new Set(domains)];
-        },
-        pagesToShow() {
-            if (this.domain) {
-                return this.pages.filter((p: any) => p.page.domain === this.domain);
-            }
 
-            return this.pages;
-        }
+        // showModal() {
+        //   return this.$store.state.modal.addWebpage
+        // }
     }
 })
 

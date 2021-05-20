@@ -25,6 +25,18 @@ module.exports = {
                 logLevel: 'debug',
                 pathRewrite: {'^/users': '/users'},
             },
+            '^/gpsi/measure': {
+                target: 'http://localhost:5000',
+                changeOrigin: true,
+                logLevel: 'debug',
+                pathRewrite: {'^/gpsi/measure': '/gpsi/measure'},
+            },
+            '^/graphs^': {
+                target: 'http://localhost:5000',
+                changeOrigin: true,
+                logLevel: 'debug',
+                pathRewrite: {'^/graphs^': '/graphs^'},
+            },
         }
     }
 };

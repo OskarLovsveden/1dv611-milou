@@ -35,26 +35,65 @@ const user = {
 }
 
 interface IModalState {
-  isOpen: boolean
+  measureWebpage: boolean,
+  addWebpage: boolean
+  editWebpage: boolean
 }
 
 const modal = {
   state: (): IModalState => ({
-    isOpen: false
+    measureWebpage: false,
+    addWebpage: false,
+    editWebpage: false
   }),
   mutations: {
-    FLIP_IS_OPEN(state: IModalState) {
-      state.isOpen = !state.isOpen
+    FLIP_MEASURE_WEBPAGE_MODAL(state: IModalState) {
+      state.measureWebpage = !state.measureWebpage
     },
+    FLIP_ADD_WEBPAGE_FORM_MODAL(state: IModalState) {
+      state.addWebpage = !state.addWebpage
+    },
+    FLIP_EDIT_DELETE_WEBPAGE_FORM_MODAL(state: IModalState) {
+      state.editWebpage = !state.editWebpage
+    }
   },
   actions: {
 
   },
 }
 
+// interface IPagesState {
+//   pages: Array<T>,
+//   domains: boolean
+// }
+
+const pages = {
+  state: (): any => ({
+    list: [],
+    domain: ''
+  }),
+  mutations: {
+    SET_PAGES(state: any, value: any) {
+      state.list = value
+    },
+    SET_DOMAIN(state: any, value: string) {
+      state.domain = value
+    }
+  },
+  actions: {
+    async loadPages({ commit }: { commit: Commit }) {
+      console.log('loadPages')
+      const response = await axios.get('/pages');
+      console.log(response.data)
+      commit('SET_PAGES', response.data);
+    },
+  },
+}
+
 export default createStore({
   modules: {
     user: user,
-    modal: modal
+    modal: modal,
+    pages: pages
   }
 })

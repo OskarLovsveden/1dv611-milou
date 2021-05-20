@@ -1,0 +1,67 @@
+{
+    "totalScore": 0.99,
+    "categories": [
+        {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more](https://web.dev/first-contentful-paint/).",
+            "score": 0.98,
+            "scoreDisplayMode": "numeric",
+            "displayValue": "0.6 s",
+            "numericValue": 649
+        },
+        {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more](https://web.dev/speed-index/).",
+            "score": 1,
+            "scoreDisplayMode": "numeric",
+            "displayValue": "0.6 s",
+            "numericValue": 649
+        },
+        {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more](https://web.dev/lighthouse-largest-contentful-paint/)",
+            "score": 0.97,
+            "scoreDisplayMode": "numeric",
+            "displayValue": "0.9 s",
+            "numericValue": 860
+        },
+        {
+            "id": "interactive",
+            "title": "Time to Interactive",
+            "description": "Time to interactive is the amount of time it takes for the page to become fully interactive. [Learn more](https://web.dev/interactive/).",
+            "score": 1,
+            "scoreDisplayMode": "numeric",
+            "displayValue": "0.7 s",
+            "numericValue": 655
+        },
+        {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more](https://web.dev/lighthouse-total-blocking-time/).",
+            "score": 1,
+            "scoreDisplayMode": "numeric",
+            "displayValue": "0 ms",
+            "numericValue": 0
+        },
+        {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more](https://web.dev/cls/).",
+            "score": 1,
+            "scoreDisplayMode": "numeric",
+            "displayValue": "0",
+            "details": {
+                "type": "debugdata",
+                "items": [
+                    {
+                        "finalLayoutShiftTraceEventFound": false
+                    }
+                ]
+            },
+            "numericValue": 0
+        }
+    ]
+}

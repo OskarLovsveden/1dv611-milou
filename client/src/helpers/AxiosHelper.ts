@@ -64,6 +64,7 @@ export default class AxiosHelper {
             throw new Error(error.response.data.message.detail)
         }
     }
+
     async delete(url: string) {
         try {
             const response = await axios({
