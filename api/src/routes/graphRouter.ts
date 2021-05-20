@@ -16,13 +16,11 @@ export default class GraphRouter implements IRouter {
     initializeRoutes(): void {
         /**
          * @swagger
-         * /measure:
+         * /graph:
          *   get:
          *     summary: GPSI results graph.
          *     tags:
-         *       - gpsi
-         *       - Graph
-         *       - IFrame 
+         *       - Graph 
          *     description: Get graph of the lastest GPSI measurements(max 20) on a specific address.
          *     operationId: getGraph
          *     parameters:

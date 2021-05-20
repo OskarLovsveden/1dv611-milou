@@ -40,10 +40,12 @@ export default class Server {
             ],
             apis: 
             [
-                './src/routes/pageRouter.ts',
-                './src/routes/userRouter.ts',
-                './src/routes/gpsiRouter.ts',
-                './src/routes/authRouter.ts'
+                /* './src/routes/pageRouter.js',
+                './src/routes/userRouter.js',
+                './src/routes/gpsiRouter.js',
+                './src/routes/authRouter.js',
+                './src/routes/graphRouter.js' */
+                './src/routes/*.ts', './src/routes/*.js'
             ]
         };
 
