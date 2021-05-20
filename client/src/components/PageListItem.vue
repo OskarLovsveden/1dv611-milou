@@ -48,25 +48,4 @@ export default class PageListItem extends Vue {}
     .list-item {
         list-style: none;
     }
-
-    #show-modal {
-        display: inline-block;
-        color: #000;
-        text-decoration: none;
-        background: none;
-        border: none;
-    }
-
-    #show-modal::after {
-        content: '';
-        display: block;
-        width: 0;
-        height: 2px;
-        background: red;
-        transition: width .3s;
-    }
-
-    #show-modal:hover::after {
-        width: 100%;
-    }
 </style>
