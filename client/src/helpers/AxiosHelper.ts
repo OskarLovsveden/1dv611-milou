@@ -13,7 +13,7 @@ export default class AxiosHelper {
         try {
             const response = await axios({
                 method: 'POST',
-                url: url,
+                url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
                     authorization: 'Bearer ' + this.cookie.get()
                 },
