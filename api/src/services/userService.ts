@@ -14,7 +14,9 @@ export default class UserService {
         try {
             const { email, password } = req.body;
 
-            if (await User.find({email: email})) {
+            const user = await User.findOne({email: email});
+
+            if (user) {
                 throw new Error(userExistMessage);
             } else {
                 const userData: UserData = {email: email, password: password};

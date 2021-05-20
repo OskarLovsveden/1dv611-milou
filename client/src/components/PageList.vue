@@ -14,10 +14,30 @@ import PageListItem from '../components/PageListItem.vue';
     components: {
         PageListItem
     },
-    props: {
-        pages: {
-            type: Array,
+    // props: {
+    //     pages: {
+    //         type: Array,
+    //     }
+    // }
+    // data() {
+        // return {
+        //     pages: []
+        // }
+    // },
+    computed: {
+        pages () {
+
+        // console.log(this.$store.state.pages.domain, "lkasdlkahsdlkasdlkahlkdshl")
+
+        if (this.$store.state.pages.domain) {
+            // this.pages =  this.$store.state.pages.list.filter((p: any) => p.page.domain === this.$store.state.pages.domain);
+            return this.$store.state.pages.list.filter((p: any) => p.page.domain === this.$store.state.pages.domain);
         }
+
+        // this.pages = this.$store.state.pages.list;
+        return this.$store.state.pages.list;
+        }
+
     },
     methods: {
         closeModal() {

@@ -10,14 +10,14 @@ import { Options, Vue } from 'vue-class-component';
 import Modal from '../components/Modal.vue';
 
 @Options({
+    components: {
+        PageListItem,
+        Modal
+    },
     data() {
         return {
             showModal: false
         };
-    },
-    components: {
-        PageListItem,
-        Modal
     },
     props:{
         address: {
@@ -32,8 +32,13 @@ import Modal from '../components/Modal.vue';
         toggleModal() {
             this.showModal = !this.showModal;
             this.$emit('close');
-        }
-    }
+            }
+    },
+    // computed: {
+    //     showModal () {
+    //         return this.$store.state.modal.editWebpage
+    //     }
+    // }
 })
 
 export default class PageListItem extends Vue {}

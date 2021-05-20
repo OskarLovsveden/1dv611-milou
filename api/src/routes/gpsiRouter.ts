@@ -19,7 +19,7 @@ export default class GPSIRouter implements IRouter {
         /**
          * @swagger
          * /measure:
-         *   get:
+         *   post:
          *     summary: Google PageSpeed Insights readings.
          *     tags:
          *       - gpsi
@@ -39,7 +39,7 @@ export default class GPSIRouter implements IRouter {
          *       401:
          *         description: Unauthorized.
          */
-        this.router.get('/measure', 
+        this.router.post('/measure', 
             (req, res, next) => this.authMiddleware.isAuthenticated(req, next),
             (req, res, next) => this.middleware.requestHasAddresses(req, next),
             (req, res, next) => this.controller.getMeasurements(req, res, next),
