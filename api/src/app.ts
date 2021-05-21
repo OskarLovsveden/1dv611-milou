@@ -5,7 +5,7 @@ const main = async () => {
     try {
         await connectDB();
 
-        const server = new Server(5000);
+        const server = new Server(process.env.PORT || 5000);
 
         server.run();
     } catch (error) {
