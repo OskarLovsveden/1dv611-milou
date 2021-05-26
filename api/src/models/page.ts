@@ -44,8 +44,9 @@ export const PageSchema = new Schema({
 });
 
 PageSchema.statics.getByAddress = async function(address: string): Promise<IPage> {
-    try {
-        const existingPage = await Page.findOne({address});
+    try {        
+        const url = new URL(address);
+        const existingPage = await Page.findOne({address: url.href});
 
         if (existingPage) {
             return existingPage;

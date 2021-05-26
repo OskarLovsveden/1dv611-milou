@@ -16,7 +16,7 @@ export default class GraphRouter implements IRouter {
     initializeRoutes(): void {
         /**
          * @swagger
-         * /graph:
+         * /graphs:
          *   get:
          *     summary: GPSI results graph.
          *     tags:

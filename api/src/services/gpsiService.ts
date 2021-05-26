@@ -34,7 +34,6 @@ export default class GPSIService {
                     this.emailService.notifyDecreasedGPSIResults(page.id, previousResult, newResult, page.address);
                 }
             }
-
           
         } catch (error) {
             console.log(error);
@@ -68,14 +67,15 @@ export default class GPSIService {
         if (isLastDayOfTheMonth()) {
             pagesToMeasure.push(...await UserPage.find({ measureAt: 'Monthly' }));
         }
+
         return [...new Set(pagesToMeasure.map((page: IUserPage) => page.addressID))];
     }
 
-  
-
     private async gpsiAPIRequest(address: string): Promise<any> {
         const encodedAddress = encodeURI(address);
-        const response = await fetch(`${process.env.GPSI_URL}?url=${encodedAddress}&key=${process.env.GPSI_TOKEN}&category=PERFORMANCE`);
+        const url = `${process.env.GPSI_URL}?url=${encodedAddress}&key=${process.env.GPSI_TOKEN}&category=PERFORMANCE`;
+
+        const response = await fetch(url);
         return await response.json();
     }
 
