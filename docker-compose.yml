@@ -4,6 +4,8 @@ services:
     build: "./api"
     ports: 
       - "5000:5000"
+    env_file: 
+      - ./api/.env
     environment: 
       - DB_CONNECTION_STRING=mongodb://db-service/milou-project
     depends_on: 
@@ -17,4 +19,4 @@ services:
   db-service:
     image: mongo:latest
     ports: 
-      - "27017:27017"
+      - "27018:27018"
