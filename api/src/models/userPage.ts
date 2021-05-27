@@ -78,16 +78,32 @@ schema.statics.deletePageId = async function(userID: string, addressID: string):
 
 schema.statics.updateAddressID = async function(userID: string, previousID: string, newID: string, measureAt: MeasureAt): Promise<void> {
     try {
+        const pageAlreadyExistOnUser = await UserPage.findOne({ userID, addressID: newID});
+        
+        if (pageAlreadyExistOnUser) {
+            throw createHttpError(400, { 
+                message: {
+                    detail: 'Cant update page to already existing page', 
+                    addressID: newID
+                }
+            });
+        }
+
         const updatedUserPage = await this.updateOne({userID: userID, addressID: previousID}, {
             addressID: newID,
             measureAt
         });
 
         if (updatedUserPage.nModified !== 1) {
-            throw new Error();
+            throw createHttpError(400, { 
+                message: {
+                    detail: `Failed to update page with id: ${previousID} to page with id: ${newID}` , 
+                    addressID: previousID
+                }
+            });
         }
     } catch (error) {
-        throw createHttpError(400, 'Failed to update page');
+        throw error;
     }
 };
 
