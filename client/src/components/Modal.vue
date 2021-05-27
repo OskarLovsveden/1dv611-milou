@@ -2,21 +2,31 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container">
-
+        <div
+          class="modal-container"
+          :class="address ? 'modal-container-large' : 'modal-container-small'"
+        >
           <div class="modal-header">
-            <slot name="header">{{address ? 'Update webpage' : 'Add new webpage'}}</slot>
+            <slot name="header">{{
+              address ? "Update webpage" : "Add new webpage"
+            }}</slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
-              <WebpageForm :address="address" :pageID="pageID"/>
+              <WebpageForm :address="address" :pageID="pageID" />
             </slot>
+            <iframe
+              class="chart"
+              v-if="address"
+              :src="`http://localhost:5000/api/graphs?address=${address}`"
+              frameborder="0"
+            ></iframe>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <DeleteButton v-if="address" :pageID="pageID" ></DeleteButton>
+              <DeleteButton v-if="address" :pageID="pageID"></DeleteButton>
               <button class="modal-default-button" @click="emitCloseEvent">
                 Close
               </button>
@@ -29,34 +39,37 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import WebpageForm from '../components/WebpageForm.vue';
-import DeleteButton from '../components/DeleteButton.vue';
+import { Options, Vue } from "vue-class-component";
+import WebpageForm from "../components/WebpageForm.vue";
+import DeleteButton from "../components/DeleteButton.vue";
 
 @Options({
-    components: {
-        WebpageForm,
-        DeleteButton
+  components: {
+    WebpageForm,
+    DeleteButton,
+  },
+  props: {
+    address: {
+      type: String,
     },
-    props: {
-        address: {
-            type: String
-        },
-        pageID: {
-            type: String
-        }
+    pageID: {
+      type: String,
     },
-    methods: {
-        emitCloseEvent() {
-            this.$emit('close');
-        }
-    }
+  },
+  methods: {
+    emitCloseEvent() {
+      this.$emit("close");
+    },
+  },
 })
-
 export default class Modal extends Vue {}
 </script>
 
 <style scoped>
+.chart {
+  width: 500px;
+  height: 500px;
+}
 
 .modal-mask {
   position: fixed;
@@ -74,8 +87,15 @@ export default class Modal extends Vue {}
   vertical-align: middle;
 }
 
+.modal-container-small {
+  width: 20%;
+}
+
+.modal-container-large {
+  width: 40rem;
+}
+
 .modal-container {
-  width: 400px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -122,5 +142,4 @@ export default class Modal extends Vue {}
   flex-direction: row;
   justify-content: flex-end;
 }
-
 </style>
