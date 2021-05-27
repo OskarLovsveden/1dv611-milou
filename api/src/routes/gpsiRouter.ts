@@ -18,7 +18,7 @@ export default class GPSIRouter implements IRouter {
     initializeRoutes(): void {
         /**
          * @swagger
-         * /measure:
+         * /api/measure:
          *   post:
          *     summary: Google PageSpeed Insights readings.
          *     tags:

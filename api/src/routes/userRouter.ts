@@ -16,7 +16,7 @@ export default class UserRouter implements IRouter {
     public initializeRoutes(): void {
         /**
          * @swagger
-         * /users:
+         * /api/users:
          *   post:
          *     summary: Add a new user.
          *     tags:

@@ -15,7 +15,7 @@ export default class AuthRouter implements IRouter {
     initializeRoutes(): void {
         /**
          * @swagger
-         * /login:
+         * /api/login:
          *   post:
          *     summary: Log in a user.
          *     tags:
@@ -45,7 +45,7 @@ export default class AuthRouter implements IRouter {
         );
         /**
          * @swagger
-         * /authenticate:
+         * /api/authenticate:
          *   post:
          *     summary: Authenticate a user.
          *     tags:

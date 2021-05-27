@@ -11,10 +11,7 @@ export default class GPSIController {
             for (const address of req.body.addresses) {
                 const data = await this.service.measurePages(address);
                 gpsiResults.push(data);
-                console.log(data);
             }
-
-            console.log(gpsiResults);
 
             res.status(200).json(gpsiResults);
         } catch (error) {

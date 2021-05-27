@@ -7,8 +7,8 @@ export default class UserController {
     public async register(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             await this.service.createUser(req);
-            res.status(201).json({message: 'User created'});
             
+            res.status(201).json({message: 'User created'}); 
         } catch (error) {
             next(error);
         }

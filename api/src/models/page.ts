@@ -51,9 +51,18 @@ PageSchema.statics.getByAddress = async function(address: string): Promise<IPage
         if (existingPage) {
             return existingPage;
         }
-        throw createHttpError(404, 'Could not find page');
+
+        throw createHttpError(404, { 
+            message: {
+                detail: `Could not find page: ${address}`, 
+                address: address
+            }
+        });
     } catch (error) { 
-        throw error;
+        if(error.code === 'ERR_INVALID_URL') {
+            throw createHttpError(400, `${error.input} is not a valid address.`);
+        }
+        throw createHttpError(400);
     }
 };
 
@@ -65,6 +74,7 @@ PageSchema.statics.insert = async function(url: URL) {
         if (existingPage) {
             return existingPage;
         }
+
         return await Page.create({
             domain: hostname,
             address:href,
@@ -89,6 +99,7 @@ PageSchema.statics.getAllPages = async function(userPages: IUserPage[]): Promise
                 });
             }
         }
+
         return pages;
     } catch (error) {
         throw createHttpError(400);
@@ -106,6 +117,7 @@ PageSchema.statics.getAllPagesByIDS = async function(pageIDS: string[]): Promise
                 pages.push(page);
             }
         }
+
         return pages;
     } catch (error) {
         throw createHttpError(400);
@@ -115,8 +127,10 @@ PageSchema.statics.getAllPagesByIDS = async function(pageIDS: string[]): Promise
 PageSchema.statics.getAllDomainPages = async function(domain: string, userPages: IUserPage[]) {
     try { 
         const pages: IPageData[] = [];
+
         for (const userPage of userPages) {
             const verifiedList = await Page.findOne({_id: userPage.addressID});
+
             if(verifiedList) {
                 pages.push({
                     page: verifiedList,
@@ -124,11 +138,12 @@ PageSchema.statics.getAllDomainPages = async function(domain: string, userPages:
                 });
             }
         }
-        /* const url = new URL(address); */ // remove/replace 'www.'
+
         if(pages) {
             return pages.filter((pageData: IPageData) => pageData.page.domain === domain)
                 .map((pd: IPageData) => pd);
         }
+
     } catch (error) {
         throw createHttpError(400);
     }
@@ -136,24 +151,18 @@ PageSchema.statics.getAllDomainPages = async function(domain: string, userPages:
 
 PageSchema.statics.findOrCreate = async function(url: URL) {
     try {
-        console.log(url);
         const {href, hostname, pathname} = url;
-
-
 
         const address = {
             domain: hostname.includes('www.') ? hostname.replace('www.', ''): hostname,
             address:href,
             path: pathname
         };
-        console.log('=================');
-        console.log(address);
 
         return await Page.findOneAndUpdate(address, address, {
             upsert: true, 
             new: true
         });
-
     } catch (error) {
         throw createHttpError(400);
     }

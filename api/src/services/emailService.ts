@@ -1,6 +1,4 @@
-import { Request } from 'express';
 import { IScore } from '../models/measurements';
-import fetch from 'node-fetch';
 import nodemailer from 'nodemailer';
 import { emailTemplate } from '../utils/email';
 import UserPage from '../models/userPage';
@@ -22,14 +20,13 @@ export default class EmailService {
     }
 
     private async sendMail(emails: string[], message: string, transporter: Mail) {
-        const info = await transporter.sendMail({
+        await transporter.sendMail({
             from: '"Hermes GPSI Test" <milouhermes1@hotmail.com>',
             to: emails.join(','),
             subject: 'Lowered result',
             text: 'Hermes GPSI measurement.',
             html: message
         });
-        console.log('Message sent: %s', info.messageId);
     }
 
     private createHotmailMailConfig(username: string, password: string) : Mail {
@@ -44,6 +41,7 @@ export default class EmailService {
 
     private async getUserEmails(pageID: string): Promise<string[]> {
         const userIDS = await UserPage.findUserIdsOfPage(pageID);
+        
         return await User.findUserEmailsFromIDS(userIDS);
     }
 }

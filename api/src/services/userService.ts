@@ -13,16 +13,13 @@ export default class UserService {
     public async createUser(req: Request): Promise<void> {
         try {
             const { email, password } = req.body;
-
             const user = await User.findOne({email: email});
 
             if (user) {
                 throw new Error(userExistMessage);
             } else {
-                const userData: UserData = {email: email, password: password};
-                await User.create(userData);    
+                await User.create({email: email, password: password});    
             }
-             
         } catch (error) {
             if (error.name === 'ValidationError') {
                 if(error.errors.email) {
