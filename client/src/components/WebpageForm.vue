@@ -51,17 +51,17 @@ const axios = new AxiosHelper();
                     await axios.post('/pages', {address: this.url, testInterval: this.interval});
                     this.$toast.success("Page added")
                     this.url = '';
-                    this.$emit('added-page');
+                    await this.$store.dispatch('loadPages');
                 } catch (error) {
                     this.$toast.error("Error when adding page")
                 }
-
             }
         },
         async updateWebPage() {
             try {
                 await axios.update('/pages/' + this.pageID, {address: this.url, testInterval: this.interval});
                 this.$toast.success("Page updated")
+                await this.$store.dispatch('loadPages');
             } catch (error) {
                 this.$toast.error("Error when updating page")
                 
