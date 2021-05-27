@@ -60,8 +60,4 @@ export default class AuthMiddleware {
             }));
         }
     }
-
-    public isAuthorized(req: Request, next: NextFunction): void {
-        throw new Error('Not implemented');
-    }
 }

@@ -17,7 +17,6 @@ export default class GPSIService {
 
             return await Measurement.addScore(measurement, page.id);
         } catch (error) {
-            console.log(error);
             throw error;
         }
     }
@@ -30,11 +29,11 @@ export default class GPSIService {
             for (const page of pages) {
                 const previousResult = await Measurement.getLatestMeasurement(page.id);
                 const newResult = await this.measurePages(page.address);
+
                 if (this.shouldNotifyUser(previousResult.totalScore, newResult.totalScore)) {
                     this.emailService.notifyDecreasedGPSIResults(page.id, previousResult, newResult, page.address);
                 }
             }
-          
         } catch (error) {
             console.log(error);
         }
@@ -42,8 +41,10 @@ export default class GPSIService {
 
     private async getGPSIResults(address: string): Promise<IScore> {
         const gpsiResults: IScore[] = [];
+
         for (let index = 0; index < this.numberOfTestRuns; index++) {
             const gpsiData = await this.gpsiAPIRequest(address);
+
             gpsiResults.push(this.gpsiDataFormatter(gpsiData));
         }
         return this.compareGPSIResults(gpsiResults);
@@ -59,11 +60,13 @@ export default class GPSIService {
 
     private async getPageIDS(): Promise<string[]> {
         const pagesToMeasure: IUserPage[] = [];
+
         pagesToMeasure.push(...await UserPage.find({ measureAt: 'Daily' }));
 
         if (isLastDayOfTheWeek()) {
             pagesToMeasure.push(...await UserPage.find({ measureAt: 'Weekly' }));
         } 
+
         if (isLastDayOfTheMonth()) {
             pagesToMeasure.push(...await UserPage.find({ measureAt: 'Monthly' }));
         }
@@ -74,8 +77,8 @@ export default class GPSIService {
     private async gpsiAPIRequest(address: string): Promise<any> {
         const encodedAddress = encodeURI(address);
         const url = `${process.env.GPSI_URL}?url=${encodedAddress}&key=${process.env.GPSI_TOKEN}&category=PERFORMANCE`;
-
         const response = await fetch(url);
+
         return await response.json();
     }
 
@@ -84,6 +87,7 @@ export default class GPSIService {
             .filter((metric: any) => metric.group === 'metrics')
             .map((category: any) => category.id)
             .map((result: any) => unformattedData.lighthouseResult.audits[result]);
+            
         return {
             totalScore: unformattedData.lighthouseResult.categories.performance.score,
             categories

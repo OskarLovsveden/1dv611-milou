@@ -1,7 +1,6 @@
 import mongoose, { Document, Model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import Page from './page';
 import createHttpError from 'http-errors';
 
 const { isEmail } = validator;
@@ -56,6 +55,7 @@ schema.statics.findUserEmailsFromIDS = async function(userIDS: string[]): Promis
                 userEmails.push(user?.email);
             }
         }
+        
         return userEmails;
     } catch (error) {
         throw createHttpError(400, 'Failed to find user emails');

@@ -1,7 +1,6 @@
 import { ICategory, IScore } from '../models/measurements';
 import moment from 'moment';
 
-
 export const createGPSIGraphHTML = (pageScores: IScore[], address: string): string => {
     const graphTitle = 'GPSI Measurements For: ' + address;
     const organizedMeasurements = getOrganizedMeasurements(pageScores);
@@ -68,6 +67,7 @@ const getDates = (pageScores: IScore[]): string[] => {
 const getCategories = (organizedMeasurements: ICategory[]): string[] => {
     const categories = [...new Set(organizedMeasurements.map((oM: ICategory) => oM.title))];
     categories.unshift('Total Scores');
+
     return categories;
 };
 

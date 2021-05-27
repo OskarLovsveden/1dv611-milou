@@ -5,6 +5,7 @@ import { isValidObjectId } from 'mongoose';
 export default class PageMiddleware {
     public bodyHasAddress(req: Request, next: NextFunction): void {
         const { address } = req.body;
+
         if(!address) {
             next(createHttpError(400, { 
                 message: {
@@ -13,11 +14,13 @@ export default class PageMiddleware {
                 }})
             );
         }
+
         next();
     }
 
     public bodyHasTestInterval(req: Request, next: NextFunction): void {
         const { testInterval } = req.body;
+
         if (!testInterval) {
             next(createHttpError(400, {
                 message: {
@@ -26,6 +29,7 @@ export default class PageMiddleware {
                 }})
             );
         }
+        
         next();
     }
 

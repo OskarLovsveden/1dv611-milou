@@ -12,12 +12,12 @@ export default class GraphService {
             if (address) {
                 const pageAddress = await Page.getByAddress(address as string);
                 const measurements = await Measurement.findOne({addressID: pageAddress._id});
+
                 if (measurements) {
-                    
-                    const graph = createGPSIGraphHTML(measurements?.scores, address as string);
-                    return graph;
+                    return createGPSIGraphHTML(measurements?.scores, address as string);
                 }
             } 
+
             throw createHttpError(400, { 
                 message: {
                     detail: `Measurements for: ${address} does not exist`, 
@@ -25,7 +25,6 @@ export default class GraphService {
                 }
             });
         } catch (error) {
-            console.log(error);
             throw error;
         }
     }

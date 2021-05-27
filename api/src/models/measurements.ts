@@ -1,6 +1,5 @@
 import createHttpError from 'http-errors';
 import mongoose, { Document, Model, Schema } from 'mongoose';
-// import { URL } from 'url';
 
 export interface ICategory {
     id: string
@@ -39,7 +38,7 @@ export const CategorySchema = new Schema({
 export const ScoreSchema = new Schema({
     totalScore: { type: Number},
     categories: [CategorySchema],
-}, {timestamps: true}
+}, { timestamps: true }
 );
 
 export const MeasurementSchema = new Schema({
@@ -79,10 +78,13 @@ MeasurementSchema.statics.findOrCreate = async function(addressID: string): Prom
 MeasurementSchema.statics.getLatestMeasurement = async function(addressID: string): Promise<IScore> {
     try {
         let scores: IScore = { totalScore: 0, categories: []};
+        
         const pageMeasurements = await Measurement.findOne({addressID});
+
         if (pageMeasurements && pageMeasurements.scores.length > 0) {
             scores = pageMeasurements.scores[pageMeasurements?.scores.length - 1];
         }
+
         return scores;
     } catch (error) {
         throw createHttpError(400);

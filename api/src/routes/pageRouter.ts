@@ -18,7 +18,7 @@ export default class PageRouter implements IRouter {
     initializeRoutes(): void {
         /**
          * @swagger
-         * /pages:
+         * /api/pages:
          *   post:
          *     summary: Add a new address.
          *     tags:
@@ -54,7 +54,7 @@ export default class PageRouter implements IRouter {
         
         /**
          * @swagger
-         * /pages/{id}:
+         * /api/pages/{id}:
          *   put:
          *     summary: Update an address.
          *     tags:
@@ -95,7 +95,7 @@ export default class PageRouter implements IRouter {
         
         /**
          * @swagger
-         * /pages?domain={address}:
+         * /api/pages?domain={address}:
          *   get:
          *     summary: Get a specific user's pages.
          *     tags:
@@ -123,7 +123,7 @@ export default class PageRouter implements IRouter {
               
         /**
          * @swagger
-         * /pages/{id}:
+         * /api/pages/{id}:
          *   delete:
          *     summary: Remove a page.
          *     tags:
