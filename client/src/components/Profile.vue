@@ -42,7 +42,6 @@ import Modal from "../components/Modal.vue";
         },
         toggleModal() {
           this.showModal = !this.showModal;
-          this.getPages();
         }
     }
 })
