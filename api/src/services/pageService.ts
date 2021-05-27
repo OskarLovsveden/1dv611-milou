@@ -6,6 +6,7 @@ import { URL } from 'url';
 import UserPage, { IUserPage, MeasureAt } from '../models/userPage';
 import { validateUrlResponse } from '../utils/urlUtilities';
 import Measurement from '../models/measurements';
+import GPSIService from './gpsiService';
 
 
 export interface IPageData {
@@ -14,6 +15,7 @@ export interface IPageData {
 }
 
 export default class PageService {
+    private service: GPSIService = new GPSIService()
 
     public async createPage(req: Request): Promise<IPageData> {
         try {
@@ -35,6 +37,8 @@ export default class PageService {
             await Measurement.findOrCreate(page.id);
             const userPage = await UserPage.findOrCreate(user?.id, page.id, testInterval);
 
+            await this.service.measurePages(url.href);
+            
             return {
                 page,
                 measureAt: userPage.measureAt
