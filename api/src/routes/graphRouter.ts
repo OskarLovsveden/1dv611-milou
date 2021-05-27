@@ -16,11 +16,11 @@ export default class GraphRouter implements IRouter {
     initializeRoutes(): void {
         /**
          * @swagger
-         * /graphs:
+         * /api/graphs:
          *   get:
          *     summary: GPSI results graph.
          *     tags:
-         *       - Graph 
+         *       - graph 
          *     description: Get graph of the lastest GPSI measurements(max 20) on a specific address.
          *     operationId: getGraph
          *     parameters:
@@ -31,8 +31,10 @@ export default class GraphRouter implements IRouter {
          *     responses:
          *       200:
          *         description: Returns an JSON object of GPSI readings.
-         *       404:
+         *       400:
          *         description: Bad request, probably missing address.
+         *       404:
+         *         description: Not found, address could not be found.
          */
         this.router.get('/', 
             (req, res, next) => this.middleware.queryHasAddress(req, next),

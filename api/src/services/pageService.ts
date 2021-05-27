@@ -28,16 +28,14 @@ export default class PageService {
                 });
             }
 
-            const url = new URL(req.body.address);
-
-            const testInterval: MeasureAt = (<any>MeasureAt)[req.body.testInterval];
             const user = await User.findOne({email: req?.user?.email});
             await validateUrlResponse(req.body.address);
-            const page = await Page.findOrCreate(url);
-            await Measurement.findOrCreate(page.id);
-            const userPage = await UserPage.findOrCreate(user?.id, page.id, testInterval);
 
-            await this.service.measurePages(url.href);
+            const page = await Page.findOrCreate(new URL(req.body.address));
+            await Measurement.findOrCreate(page.id);
+            const userPage = await UserPage.findOrCreate(user?.id, page.id, (<any>MeasureAt)[req.body.testInterval]);
+
+            await this.service.measurePages(page.address);
             
             return {
                 page,
@@ -52,11 +50,10 @@ export default class PageService {
                     }
                 });
             }
-            console.log(error);
             throw error;
         }
     }
- 
+
     public async getPages(req: Request): Promise<IPageData[]> {
         try {
             const user = await User.findOne({email: req?.user?.email});
@@ -65,12 +62,14 @@ export default class PageService {
                 const userPages = await UserPage.getAllUserPages(user.id);
 
                 if(req.query.domain) {
-                    /* const url = new URL(req.query.address as string); */
                     const domainPages = await Page.getAllDomainPages((req.query.domain as string), userPages);
                     const sortedDomainPages = this.sortAlphabeticallyByPath(domainPages);
+
                     return sortedDomainPages; 
                 }
+
                 const allPages = await Page.getAllPages(userPages);
+
                 return this.sortAlphabeticallyByDomain(allPages);
             }
             throw createHttpError(400);
@@ -89,8 +88,8 @@ export default class PageService {
 
     public async updatePage(req: Request): Promise<void> {
         try {
-
             await validateUrlResponse(req.body.address);
+
             if (!this.testIntervalIsValid(req.body.testInterval)) {
                 throw createHttpError(400, { 
                     message: {
@@ -99,7 +98,7 @@ export default class PageService {
                     } 
                 });
             }
-            const testInterval: MeasureAt = (<any>MeasureAt)[req.body.testInterval];
+
             const user = await User.findOne({email: req?.user?.email});
             const userPages = await UserPage.getAllUserPages(user?.id);
             const userPageIDS = userPages.map((userPage: IUserPage) => userPage.addressID);
@@ -110,10 +109,10 @@ export default class PageService {
             }
 
             const page = await Page.findOrCreate(new URL(req.body.address));
-            await UserPage.updateAddressID(user?.id, req.params.id, page.id, testInterval);
+
+            await UserPage.updateAddressID(user?.id, req.params.id, page.id, (<any>MeasureAt)[req.body.testInterval]);
 
         } catch (error) {
-            console.log(error);
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, { 
                     message: {
@@ -129,7 +128,6 @@ export default class PageService {
     public async deletePage(req: Request): Promise<void> {
         try {
             const user = await User.findOne({email: req?.user?.email});
-
             const userPages = await UserPage.getAllUserPages(user?.id);
             const userPageIDS = userPages.map((userPage: IUserPage) => userPage.addressID);
 
@@ -142,7 +140,6 @@ export default class PageService {
             }
 
             await UserPage.deletePageId(user.id, req.params.id);
-
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
                 throw createHttpError(400, `${error.input} is not a valid address.`);

@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import mongoose, { Document, Model, Schema} from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export enum MeasureAt {
     Daily = 'Daily',
@@ -110,6 +110,7 @@ schema.statics.updateAddressID = async function(userID: string, previousID: stri
 schema.statics.findUserIdsOfPage = async function(addressID: string): Promise<string[]> {
     try {
         const userPages = await UserPage.find({ addressID });
+        
         return userPages.map((xd: IUserPage) => xd.userID);
     } catch (error) {
         throw createHttpError(400, 'Failed to update page');

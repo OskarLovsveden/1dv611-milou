@@ -9,9 +9,7 @@ import { startCronJob } from './utils/cronJob';
 export default class Server {
     private app: express.Application = express()
     private indexRouter: IndexRouter = new IndexRouter()
-    constructor(private port: number | string) {
-        // Empty
-    }
+    constructor(private port: number | string) {}
 
     public run(): void {
         // Call everything that needs to be run before starting the server//
@@ -22,7 +20,7 @@ export default class Server {
         }));
         startCronJob();
         // Setting up routes
-        this.app.use('/', this.indexRouter.router);
+        this.app.use('/api', this.indexRouter.router);
         this.swaggerBoot();
         this.errorHandler();
         this.listen();
@@ -42,6 +40,8 @@ export default class Server {
                     url: process.env.BASE_URL
                 }
             ],
+            // ./src/routes/*.ts for development
+            // ./src/routes/*.js for deployment build
             apis: 
             [
                 './src/routes/*.ts', './src/routes/*.js'
@@ -49,7 +49,7 @@ export default class Server {
         };
 
         const swaggerDocs = swaggerJSDoc(options);
-        this.app.use('/api', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+        this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
     }
 
     private errorHandler(): void {

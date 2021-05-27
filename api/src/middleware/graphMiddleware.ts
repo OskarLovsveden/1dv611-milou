@@ -4,6 +4,7 @@ import createHttpError from 'http-errors';
 export default class GraphMiddleware {
     public queryHasAddress(req: Request, next: NextFunction): void {
         const { address } = req.query;
+
         if(!address) {
             next(createHttpError(400, { 
                 message: {
@@ -12,6 +13,7 @@ export default class GraphMiddleware {
                 }})
             );
         }
+        
         next();
     }
 }

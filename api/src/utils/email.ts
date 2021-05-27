@@ -20,12 +20,14 @@ export const emailTemplate = (previousScore: IScore, newScore: IScore, address: 
 
 const createMeasurementString = (score: IScore) => {
     let measurementString = '';
+    
     score.categories.forEach((category: any) => {
         measurementString += `
         <h4>Category: ${category.title}</h4>
         <p>Score: ${category.score}</p>
         `;
     });
+    
     return measurementString;
 };
 

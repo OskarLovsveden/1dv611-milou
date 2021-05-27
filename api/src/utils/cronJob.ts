@@ -1,6 +1,6 @@
 import { scheduleJob } from 'node-schedule'; 
 import GPSIService from '../services/gpsiService';
-export const startCronJob = () => {
+export const startCronJob = (): void => {
     const gpsiService = new GPSIService();
     scheduleJob('1 23 * * *', () => gpsiService.performScheduledMeasures());
 };
