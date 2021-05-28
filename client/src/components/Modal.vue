@@ -2,10 +2,7 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div
-          class="modal-container"
-          :class="address ? 'modal-container-large' : 'modal-container-small'"
-        >
+        <div class="modal-container">
           <div class="modal-header">
             <slot name="header">{{
               address ? "Update webpage" : "Add new webpage"
@@ -16,12 +13,6 @@
             <slot name="body">
               <WebpageForm :address="address" :pageID="pageID" />
             </slot>
-            <iframe
-              class="chart"
-              v-if="address"
-              :src="`http://localhost:5000/api/graphs?address=${address}`"
-              frameborder="0"
-            ></iframe>
           </div>
 
           <div class="modal-footer">
@@ -87,15 +78,8 @@ export default class Modal extends Vue {}
   vertical-align: middle;
 }
 
-.modal-container-small {
-  width: 20%;
-}
-
-.modal-container-large {
-  width: 40rem;
-}
-
 .modal-container {
+  width: 400px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;

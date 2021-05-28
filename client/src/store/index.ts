@@ -62,11 +62,6 @@ const modal = {
   },
 }
 
-// interface IPagesState {
-//   pages: Array<T>,
-//   domains: boolean
-// }
-
 const pages = {
   state: (): any => ({
     list: [],

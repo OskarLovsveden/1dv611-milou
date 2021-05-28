@@ -3,20 +3,21 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
-            <slot name="header">Add new webpage</slot>
+            <slot name="header">{{ address }}</slot>
           </div>
 
           <div class="modal-body">
-            <slot name="body">
-              <AddWebpageForm />
-            </slot>
+            <iframe
+              class="chart"
+              :src="`http://localhost:5000/api/graphs?address=${address}`"
+              frameborder="0"
+            ></iframe>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="modal-default-button" @click="onClose">
+              <button class="modal-default-button" @click="emitCloseEvent">
                 Close
               </button>
             </slot>
@@ -28,24 +29,29 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import AddWebpageForm from "../forms/AddWebpageForm.vue";
+import { Options, Vue } from "vue-class-component";
 
 @Options({
-    components: {
-        AddWebpageForm
+  props: {
+    address: {
+      type: String,
+      required: true,
     },
-    methods: {
-      onClose() {
-        this.$emit('close')
-      }
-    }
+  },
+  methods: {
+    emitCloseEvent() {
+      this.$emit("close-history-modal");
+    },
+  },
 })
-
 export default class Modal extends Vue {}
 </script>
 
 <style scoped>
+.chart {
+  width: 100%;
+  height: 100%;
+}
 
 .modal-mask {
   position: fixed;
@@ -64,7 +70,8 @@ export default class Modal extends Vue {}
 }
 
 .modal-container {
-  width: 400px;
+  width: 70rem;
+  height: 50rem;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -81,6 +88,7 @@ export default class Modal extends Vue {}
 
 .modal-body {
   margin: 20px 0;
+  height: 90%;
 }
 
 #left-buttons {
@@ -111,5 +119,4 @@ export default class Modal extends Vue {}
   flex-direction: row;
   justify-content: flex-end;
 }
-
 </style>
