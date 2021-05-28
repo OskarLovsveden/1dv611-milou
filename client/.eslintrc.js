@@ -7,6 +7,7 @@ module.exports = {
   },
   settings: { },
   extends: [
+      'plugin:@typescript-eslint/recommended' // Uses the recommended rules from @typescript-eslint/eslint-plugin
   ],
   rules: {
       // we only want single quotes

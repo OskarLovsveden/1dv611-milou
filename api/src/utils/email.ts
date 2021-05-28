@@ -13,7 +13,7 @@ export const emailTemplate = (previousScore: IScore, newScore: IScore, address: 
     ${createMeasurementString(newScore)}
     <hr>
     <h3>Contact for more information:</h3>
-    <p><a href="mailto:todoaddrealemailhere@example.com">Email Us</a></p>
+    <p><a href="mailto:${process.env.EMAIL_USER}">Email Us</a></p>
     <p><a href="localhost">Visit our page for more info</a></p>
     `;
 };
