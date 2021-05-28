@@ -15,7 +15,7 @@ export default class AxiosHelper {
                 method: 'POST',
                 url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
-                authorization: 'Bearer ' + this.cookie.get()
+                    authorization: 'Bearer ' + this.cookie.get()
                 },
                 data: data
             });
@@ -23,7 +23,7 @@ export default class AxiosHelper {
             return response;
         } catch (error) {
             if(error.response.status === 403) {
-                this.cookie.delete()  
+                this.cookie.delete();  
             }
 
             return error.response;
@@ -37,7 +37,7 @@ export default class AxiosHelper {
                 method: 'POST',
                 url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
-                authorization: 'Bearer ' + this.cookie.get()
+                    authorization: 'Bearer ' + this.cookie.get()
                 },
                 data: data
             });
@@ -45,7 +45,7 @@ export default class AxiosHelper {
             return response;
         } catch (error) {
             if(error.response.status === 403) {
-                this.cookie.delete()  
+                this.cookie.delete();  
             }
 
             throw new Error(error.response.data.message.detail);
@@ -58,14 +58,14 @@ export default class AxiosHelper {
                 method: 'PUT',
                 url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
-                authorization: 'Bearer ' + this.cookie.get()
+                    authorization: 'Bearer ' + this.cookie.get()
                 },
                 data: data
             });
 
             return response;
         } catch (error) {
-            throw new Error(error.response.data.message.detail)
+            throw new Error(error.response.data.message.detail);
         }
     }
 
@@ -76,13 +76,13 @@ export default class AxiosHelper {
                 method: 'GET',
                 url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
-                authorization: 'Bearer ' + this.cookie.get()
+                    authorization: 'Bearer ' + this.cookie.get()
                 }
             });
 
             return response;
         } catch (error) {
-            throw new Error(error.response.data.message.detail)
+            throw new Error(error.response.data.message.detail);
         }
     }
 
@@ -92,13 +92,13 @@ export default class AxiosHelper {
                 method: 'DELETE',
                 url: process.env.VUE_APP_BASE_URL + url,
                 headers: {
-                authorization: 'Bearer ' + this.cookie.get()
+                    authorization: 'Bearer ' + this.cookie.get()
                 }
             });
 
             return response;
         } catch (error) {
-            throw new Error(error.response.data.message.detail)
+            throw new Error(error.response.data.message.detail);
         }
     }
 }
