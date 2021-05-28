@@ -11,39 +11,37 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import Home from './components/Home.vue';
-import Logo from './components/Logo.vue';
+import { Options, Vue } from "vue-class-component";
+import Home from "./components/Home.vue";
+import Logo from "./components/Logo.vue";
 
-import Cookie from './helpers/Cookie';
-const cookie = new Cookie('token');
+import Cookie from "./helpers/Cookie";
+const cookie = new Cookie("token");
 
 @Options({
-    components: {
-        Home,
-        Logo
-    },
-    data() {
-        return {
-            loading: true,
-            registerUser: false
-        };
-    },
-    async mounted() {
-      if (cookie.get()) {
-        await this.$store.dispatch('checkUser');
-      }
-  
-      this.loading = false;
+  components: {
+    Home,
+    Logo,
+  },
+  data() {
+    return {
+      loading: true,
+      registerUser: false,
+    };
+  },
+  async mounted() {
+    if (cookie.get()) {
+      await this.$store.dispatch("checkUser");
     }
-})
 
+    this.loading = false;
+  },
+})
 export default class App extends Vue {}
 </script>
 
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
 
 body {
   margin: 0;
@@ -55,7 +53,7 @@ body {
 }
 
 #app {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -87,25 +85,30 @@ body {
 }
 
 button {
-    display: inline-block;
-    color: #000;
-    text-decoration: none;
-    background-color: rgb(253, 253, 253);
-    border: none;
-    border-radius: 5px;
-    padding: 8px;
+  display: inline-block;
+  color: #000;
+  text-decoration: none;
+  background-color: rgb(253, 253, 253);
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
 }
 
 button::after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 2px;
-    background: red;
-    transition: width .3s;
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: red;
+  transition: width 0.3s;
 }
+
+button:hover {
+  cursor: pointer;
+}
+
 button:hover::after {
-        width: 100%;
+  width: 100%;
 }
 
 form input {
@@ -113,7 +116,5 @@ form input {
   border-radius: 5px;
   background-color: rgb(209, 209, 209);
   padding: 10px;
-
 }
-
 </style>
