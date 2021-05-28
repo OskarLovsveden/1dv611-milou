@@ -1,51 +1,72 @@
 <template>
-    <li class="list-item">
-        <button id="show-modal" @click="toggleModal">{{address}}</button>
-        <Modal v-if="showModal" @close="toggleModal" :address="address" :pageID="pageID"/>
-    </li>
+  <li class="list-item">
+    <button @click="toggleHistoryModal">{{ address }}</button>
+    <HistoryGraphModal
+      v-if="showHistoryModal"
+      @close-history-modal="toggleHistoryModal"
+      :address="address"
+    />
+
+    <font-awesome-icon class="edit-icon" @click="toggleEditModal" icon="edit" />
+    <Modal
+      v-if="showEditModal"
+      @close="toggleEditModal"
+      :address="address"
+      :pageID="pageID"
+    />
+  </li>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import Modal from '../components/Modal.vue';
+import { Options, Vue } from "vue-class-component";
+import Modal from "../components/Modal.vue";
+import HistoryGraphModal from "../components/modals/HistoryGraphModal.vue";
 
 @Options({
-    components: {
-        PageListItem,
-        Modal
+  components: {
+    PageListItem,
+    Modal,
+    HistoryGraphModal,
+  },
+  data() {
+    return {
+      showEditModal: false,
+      showHistoryModal: false,
+    };
+  },
+  props: {
+    address: {
+      type: String,
+      required: true,
     },
-    data() {
-        return {
-            showModal: false
-        };
+    pageID: {
+      type: String,
     },
-    props:{
-        address: {
-            type: String,
-            required: true
-        },
-        pageID: {
-            type: String
-        }
+  },
+  methods: {
+    toggleEditModal() {
+      this.showEditModal = !this.showEditModal;
     },
-    methods: {
-        toggleModal() {
-            this.showModal = !this.showModal;
-            this.$emit('close');
-            }
+    toggleHistoryModal() {
+      this.showHistoryModal = !this.showHistoryModal;
     },
-    // computed: {
-    //     showModal () {
-    //         return this.$store.state.modal.editWebpage
-    //     }
-    // }
+  },
 })
-
 export default class PageListItem extends Vue {}
 </script>
 
 <style scoped>
-    .list-item {
-        list-style: none;
-    }
+.list-item {
+  list-style: none;
+}
+
+.edit-icon {
+  margin-left: 1rem;
+  transition: 0.5s;
+}
+
+.edit-icon:hover {
+  cursor: pointer;
+  transform: scale(1.5);
+}
 </style>

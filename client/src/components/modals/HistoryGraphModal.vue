@@ -4,20 +4,19 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <slot name="header">{{
-              address ? "Update webpage" : "Add new webpage"
-            }}</slot>
+            <slot name="header">{{ address }}</slot>
           </div>
 
           <div class="modal-body">
-            <slot name="body">
-              <WebpageForm :address="address" :pageID="pageID" />
-            </slot>
+            <iframe
+              class="chart"
+              :src="`http://localhost:5000/api/graphs?address=${address}`"
+              frameborder="0"
+            ></iframe>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <DeleteButton v-if="address" :pageID="pageID"></DeleteButton>
               <button class="modal-default-button" @click="emitCloseEvent">
                 Close
               </button>
@@ -31,25 +30,17 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import WebpageForm from "../components/WebpageForm.vue";
-import DeleteButton from "../components/DeleteButton.vue";
 
 @Options({
-  components: {
-    WebpageForm,
-    DeleteButton,
-  },
   props: {
     address: {
       type: String,
-    },
-    pageID: {
-      type: String,
+      required: true,
     },
   },
   methods: {
     emitCloseEvent() {
-      this.$emit("close");
+      this.$emit("close-history-modal");
     },
   },
 })
@@ -58,8 +49,8 @@ export default class Modal extends Vue {}
 
 <style scoped>
 .chart {
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 100%;
 }
 
 .modal-mask {
@@ -79,7 +70,8 @@ export default class Modal extends Vue {}
 }
 
 .modal-container {
-  width: 400px;
+  width: 70rem;
+  height: 50rem;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -96,6 +88,7 @@ export default class Modal extends Vue {}
 
 .modal-body {
   margin: 20px 0;
+  height: 90%;
 }
 
 #left-buttons {
