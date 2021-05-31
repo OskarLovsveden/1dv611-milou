@@ -1,32 +1,32 @@
 <template>
-    <div id="logo-container">
-        <h1>Milou</h1>
-    </div>
+  <div id="logo-container">
+    <img src="../../public/img/logo.png" alt="" />
+  </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Options, Vue } from "vue-class-component";
 
-@Options({
-})
+@Options({})
 export default class Logo extends Vue {}
 </script>
 
 <style scoped>
-
-    #logo-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    h1 {
-        color: white;
-        background-color: rgb(238, 0, 0);
-        text-transform: uppercase;
-        padding: 40px 20px;
-        border-radius: 10px;
-        font-weight: 900;
-    }
+#logo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 150px;
+  height: 150px;
+}
 </style>
