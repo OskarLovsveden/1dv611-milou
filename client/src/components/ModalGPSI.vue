@@ -3,26 +3,18 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
             <h3 name="header">Result from GPSI measure</h3>
           </div>
 
           <div class="modal-body">
             <slot name="body">
-              <div v-if="loader" id="loader-container">
-                <h3>Loading...</h3>
-                <div id="loader"></div>
+              <div v-if="loader">
+                <LoadingSpinner />
               </div>
-              
-            <div v-if="measureResult" id="result">
-              <div v-for="(item, index) in measureResult" :key="index">
-                <p>Total score: {{item.totalScore}}</p>
-                <div v-for="(category, index) in item.categories" :key="index">
-                  <p>{{category.title}}: {{category.score}}</p>
-                </div>
+              <div v-else>
+                <Chart :data="measureResult" />
               </div>
-            </div>
             </slot>
           </div>
 
@@ -40,45 +32,54 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Options, Vue } from "vue-class-component";
 
-import AxiosHelper from '../helpers/AxiosHelper';
-const axios = new AxiosHelper()
+import AxiosHelper from "../helpers/AxiosHelper";
+const axios = new AxiosHelper();
+
+import Chart from "./DataChart.vue";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 @Options({
-    components: {
+  components: {
+    Chart,
+    LoadingSpinner,
+  },
+  props: {
+    address: {
+      type: String,
     },
-    props: {
-        address: {
-            type: String
-        }
+  },
+  data() {
+    return {
+      loader: true,
+      measureResult: null,
+    };
+  },
+  methods: {
+    emitCloseEvent() {
+      this.$emit("close");
     },
-    data() {
-      return {
-        loader: false,
-        measureResult: null,
-      }
-    },
-    methods: {
-        emitCloseEvent() {
-            this.$emit('close');
-        }
-    },
-    async mounted() {
-      this.loader = true;
-      const result = await axios.post("/gpsi/measure", { addresses: [this.address] })
-      if (result) {
-        this.loader = false
-        this.measureResult = await result.data
-      }
+  },
+  async mounted() {
+    this.loader = true;
+    const result = await axios.post("/gpsi/measure", {
+      addresses: [this.address],
+    });
+    if (result) {
+      this.measureResult = await result.data;
+      this.measureResult.forEach((element: any) => {
+        console.log(Object.keys(element), "keys");
+        console.log(Object.values(element), "values");
+      });
+      this.loader = false;
     }
+  },
 })
-
 export default class ModalGPSI extends Vue {}
 </script>
 
 <style scoped>
-
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -147,29 +148,8 @@ export default class ModalGPSI extends Vue {}
   justify-content: flex-end;
 }
 
-  #result {
-    display: flex;
-    flex-direction: column;
-  } 
-
-#loader-container {
+#result {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
-
-#loader {
-border: 6px solid #f3f3f3; /* Light grey */
-border-top: 6px solid #3498db; /* Blue */
-border-radius: 50%;
-width: 40px;
-height: 40px;
-animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 </style>

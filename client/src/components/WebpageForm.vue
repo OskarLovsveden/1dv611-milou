@@ -1,5 +1,8 @@
 <template>
-  <form v-on:submit.prevent autocomplete="on">
+  <div v-if="loading">
+    <LoadingSpinner />
+  </div>
+  <form v-else v-on:submit.prevent autocomplete="on">
     <input
       :placeholder="placeholder"
       type="url"
@@ -34,7 +37,12 @@ import { Options, Vue } from "vue-class-component";
 import AxiosHelper from "../helpers/AxiosHelper";
 const axios = new AxiosHelper();
 
+import LoadingSpinner from "./LoadingSpinner.vue";
+
 @Options({
+  components: {
+    LoadingSpinner,
+  },
   props: {
     address: {
       type: String,
@@ -50,6 +58,7 @@ const axios = new AxiosHelper();
     return {
       url: "",
       interval: "",
+      loading: false,
     };
   },
   computed: {
@@ -61,27 +70,33 @@ const axios = new AxiosHelper();
     async addWebPage() {
       if (this.interval) {
         try {
+          this.loading = true;
           await axios.post("/pages", {
             address: this.url,
             testInterval: this.interval,
           });
           this.$toast.success("Page added");
+          this.loading = false;
           this.url = "";
           await this.$store.dispatch("loadPages");
         } catch (error) {
+          this.loading = false;
           this.$toast.error(error);
         }
       }
     },
     async updateWebPage() {
       try {
+        this.loading = true;
         await axios.update("/pages/" + this.pageID, {
           address: this.url,
           testInterval: this.interval,
         });
+        this.loading = false;
         this.$toast.success("Page updated");
         await this.$store.dispatch("loadPages");
       } catch (error) {
+        this.loading = false;
         this.$toast.error(error);
       }
     },
