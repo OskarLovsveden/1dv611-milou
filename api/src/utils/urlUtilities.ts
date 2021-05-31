@@ -14,7 +14,7 @@ export const validateUrlResponse = async (url: URL): Promise<void> => {
     } catch (error) {
         throw createHttpError(400, { 
             message: {
-                detail: `${url} is not valid.`, 
+                detail: `${url} is not a valid URL`, 
                 address: url
             }
         });

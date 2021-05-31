@@ -36,15 +36,23 @@ export const schema = new Schema({
 
 schema.statics.findOrCreate = async function(userId: string, pageId: string, interval: MeasureAt): Promise<IUserPage> {
     try {
-        const findCriteria = { userID: userId, addressID: pageId };
-        const create = {userID: userId, addressID: pageId, measureAt: interval};
+        const filter = { userID: userId, addressID: pageId };
+        const newUserPage = {userID: userId, addressID: pageId, measureAt: interval};
 
-        return await UserPage.findOneAndUpdate(findCriteria,create, {
-            upsert: true, 
-            new: true
-        });
+        const userPage = await UserPage.findOne(filter);
+
+        if (userPage) {
+            throw createHttpError(400, { 
+                message: {
+                    detail: 'Page already added'
+                }
+            });
+        }
+
+        return await UserPage.create(newUserPage);
+
     } catch (error) {
-        throw createHttpError(400);
+        throw error;
     }
 };
 

@@ -81,7 +81,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
           await this.$store.dispatch("loadPages");
         } catch (error) {
           this.loading = false;
-          this.$toast.error("Error when adding page");
+          this.$toast.error(error);
         }
       }
     },
@@ -97,7 +97,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
         await this.$store.dispatch("loadPages");
       } catch (error) {
         this.loading = false;
-        this.$toast.error("Error when updating page");
+        this.$toast.error(error);
       }
     },
   },
