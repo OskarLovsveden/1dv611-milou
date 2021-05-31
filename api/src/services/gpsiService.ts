@@ -10,12 +10,23 @@ export default class GPSIService {
     private emailService: EmailService = new EmailService()
     private numberOfTestRuns = 2
     
-    public async measurePages(address: string) : Promise<IScore> {
+    public async measurePage(address: string) : Promise<IScore> {
         try {
-            const measurement: IScore = await this.getGPSIResults(address);
             const page = await Page.findOrCreate(new URL(address));
+            const prevMeasurement = await Measurement.findOrCreate(page.id);
+            const prevResult = await Measurement.getLatestMeasurement(page.id);
+            const measurement = await this.performMeasurement(address);
+            
+            if (prevMeasurement.scores.length < 1) {
+                return await Measurement.addScore(measurement, page.id);
+            }
 
-            return await Measurement.addScore(measurement, page.id);
+            if (this.shouldNotifyUser(prevResult.totalScore, measurement.totalScore)) {
+                const emails = await this.emailService.getUserEmails(page.id);
+                this.emailService.notifyDecreasedGPSIResults(emails, prevResult, measurement, page.address);
+            }
+
+            return measurement;
         } catch (error) {
             throw error;
         }
@@ -28,15 +39,23 @@ export default class GPSIService {
 
             for (const page of pages) {
                 const previousResult = await Measurement.getLatestMeasurement(page.id);
-                const newResult = await this.measurePages(page.address);
+                const newResult = await this.performMeasurement(page.address);
 
                 if (this.shouldNotifyUser(previousResult.totalScore, newResult.totalScore)) {
-                    this.emailService.notifyDecreasedGPSIResults(page.id, previousResult, newResult, page.address);
+                    const emails = await this.emailService.getUserEmails(page.id);
+                    this.emailService.notifyDecreasedGPSIResults(emails, previousResult, newResult, page.address);
                 }
             }
         } catch (error) {
             console.log(error);
         }
+    }
+
+    private async performMeasurement(address: string): Promise<IScore> {
+        const measurement: IScore = await this.getGPSIResults(address);
+        const page = await Page.findOrCreate(new URL(address));
+
+        return await Measurement.addScore(measurement, page.id);
     }
 
     private async getGPSIResults(address: string): Promise<IScore> {
@@ -55,7 +74,7 @@ export default class GPSIService {
     }
 
     private shouldNotifyUser(previousScore: number, newScore: number): boolean {
-        return previousScore > newScore || previousScore === 0;
+        return previousScore >= (newScore + Number(process.env.SCORE_DIFF)) || previousScore === 0;
     }
 
     private async getPageIDS(): Promise<string[]> {
@@ -94,5 +113,6 @@ export default class GPSIService {
         };
     }
 }
+
 
 

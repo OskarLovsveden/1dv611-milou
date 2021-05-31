@@ -35,7 +35,7 @@ export default class PageService {
             await Measurement.findOrCreate(page.id);
             const userPage = await UserPage.findOrCreate(user?.id, page.id, (<any>MeasureAt)[req.body.testInterval]);
 
-            await this.service.measurePages(page.address);
+            await this.service.measurePage(page.address);
             
             return {
                 page,
@@ -111,6 +111,7 @@ export default class PageService {
             const page = await Page.findOrCreate(new URL(req.body.address));
 
             await UserPage.updateAddressID(user?.id, req.params.id, page.id, (<any>MeasureAt)[req.body.testInterval]);
+            await this.service.measurePage(page.address);
 
         } catch (error) {
             if(error.code === 'ERR_INVALID_URL') {
