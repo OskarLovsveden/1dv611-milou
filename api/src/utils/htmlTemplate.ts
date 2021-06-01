@@ -13,8 +13,14 @@ export const createGPSIGraphHTML = (pageScores: IScore[], address: string): stri
 
 
     return '<script src=\'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\'></script>'+
-    '<canvas id=\'bar-chart\' width=\'800\' height=\'450\'></canvas>'+
+    '<div id="canvasWrapper">' +
+    '<canvas id=bar-chart></canvas>'+
+    '</div>' +
+    '<style> body { overflow: hidden; }' + 
+    '#canvasWrapper { width: 80%; margin: auto; }' +
+    '</style>' +
     '<script>'+
+    'setInterval((x) => { window.location.reload() }, 5000);' + 
     'var logChart = new Chart(document.getElementById(\'bar-chart\'),' + JSON.stringify(graphObject) +');'+
     '</script>';
 };
