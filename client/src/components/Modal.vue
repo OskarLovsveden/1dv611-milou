@@ -17,7 +17,11 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <DeleteButton v-if="address" :pageID="pageID"></DeleteButton>
+              <DeleteButton
+                v-if="address"
+                :pageID="pageID"
+                @click="emitCloseEvent"
+              ></DeleteButton>
               <button class="modal-default-button" @click="emitCloseEvent">
                 Close
               </button>
