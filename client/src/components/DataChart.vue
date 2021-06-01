@@ -18,30 +18,44 @@ import Chart from "chart.js/auto";
   }),
 
   mounted() {
+    console.log(this.data, "data i chart");
+    const colors = [
+      "rgb(31, 233, 182)",
+      "rgb(125, 79, 255)",
+      "rgb(255, 178, 2)",
+      "rgb(3, 175, 254)",
+      "rgb(255, 65, 129)",
+      "rgb(161, 161, 161)",
+      "rgb(183, 24, 255)",
+    ];
     const ctx = document.getElementById("myChart");
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: this.data.names,
+        // datasets: this.data.values.map(
+        //   (measureValue: number, index: number) => {
+        //     console.log(measureValue, "value");
+        //     return {
+        //       label: this.data.names[index],
+        //       data: [measureValue],
+        //       borderColor: colors[index],
+        //       backgroundColor: colors[index],
+        //     };
+        //   }
+        // ),
         datasets: [
           {
-            label: "# of Votes",
-            data: [12, 19, 3, 5, 2, 3],
+            label: "Value",
+            data: this.data.values,
             backgroundColor: [
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(255, 206, 86, 0.2)",
-              "rgba(75, 192, 192, 0.2)",
-              "rgba(153, 102, 255, 0.2)",
-              "rgba(255, 159, 64, 0.2)",
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(153, 102, 255, 1)",
-              "rgba(255, 159, 64, 1)",
+              "rgba(255, 99, 132 )",
+              "rgba(54, 162, 235)",
+              "rgba(255, 206, 86)",
+              "rgba(75, 192, 192)",
+              "rgba(153, 102, 255)",
+              "rgba(255, 159, 64)",
+              "rgba(200, 109, 64)",
             ],
             borderWidth: 1,
           },

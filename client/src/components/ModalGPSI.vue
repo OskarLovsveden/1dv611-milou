@@ -13,7 +13,7 @@
                 <LoadingSpinner />
               </div>
               <div v-else>
-                <Chart :data="measureResult" />
+                <Chart :data="chartDataObject" />
               </div>
             </slot>
           </div>
@@ -40,6 +40,11 @@ const axios = new AxiosHelper();
 import Chart from "./DataChart.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
 
+interface ChartData {
+  names: string[];
+  values: number[];
+}
+
 @Options({
   components: {
     Chart,
@@ -54,6 +59,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
     return {
       loader: true,
       measureResult: null,
+      chartDataObject: null,
     };
   },
   methods: {
@@ -67,11 +73,22 @@ import LoadingSpinner from "./LoadingSpinner.vue";
       addresses: [this.address],
     });
     if (result) {
-      this.measureResult = await result.data;
-      this.measureResult.forEach((element: any) => {
-        console.log(Object.keys(element), "keys");
-        console.log(Object.values(element), "values");
+      const resultData = result.data;
+      let array: ChartData = {
+        values: [],
+        names: [],
+      };
+      array.values.push(resultData[0].totalScore);
+      array.names.push(Object.keys(resultData[0])[0]);
+
+      resultData[0].categories.forEach((element: any) => {
+        array.values.push(element.score);
+        array.names.push(element.title);
       });
+      this.chartDataObject = array;
+      // console.log(this.chartDataArray, "chart data array");
+      // this.measureResult = await result.data;
+      // console.log(array);
       this.loader = false;
     }
   },
