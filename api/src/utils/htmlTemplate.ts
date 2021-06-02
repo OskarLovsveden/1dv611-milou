@@ -20,7 +20,6 @@ export const createGPSIGraphHTML = (pageScores: IScore[], address: string): stri
     '#canvasWrapper { width: 80%; margin: auto; }' +
     '</style>' +
     '<script>'+
-    'setInterval((x) => { window.location.reload() }, 5000);' + 
     'var logChart = new Chart(document.getElementById(\'bar-chart\'),' + JSON.stringify(graphObject) +');'+
     '</script>';
 };
