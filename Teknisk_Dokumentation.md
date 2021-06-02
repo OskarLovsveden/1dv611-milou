@@ -1,6 +1,4 @@
-# Mjukvaruarkitektur/Teknisk Dokumentation
-
-[TOC]
+[[_TOC_]]
 
 ## Kodstruktur
 
