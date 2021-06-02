@@ -20,7 +20,7 @@ export default class GraphRouter implements IRouter {
          *   get:
          *     summary: GPSI results graph.
          *     tags:
-         *       - graph 
+         *       - graphs 
          *     description: Get graph of the lastest GPSI measurements(max 20) on a specific address.
          *     operationId: getGraph
          *     parameters:
