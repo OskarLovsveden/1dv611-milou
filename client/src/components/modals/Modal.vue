@@ -31,12 +31,12 @@
       </div>
     </div>
   </transition>
-</template>
-
+</template>../WebpageForm.vue
+../DeleteButton.vue
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import WebpageForm from "../components/WebpageForm.vue";
-import DeleteButton from "../components/DeleteButton.vue";
+import WebpageForm from "../forms/WebpageForm.vue";
+import DeleteButton from "../../components/DeleteButton.vue";
 
 @Options({
   components: {

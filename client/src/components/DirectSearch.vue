@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import ModalGPSI from "./ModalGPSI.vue";
+import ModalGPSI from "./modals/ModalGPSI.vue";
 
 @Options({
   components: {
@@ -28,13 +28,6 @@ import ModalGPSI from "./ModalGPSI.vue";
   methods: {
     async submitForm() {
       this.toggleModal();
-
-      // this.loader = true;
-      // const result = await axios.post("/gpsi/measure", { addresses: [this.form.url] })
-      // if (result) {
-      //   this.loader = false
-      //   this.measureResult = await result.data
-      // }
     },
     toggleModal() {
       this.showModal = !this.showModal;

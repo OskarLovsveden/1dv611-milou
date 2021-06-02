@@ -19,7 +19,7 @@ import { Options, Vue } from "vue-class-component";
 import DirectSearch from "../components/DirectSearch.vue";
 import DomainSelector from "../components/DomainSelector.vue";
 import PageList from "../components/PageList.vue";
-import Modal from "../components/Modal.vue";
+import Modal from "./modals/Modal.vue";
 
 @Options({
   components: {

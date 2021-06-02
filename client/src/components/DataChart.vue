@@ -33,17 +33,6 @@ import Chart from "chart.js/auto";
       type: "bar",
       data: {
         labels: this.data.names,
-        // datasets: this.data.values.map(
-        //   (measureValue: number, index: number) => {
-        //     console.log(measureValue, "value");
-        //     return {
-        //       label: this.data.names[index],
-        //       data: [measureValue],
-        //       borderColor: colors[index],
-        //       backgroundColor: colors[index],
-        //     };
-        //   }
-        // ),
         datasets: [
           {
             label: "Value",

@@ -8,11 +8,7 @@
           </div>
 
           <div class="modal-body">
-            <iframe
-              class="chart"
-              :src="`http://localhost:5000/api/graphs?address=${address}`"
-              frameborder="0"
-            ></iframe>
+            <iframe class="chart" :src="iFrameSrc" frameborder="0"></iframe>
           </div>
 
           <div class="modal-footer">
@@ -39,8 +35,13 @@ import { Options, Vue } from "vue-class-component";
     },
   },
   methods: {
-    emitCloseEvent() {
+    emitCloseEvent(): void {
       this.$emit("close-history-modal");
+    },
+  },
+  computed: {
+    iFrameSrc(): string {
+      return `${process.env.VUE_APP_BASE_URL}/graphs?address=${this.address}`;
     },
   },
 })

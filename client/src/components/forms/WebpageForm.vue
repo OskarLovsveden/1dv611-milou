@@ -34,10 +34,10 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
-import AxiosHelper from "../helpers/AxiosHelper";
+import AxiosHelper from "../../helpers/AxiosHelper";
 const axios = new AxiosHelper();
 
-import LoadingSpinner from "./LoadingSpinner.vue";
+import LoadingSpinner from "../LoadingSpinner.vue";
 
 @Options({
   components: {

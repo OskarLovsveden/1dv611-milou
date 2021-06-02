@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Modal from "../components/Modal.vue";
-import HistoryGraphModal from "../components/modals/HistoryGraphModal.vue";
+import Modal from "./modals/Modal.vue";
+import HistoryGraphModal from "./modals/HistoryGraphModal.vue";
 
 @Options({
   components: {

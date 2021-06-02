@@ -34,11 +34,11 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
-import AxiosHelper from "../helpers/AxiosHelper";
+import AxiosHelper from "../../helpers/AxiosHelper";
 const axios = new AxiosHelper();
 
-import Chart from "./DataChart.vue";
-import LoadingSpinner from "./LoadingSpinner.vue";
+import Chart from "../DataChart.vue";
+import LoadingSpinner from "../LoadingSpinner.vue";
 
 interface ChartData {
   names: string[];
@@ -69,15 +69,19 @@ interface ChartData {
   },
   async mounted() {
     this.loader = true;
+
     const result = await axios.post("/gpsi/measure", {
       addresses: [this.address],
     });
+
     if (result) {
       const resultData = result.data;
+
       let array: ChartData = {
         values: [],
         names: [],
       };
+
       array.values.push(resultData[0].totalScore);
       array.names.push(Object.keys(resultData[0])[0]);
 
@@ -85,10 +89,8 @@ interface ChartData {
         array.values.push(element.score);
         array.names.push(element.title);
       });
+
       this.chartDataObject = array;
-      // console.log(this.chartDataArray, "chart data array");
-      // this.measureResult = await result.data;
-      // console.log(array);
       this.loader = false;
     }
   },
